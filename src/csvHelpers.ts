@@ -19,12 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Json from './jsonHelpers';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Result, captureResult } from './result';
+import sync from 'csv-parse/lib/sync';
+
+export function readCsvFileSync(srcPath: string): Result<unknown> {
+    return captureResult(() => {
+        const fullPath = path.resolve(srcPath);
+        const body = fs.readFileSync(fullPath, 'utf8').toString();
+        // eslint-disable-next-line
+        return sync(body, { trim: true, from_line: 2});
+    });
+}
