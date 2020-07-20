@@ -106,12 +106,25 @@ describe('Converter class', () => {
             expect(mappingConverter.convert(-1)).toFailWith(/out of range/i);
         });
 
-        it('should report a conversion failure without applying the mapping function', () => {
-            const result = mappingConverter.convert('test');
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a number/i);
-            }
+        test('reports a conversion failure without applying the mapping function', () => {
+            expect(mappingConverter.convert('test'))
+                .toFailWith(/not a number/i);
+        });
+    });
+
+    describe('mapConvert method', () => {
+        const converter = stringConverter.mapConvert(numberConverter);
+
+        test('applies a second converter to a successful conversion', () => {
+            expect(converter.convert('100')).toSucceedWith(100);
+        });
+
+        test('reports a failure from the chained converter', () => {
+            expect(converter.convert('fred')).toFailWith(/not a number/i);
+        });
+
+        test('reports a failure from the initial conversion without invoking the second', () => {
+            expect(converter.convert(true)).toFailWith(/not a string/i);
         });
     });
 
