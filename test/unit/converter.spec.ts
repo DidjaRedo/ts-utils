@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import '../helpers/jest';
 import {
     Converter,
     Result,
@@ -43,8 +44,8 @@ describe('Converter class', () => {
     });
 
     describe('convertOptional method', () => {
-        it('should ignore errors by default', () => {
-            expect(stringConverter.convertOptional(true).isSuccess()).toBe(true);
+        test('ignores errors by default', () => {
+            expect(stringConverter.convertOptional(true)).toSucceed();
         });
     });
 
@@ -52,22 +53,14 @@ describe('Converter class', () => {
         describe('with failOnError', () => {
             const optionalString = stringConverter.optional('failOnError');
 
-            it('should convert a valid value  or undefined as expected', () => {
+            test('converts a valid value  or undefined as expected', () => {
                 ['a string', '', 'true', '10', undefined].forEach((v) => {
-                    const result = optionalString.convert(v);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toEqual(v);
-                    }
+                    expect(optionalString.convert(v)).toSucceedWith(v);
                 });
             });
-            it('should fail for an invalid value', () => {
+            test('fails for an invalid value', () => {
                 [10, true, [], (): string => 'hello'].forEach((v) => {
-                    const result = optionalString.convert(v);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(/not a string/i);
-                    }
+                    expect(optionalString.convert(v)).toFailWith(/not a string/i);
                 });
             });
         });
@@ -75,30 +68,22 @@ describe('Converter class', () => {
         describe('with ignoreErrors', () => {
             const optionalString = stringConverter.optional('ignoreErrors');
 
-            it('should convert a valid value or undefined as expected', () => {
+            test('converts a valid value or undefined as expected', () => {
                 ['a string', '', 'true', '10', undefined].forEach((v) => {
-                    const result = optionalString.convert(v);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toEqual(v);
-                    }
+                    expect(optionalString.convert(v)).toSucceedWith(v);
                 });
             });
-            it('should succeed and return undefined for an invalid value', () => {
+            test('succeeds and returns undefined for an invalid value', () => {
                 [10, true, [], (): string => 'hello'].forEach((v) => {
-                    const result = optionalString.convert(v);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toBeUndefined();
-                    }
+                    expect(optionalString.convert(v)).toSucceedWith(undefined);
                 });
             });
         });
 
         describe('with default conversion', () => {
-            it('should ignore errors', () => {
+            test('ignores errors', () => {
                 const optionalString = stringConverter.optional();
-                expect(optionalString.convert(true).isSuccess()).toBe(true);
+                expect(optionalString.convert(true)).toSucceed();
             });
         });
     });
@@ -113,20 +98,12 @@ describe('Converter class', () => {
         };
         const mappingConverter = numberConverter.map(mapper);
 
-        it('should apply a mapping function to a sucessful conversion', () => {
-            const result = mappingConverter.convert(3);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(targetString.substring(0, 3));
-            }
+        test('applies a mapping function to a sucessful conversion', () => {
+            expect(mappingConverter.convert(3)).toSucceedWith(targetString.substring(0, 3));
         });
 
-        it('should report a mapping failure for an otherwise successful conversion', () => {
-            const result = mappingConverter.convert(-1);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/out of range/i);
-            }
+        test('reports a mapping failure for an otherwise successful conversion', () => {
+            expect(mappingConverter.convert(-1)).toFailWith(/out of range/i);
         });
 
         it('should report a conversion failure without applying the mapping function', () => {
@@ -141,33 +118,21 @@ describe('Converter class', () => {
     describe('withConstraint method', () => {
         describe('with a boolean constraint', () => {
             const constrained = numberConverter.withConstraint((n) => n >= 0 && n <= 100);
-            it('should convert a valid value as expected', () => {
+            test('converts a valid value as expected', () => {
                 [0, 100, '50'].forEach((v) => {
-                    const result = constrained.convert(v);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toEqual(Number(v));
-                    }
+                    expect(constrained.convert(v)).toSucceedWith(Number(v));
                 });
             });
 
-            it('should fail for an otherwise valid value that does not meet a boolean constraint', () => {
+            test('fails for an otherwise valid value that does not meet a boolean constraint', () => {
                 [-1, 200, '101'].forEach((v) => {
-                    const result = constrained.convert(v);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(/constraint/i);
-                    }
+                    expect(constrained.convert(v)).toFailWith(/constraint/i);
                 });
             });
 
-            it('should propagate the error for an invalid value', () => {
+            test('propagates the error for an invalid value', () => {
                 ['hello', {}, true].forEach((v) => {
-                    const result = constrained.convert(v);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(/not a number/i);
-                    }
+                    expect(constrained.convert(v)).toFailWith(/not a number/i);
                 });
             });
         });
@@ -177,33 +142,21 @@ describe('Converter class', () => {
                 return (n >= 0 && n <= 100) ? succeed(n) : fail('out of range');
             });
 
-            it('should convert a valid value as expected', () => {
+            test('converts a valid value as expected', () => {
                 [0, 100, '50'].forEach((v) => {
-                    const result = constrained.convert(v);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toEqual(Number(v));
-                    }
+                    expect(constrained.convert(v)).toSucceedWith(Number(v));
                 });
             });
 
-            it('should fail for an otherwise valid value that does not meet a result constraint', () => {
+            test('fails for an otherwise valid value that does not meet a result constraint', () => {
                 [-1, 200, '101'].forEach((v) => {
-                    const result = constrained.convert(v);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(/out of range/i);
-                    }
+                    expect(constrained.convert(v)).toFailWith(/out of range/i);
                 });
             });
 
-            it('should propagate the error for an invalid value', () => {
+            test('propagates the error for an invalid value', () => {
                 ['hello', {}, true].forEach((v) => {
-                    const result = constrained.convert(v);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(/not a number/i);
-                    }
+                    expect(constrained.convert(v)).toFailWith(/not a number/i);
                 });
             });
         });
