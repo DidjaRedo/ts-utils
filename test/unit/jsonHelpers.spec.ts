@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import '../helpers/jestHelpers';
+import '../helpers/jest';
 import { readJsonFileSync, writeJsonFileSync } from '../../src/jsonHelpers';
 import fs from 'fs';
 
