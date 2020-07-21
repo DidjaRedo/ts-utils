@@ -19,7 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import '../helpers/jestHelpers';
+import 'jest-extended';
+import '../helpers/jest';
 import {
     Failure,
     Result,
@@ -29,13 +30,14 @@ import {
     fail,
     mapResults,
     mapSuccess,
+    populateObject,
     succeed,
 } from '../../src';
 
 describe('Result module', () => {
     describe('Success class', () => {
         describe('getValueOrThrow method', () => {
-            it('should return the value and not throw', () => {
+            test('returns the value and not throw', () => {
                 const value = 'hello';
                 const s = new Success(value);
                 let gotValue: string|undefined;
@@ -48,7 +50,7 @@ describe('Result module', () => {
         });
 
         describe('getValueOrDefault method', () => {
-            it('should return the value and not throw', () => {
+            test('returns the value and not throw', () => {
                 const value = 'hello';
                 const s = new Success(value);
                 let gotValue: string|undefined;
@@ -60,7 +62,7 @@ describe('Result module', () => {
             });
 
             describe('with an undefined value', () => {
-                it('should return the supplied default and not throw', () => {
+                test('returns the supplied default and not throw', () => {
                     const dflt = 'default value';
                     const s = new Success<string|undefined>(undefined);
                     let gotValue: string|undefined;
@@ -73,13 +75,13 @@ describe('Result module', () => {
         });
 
         describe('onSuccess method', () => {
-            it('should call the continuation', () => {
+            test('calls the continuation', () => {
                 const cb = jest.fn();
                 succeed('hello').onSuccess(cb);
                 expect(cb).toHaveBeenCalled();
             });
 
-            it('should return any result from the continuation', () => {
+            test('returns any result from the continuation', () => {
                 let result = succeed('hello').onSuccess(() => succeed('goodbye'));
                 expect(result.isSuccess()).toBe(true);
                 if (result.isSuccess()) {
@@ -95,7 +97,7 @@ describe('Result module', () => {
         });
 
         describe('onFailure method', () => {
-            it('should not call the continuation and should return the original result', () => {
+            test('calls the continuation and returns the original result', () => {
                 const cb = jest.fn((_: string): Result<string> => fail('oops'));
                 const result = succeed('hello').onFailure(cb);
                 expect(cb).not.toHaveBeenCalled();
@@ -109,7 +111,7 @@ describe('Result module', () => {
 
     describe('Failure class', () => {
         describe('getValueOrThrow method', () => {
-            it('should throw the message', () => {
+            test('throws the message', () => {
                 const errorMessage = 'this is an error message';
                 const f = new Failure(errorMessage);
 
@@ -118,7 +120,7 @@ describe('Result module', () => {
         });
 
         describe('getValueOrDefault method', () => {
-            it('should return undefined if default is omitted', () => {
+            test('returns undefined if default is omitted', () => {
                 const f = new Failure<string>('this is an error message');
                 let gotValue: string|undefined;
 
@@ -128,7 +130,7 @@ describe('Result module', () => {
                 expect(gotValue).toBeUndefined();
             });
 
-            it('should return the supplied default and not throw', () => {
+            test('returns the supplied default and does not throw', () => {
                 const dflt = 'default value';
                 const f = new Failure<string>('this is an error message');
                 let gotValue: string|undefined;
@@ -139,108 +141,8 @@ describe('Result module', () => {
             });
         });
 
-        describe('captureResult method', () => {
-            it('should return success and the value if the method does not throw', () => {
-                const successfulReturn = 'This is a successful return';
-                const result = captureResult(() => {
-                    return successfulReturn;
-                });
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toBe(successfulReturn);
-                }
-            });
-
-            it('should return failure and the thrown message if the method throws', () => {
-                const failedReturn = 'This is a successful return';
-                const result = captureResult(() => {
-                    throw new Error(failedReturn);
-                });
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toBe(failedReturn);
-                }
-            });
-        });
-
-        describe('mapResults method', () => {
-            const strings = ['string1', 'STRING2', 'String_3'];
-            const results = strings.map((s) => succeed(s));
-            it('should report all values if all results are successful', () => {
-                const result = mapResults(results);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toEqual(strings);
-                }
-            });
-
-            it('should report an error if any results failed', () => {
-                const errors = ['Biff!', 'Pow!', 'Bam!'];
-                const errorResults = errors.map((s) => fail(s));
-                const badResults = [...results, ...errorResults];
-                const result = mapResults(badResults);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    for (const e of errors) {
-                        expect(result.message).toContain(e);
-                    }
-                }
-            });
-        });
-
-        describe('mapSuccess method', () => {
-            const strings = ['string1', 'STRING2', 'String_3'];
-            const results = [...strings.map((s) => succeed(s)), fail('failure')];
-            it('should report all successful values if any results are successful', () => {
-                const result = mapSuccess(results);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toEqual(strings);
-                }
-            });
-
-            it('should report an error if all results failed', () => {
-                const errors = ['Biff!', 'Pow!', 'Bam!'];
-                const errorResults = errors.map((s) => fail(s));
-                const badResults = [...errorResults];
-                const result = mapSuccess(badResults);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    for (const e of errors) {
-                        expect(result.message).toContain(e);
-                    }
-                }
-            });
-        });
-
-        describe('allSucceed method', () => {
-            const strings = ['string1', 'STRING2', 'String_3'];
-            const results = strings.map((s) => succeed(s));
-            it('should return true if all results are successful', () => {
-                const result = allSucceed(results, true);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toBe(true);
-                }
-            });
-
-            it('should report an error if any results failed', () => {
-                const errors = ['Biff!', 'Pow!', 'Bam!'];
-                const errorResults = errors.map((s) => fail(s));
-                const badResults = [...results, ...errorResults];
-                const result = allSucceed(badResults, true);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    for (const e of errors) {
-                        expect(result.message).toContain(e);
-                    }
-                }
-            });
-        });
-
-
         describe('onSuccess method', () => {
-            it('should not call the continuation and should return the original result', () => {
+            test('does not call the continuation and returns the original result', () => {
                 const cb = jest.fn((_: unknown): Result<string> => fail('oops'));
                 const result = fail('oops').onSuccess(cb);
                 expect(cb).not.toHaveBeenCalled();
@@ -252,13 +154,13 @@ describe('Result module', () => {
         });
 
         describe('onFailure method', () => {
-            it('should call the continuation', () => {
+            test('calls the continuation', () => {
                 const cb = jest.fn();
                 fail('oops').onFailure(cb);
                 expect(cb).toHaveBeenCalled();
             });
 
-            it('should return any result from the continuation', () => {
+            test('returns any result from the continuation', () => {
                 let result = fail('bad').onFailure(() => fail('double bad'));
                 expect(result.isFailure()).toBe(true);
                 if (result.isFailure()) {
@@ -272,62 +174,194 @@ describe('Result module', () => {
                 }
             });
         });
+
+        describe('toString method', () => {
+            test('returns the message', () => {
+                expect(new Failure('oops').toString()).toBe('oops');
+            });
+        });
     });
 
-    describe('custom matcher tests', () => {
-        it('should correctly report success or failure', () => {
-            expect(succeed('hello')).toSucceed();
-            expect(succeed('hello')).toSucceedWith('hello');
-            expect(succeed('hello')).not.toSucceedWith('goodbye');
-            expect(fail('oops')).not.toSucceed();
-            expect(fail('oops')).not.toSucceedWith('oops');
-
-            expect(fail('oops')).toFail();
-            expect(fail('very long complicated message')).toFailWith(/complicated/i);
-            expect(fail('very long complicated message')).toFailWith('complicated');
-
-            expect(succeed({
-                title: 'A title string',
-                subtitles: ['subtitle 1', 'subtitle 2'],
-            })).toSucceedWith(expect.objectContaining({
-                title: expect.stringMatching(/.*title*/),
-                subtitles: expect.arrayContaining([
-                    'subtitle 1',
-                    expect.stringContaining('2'),
-                ]),
-            }));
-
-            expect(succeed({
-                title: 'A title string',
-                subtitles: ['subtitle 1', 'subtitle 2'],
-            })).not.toSucceedWith(expect.objectContaining({
-                title: expect.stringMatching(/.*title*/),
-                subtitles: expect.arrayContaining([
-                    'subtitle 1',
-                    expect.stringContaining('3'),
-                ]),
-            }));
-
-            expect(succeed({
-                title: 'A title string',
-                subtitles: ['subtitle 1', 'subtitle 2'],
-            })).toSucceedWithCallback((value: { title: string, subtitles: string[] }) => {
-                expect(value.title).toEqual('A title string');
+    describe('captureResult function', () => {
+        test('returns success and the value if the method does not throw', () => {
+            const successfulReturn = 'This is a successful return';
+            const result = captureResult(() => {
+                return successfulReturn;
             });
+            expect(result.isSuccess()).toBe(true);
+            if (result.isSuccess()) {
+                expect(result.value).toBe(successfulReturn);
+            }
+        });
 
-            expect(2).toBeInRange(1, 3);
-            expect(2).toBeInRange(1, 2);
-            expect(2).toBeInRange(2, 5);
-            expect(4).not.toBeInRange(1, 3);
-            expect(4).not.toBeInRange(5, 10);
+        test('returns failure and the thrown message if the method throws', () => {
+            const failedReturn = 'This is a successful return';
+            const result = captureResult(() => {
+                throw new Error(failedReturn);
+            });
+            expect(result.isFailure()).toBe(true);
+            if (result.isFailure()) {
+                expect(result.message).toBe(failedReturn);
+            }
+        });
+    });
 
-            const obj = { name: 'name', value: 'value' };
-            expect('this').toBeOneOf(['this', 7, obj]);
-            expect('that').not.toBeOneOf(['this', 7, obj]);
-            expect(obj).toBeOneOf([obj]);
-            expect({ ...obj }).toBeOneOf([obj]);
-            expect({ ...obj, extra: 'extra' }).not.toBeOneOf([obj]);
-            expect(obj).toBeOneOf(['this', 7, expect.objectContaining({ name: 'name' })]);
+    describe('mapResults function', () => {
+        const strings = ['string1', 'STRING2', 'String_3'];
+        const results = strings.map((s) => succeed(s));
+        test('reports all values if all results are successful', () => {
+            const result = mapResults(results);
+            expect(result.isSuccess()).toBe(true);
+            if (result.isSuccess()) {
+                expect(result.value).toEqual(strings);
+            }
+        });
+
+        test('reports an error if any results failed', () => {
+            const errors = ['Biff!', 'Pow!', 'Bam!'];
+            const errorResults = errors.map((s) => fail(s));
+            const badResults = [...results, ...errorResults];
+            const result = mapResults(badResults);
+            expect(result.isFailure()).toBe(true);
+            if (result.isFailure()) {
+                for (const e of errors) {
+                    expect(result.message).toContain(e);
+                }
+            }
+        });
+    });
+
+    describe('mapSuccess function', () => {
+        const strings = ['string1', 'STRING2', 'String_3'];
+        const results = [...strings.map((s) => succeed(s)), fail('failure')];
+        test('reports all successful values if any results are successful', () => {
+            const result = mapSuccess(results);
+            expect(result.isSuccess()).toBe(true);
+            if (result.isSuccess()) {
+                expect(result.value).toEqual(strings);
+            }
+        });
+
+        test('reports an error if all results failed', () => {
+            const errors = ['Biff!', 'Pow!', 'Bam!'];
+            const errorResults = errors.map((s) => fail(s));
+            const badResults = [...errorResults];
+            const result = mapSuccess(badResults);
+            expect(result.isFailure()).toBe(true);
+            if (result.isFailure()) {
+                for (const e of errors) {
+                    expect(result.message).toContain(e);
+                }
+            }
+        });
+    });
+
+    describe('allSucceed function', () => {
+        const strings = ['string1', 'STRING2', 'String_3'];
+        const results = strings.map((s) => succeed(s));
+        test('returns true if all results are successful', () => {
+            const result = allSucceed(results, true);
+            expect(result.isSuccess()).toBe(true);
+            if (result.isSuccess()) {
+                expect(result.value).toBe(true);
+            }
+        });
+
+        test('reports an error if any results failed', () => {
+            const errors = ['Biff!', 'Pow!', 'Bam!'];
+            const errorResults = errors.map((s) => fail(s));
+            const badResults = [...results, ...errorResults];
+            const result = allSucceed(badResults, true);
+            expect(result.isFailure()).toBe(true);
+            if (result.isFailure()) {
+                for (const e of errors) {
+                    expect(result.message).toContain(e);
+                }
+            }
+        });
+    });
+
+    describe('populateObject function', () => {
+        test('populates an object by invoking each initializer', () => {
+            expect(populateObject({
+                field: () => succeed('field'),
+                numberField: () => succeed(10),
+            })).toSucceedWith({
+                field: 'field',
+                numberField: 10,
+            });
+        });
+
+        test('fails if any initializers fail', () => {
+            expect(populateObject({
+                field: () => succeed('field'),
+                numberField: () => fail('oopsy'),
+            })).toFailWith(/oopsy/i);
+        });
+
+        test('reports errors from all failing initializers', () => {
+            expect(populateObject({
+                field: () => fail('oops 1'),
+                field2: () => fail('oops 2'),
+            })).toFailWith('oops 1\noops 2');
+        });
+
+        test('invokes all initializers even if one fails', () => {
+            const good2 = jest.fn(() => succeed('good 2'));
+            expect(populateObject({
+                field: () => fail('oops 1'),
+                field2: good2,
+                field3: () => fail('oops 3'),
+            })).toFailWith('oops 1\noops 3');
+            expect(good2).toHaveBeenCalled();
+        });
+
+        test('invokes initializers in the specified order', () => {
+            expect(populateObject({
+                field1: (state) => {
+                    return (state.field2 === 'field2')
+                        ? succeed('field1')
+                        : fail('field 2 has not been correctly initialized');
+                },
+                field2: () => succeed('field2'),
+            }, ['field2', 'field1'])).toSucceedWith({
+                field1: 'field1',
+                field2: 'field2',
+            });
+        });
+
+        test('invokes unlisted initializers after listed initializers', () => {
+            expect(populateObject({
+                field3: (state) => succeed(`[${state.field1}, ${state.field2}]`),
+                field1: (state) => {
+                    return (state.field2 === 'field2')
+                        ? succeed('field1')
+                        : fail('field 2 has not been correctly initialized');
+                },
+                field2: () => succeed('field2'),
+            }, ['field2', 'field1'])).toSucceedWith({
+                field1: 'field1',
+                field2: 'field2',
+                field3: '[field1, field2]',
+            });
+        });
+
+        test('fails if order lists a property that has no initializer', () => {
+            interface Thing {
+                field1?: string;
+                field2?: string;
+                field3?: string;
+                field4?: string;
+            }
+            expect(populateObject<Thing>({
+                field3: (state) => succeed(`[${state.field1}, ${state.field2}]`),
+                field1: (state) => {
+                    return (state.field2 === 'field2')
+                        ? succeed('field1')
+                        : fail('field 2 has not been correctly initialized');
+                },
+                field2: () => succeed('field2'),
+            }, ['field2', 'field1', 'field4'])).toFailWith(/is present but/i);
         });
     });
 });

@@ -220,12 +220,21 @@ export type FieldInitializers<T> = { [ key in keyof T ]: (state: Partial<T>) => 
  * @param initializers An object with the shape of the target but with initializer functions for
  * each property.
  */
-export function populateObject<T>(initializers: FieldInitializers<T>): Result<T> {
+export function populateObject<T>(initializers: FieldInitializers<T>, order?: (keyof T)[]): Result<T> {
     const state = {} as { [key in keyof T]: T[key] };
     const errors: string[] = [];
+    const keys: (keyof T)[] = Array.from(order ?? []);
+    const foundKeys = new Set<keyof T>(order);
 
+    // start with the supplied order then append anything else we find
     for (const key in initializers) {
-        // istanbul ignore else
+        if (!foundKeys.has(key)) {
+            keys.push(key);
+            foundKeys.add(key);
+        }
+    }
+
+    for (const key of keys) {
         if (initializers[key]) {
             const result = initializers[key](state);
             if (result.isSuccess()) {
@@ -234,6 +243,9 @@ export function populateObject<T>(initializers: FieldInitializers<T>): Result<T>
             else {
                 errors.push(result.message);
             }
+        }
+        else {
+            errors.push(`populateObject: Key ${key} is present but has no initializer`);
         }
     }
 
