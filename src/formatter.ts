@@ -52,7 +52,8 @@ export function formatList<T>(format: string, items: T[], itemFormatter: Formatt
     return mapResults(items.map((item) => {
         return itemFormatter(format, item);
     })).onSuccess((results: string[]) => {
-        return succeed(results.join('\n'));
+        const filtered = results.filter((s) => (s !== ''));
+        return succeed(filtered.join('\n'));
     });
 }
 
