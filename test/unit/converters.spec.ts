@@ -21,6 +21,7 @@
  */
 import '../helpers/jest';
 import * as Converters from '../../src/converters';
+import { ExtendedArray } from '../../src';
 
 describe('Converters module', () => {
     describe('string converter', () => {
@@ -238,6 +239,52 @@ describe('Converters module', () => {
     });
 
 
+    describe('extendedArrayOf converter', () => {
+        test('converts a valid array', () => {
+            const srcArray = ['s1', 's2', 's3'];
+            expect(Converters.extendedArrayOf('strings', Converters.string).convert(srcArray))
+                .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
+                    expect(got.first()).toSucceedWith('s1');
+                    return true;
+                });
+        });
+
+        test('fails an array which contains values that cannot be converted if onError is "fail"', () => {
+            const srcArray = ['s1', 's2', 's3', 10];
+            expect(Converters.extendedArrayOf('strings', Converters.string, 'failOnError').convert(srcArray))
+                .toFailWith(/not a string/i);
+        });
+
+        test('ignores values that cannot be converted if onError is "ignore"', () => {
+            const validArray = ['s1', 's2', 's3'];
+            const badArray = [100, ...validArray, 10];
+            expect(Converters.extendedArrayOf('strings', Converters.string, 'ignoreErrors').convert(badArray))
+                .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
+                    expect(got.all()).toEqual(validArray);
+                    return true;
+                });
+        });
+
+        test('defaults to onError="failOnError"', () => {
+            expect(Converters.extendedArrayOf('strings', Converters.string).convert([true])).toFail();
+        });
+
+        test('ignores undefined values returned by a converter', () => {
+            const validArray = ['s1', 's2', 's3'];
+            const badArray = [100, ...validArray, 10];
+            expect(Converters.extendedArrayOf('strings', Converters.string.optional()).convert(badArray))
+                .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
+                    expect(got.all()).toEqual(validArray);
+                    return true;
+                });
+        });
+
+        test('fails when converting a non-array', () => {
+            expect(Converters.extendedArrayOf('strings', Converters.string).convert(123))
+                .toFailWith(/not an array/i);
+        });
+    });
+
     describe('rangeOf converter', () => {
         const min = 0;
         const max = 1000;
@@ -431,6 +478,12 @@ describe('Converters module', () => {
 
         test('succeeds with undefined for a non-existent field', () => {
             expect(getFirstString.convert(bad))
+                .toSucceedWith(undefined);
+        });
+
+        test('succeeds with undefined if the converter fails on an undefined field', () => {
+            const ugly = { first: 'test', second: undefined };
+            expect(getSecondNumber.convert(ugly))
                 .toSucceedWith(undefined);
         });
 
