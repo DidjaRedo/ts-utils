@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import '../helpers/jestHelpers';
+import '../helpers/jest';
 import {
     RangeOf,
     Result,
@@ -28,7 +28,7 @@ import {
 
 describe('RangeOf class', () => {
     describe('constructor', () => {
-        it('should throw if min is greater than max', () => {
+        test('throws if min is greater than max', () => {
             const min = 0;
             const max = 1000;
             expect(() => {
@@ -50,15 +50,28 @@ describe('RangeOf class', () => {
                 expect(result?.message).toMatch(/inverted range/i);
             }
         });
+
+        test('succeeds for open-ended ranges', () => {
+            expect(RangeOf.createRange({ min: 0 })).toSucceed();
+            expect(RangeOf.createRange({ max: 100 })).toSucceed();
+        });
+
+        test('creates an open-ended range if nothing is specified', () => {
+            expect(RangeOf.createRange()).toSucceedAndSatisfy((r: RangeOf<number>) => {
+                expect(r.min).toBeUndefined();
+                expect(r.max).toBeUndefined();
+                return true;
+            });
+        });
     });
 
     describe('includes method', () => {
-        it('should succeed for an empty range', () => {
+        test('succeeds for an empty range', () => {
             const range = new RangeOf<number>();
             expect(range.includes(-1)).toBe(true);
         });
 
-        it('should succeed for an item equal to or later than the start of an endless range', () => {
+        test('succeeds for an item equal to or later than the start of an endless range', () => {
             const min = 0;
             const max = undefined;
             const range = new RangeOf<number>(min, max);
@@ -66,7 +79,7 @@ describe('RangeOf class', () => {
             expect(range.includes(100000000)).toBe(true);
         });
 
-        it('should succeed for an item before the end of an startless range', () => {
+        test('succeeds for an item before the end of an startless range', () => {
             const min = undefined;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
@@ -75,7 +88,7 @@ describe('RangeOf class', () => {
             expect(range.includes(max)).toBe(false);
         });
 
-        it('should succeed for an item within the range min <= i < max', () => {
+        test('succeeds for an item within the range min <= i < max', () => {
             const min = -1000;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
@@ -85,21 +98,21 @@ describe('RangeOf class', () => {
             expect(range.includes(max)).toBe(false);
         });
 
-        it('should fail for an item before the start of an endless range', () => {
+        test('fails for an item before the start of an endless range', () => {
             const min = 0;
             const max = undefined;
             const range = new RangeOf<number>(min, max);
             expect(range.includes(-1000)).toBe(false);
         });
 
-        it('should fail for an item after the end of a startless range', () => {
+        test('fails for an item after the end of a startless range', () => {
             const min = undefined;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
             expect(range.includes(10000)).toBe(false);
         });
 
-        it('should fail for an item outside of a range', () => {
+        test('fails for an item outside of a range', () => {
             const min = -1000;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
@@ -109,14 +122,14 @@ describe('RangeOf class', () => {
     });
 
     describe('findTransition method', () => {
-        it('should return min for a value before the start of a range', () => {
+        test('returns min for a value before the start of a range', () => {
             const min = -1000;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
             expect(range.findTransition(-2000)).toBe(min);
         });
 
-        it('should return max for a value inside of a range inclusive of start', () => {
+        test('returns max for a value inside of a range inclusive of start', () => {
             const min = -1000;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
@@ -124,28 +137,28 @@ describe('RangeOf class', () => {
             expect(range.findTransition(min)).toBe(max);
         });
 
-        it('should return max for a value inside of a startless range exclusive of end', () => {
+        test('returns max for a value inside of a startless range exclusive of end', () => {
             const min = undefined;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
             expect(range.findTransition(0)).toBe(max);
-            expect(range.findTransition(max)).toBe(undefined);
+            expect(range.findTransition(max)).toBeUndefined();
         });
 
-        it('should return min for a value before the start of an endless range', () => {
+        test('returns min for a value before the start of an endless range', () => {
             const min = -1000;
             const max = undefined;
             const range = new RangeOf<number>(min, max);
             expect(range.findTransition(-2000)).toBe(min);
-            expect(range.findTransition(min)).toBe(undefined);
+            expect(range.findTransition(min)).toBeUndefined();
         });
 
-        it('should return undefined for a value after the end of a range exclusive', () => {
+        test('returns undefined for a value after the end of a range exclusive', () => {
             const min = -1000;
             const max = 1000;
             const range = new RangeOf<number>(min, max);
             expect(range.findTransition(2000)).toBeUndefined();
-            expect(range.findTransition(max)).toBe(undefined);
+            expect(range.findTransition(max)).toBeUndefined();
         });
     });
 });
