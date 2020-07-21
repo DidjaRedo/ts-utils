@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import '../helpers/jestHelpers';
+import '../helpers/jest';
 import { InMemoryLogger, LogLevel, Logger, LoggerBase, NoOpLogger } from '../../src/logger';
 import {
     Result,
@@ -51,7 +51,7 @@ describe('Logger class', () => {
     }
 
     describe('InMemoryLogger classe', () => {
-        it('should log everything for logLevel "detail"', () => {
+        test('logs everything for logLevel "detail"', () => {
             const logger = new InMemoryLogger('detail');
             const results = logEverything(logger);
             expect(logger.messages).toEqual([
@@ -68,7 +68,7 @@ describe('Logger class', () => {
             expect(logger.silent).toEqual([]);
         });
 
-        it('should omit "detail" for logLevel "info"', () => {
+        test('omits "detail" for logLevel "info"', () => {
             const logger = new InMemoryLogger('info');
             const results = logEverything(logger);
             expect(logger.messages).toEqual([
@@ -85,7 +85,7 @@ describe('Logger class', () => {
             expect(logger.silent).toEqual([]);
         });
 
-        it('should omit "detail" and "info" for logLevel "warning"', () => {
+        test('omits "detail" and "info" for logLevel "warning"', () => {
             const logger = new InMemoryLogger('warning');
             const results = logEverything(logger);
             expect(logger.messages).toEqual([
@@ -102,7 +102,7 @@ describe('Logger class', () => {
             expect(logger.silent).toEqual([]);
         });
 
-        it('should display only errors and explicit logs for logLevel "error"', () => {
+        test('displays only errors and explicit logs for logLevel "error"', () => {
             const logger = new InMemoryLogger('error');
             const results = logEverything(logger);
             expect(logger.messages).toEqual([
@@ -112,14 +112,14 @@ describe('Logger class', () => {
             expect(results.detail).toSucceedWith(undefined);
             expect(results.info).toSucceedWith(undefined);
             expect(results.warning).toSucceedWith(undefined);
-            expect(results.warnAndFail).toFailWith('');
+            expect(results.warnAndFail).toFailWith(messages.warning);
             expect(results.error).toFailWith(messages.error);
             expect(results.default).toSucceedWith(message);
 
             expect(logger.silent).toEqual([]);
         });
 
-        it('should send suppress everything and send explicit log messages to the silent channel for logLevel "silent"', () => {
+        test('suppresses everything and sends explicit log messages to the silent channel for logLevel "silent"', () => {
             const logger = new InMemoryLogger('silent');
             const results = logEverything(logger);
 
@@ -134,14 +134,14 @@ describe('Logger class', () => {
             expect(logger.silent).toEqual([message]);
         });
 
-        it('should concatenate parameters as strings', () => {
+        test('concatenates parameters as strings', () => {
             const logger = new InMemoryLogger();
             logger.log('This is a string with an embedded ', 2, ' and a boolean ', true);
             expect(logger.messages).toEqual(['This is a string with an embedded 2 and a boolean true']);
         });
 
         describe('clear method', () => {
-            it('should clear both messages and silent', () => {
+            test('clears both messages and silent', () => {
                 const logger = new InMemoryLogger();
                 logger.log('message');
                 logger.logLevel = 'silent';
@@ -156,12 +156,12 @@ describe('Logger class', () => {
     });
 
     describe('NoOpLogger class', () => {
-        it('should return successfully when logging', () => {
+        test('returns successfully when logging', () => {
             const logger = new NoOpLogger('detail');
             expect(() => logEverything(logger)).not.toThrow();
         });
 
-        it('should return successfully when silent', () => {
+        test('returns successfully when silent', () => {
             const logger = new NoOpLogger('silent');
             expect(() => logEverything(logger)).not.toThrow();
         });
@@ -177,7 +177,7 @@ describe('Logger class', () => {
             }
         }
 
-        it('should return \'unknown error\' if the inner logger returns undefined', () => {
+        test('returns \'unknown error\' if the inner logger returns undefined', () => {
             const logger = new BogusLogger('detail');
             const results = logEverything(logger);
             expect(results.detail).toSucceedWith(undefined);

@@ -25,8 +25,8 @@ import { readJsonFileSync, writeJsonFileSync } from '../../src/jsonHelpers';
 import fs from 'fs';
 
 describe('JsonHelpers module', () => {
-    describe('loadJsonFile method', () => {
-        it('should return a requested json file', () => {
+    describe('readJsonFilSync function', () => {
+        test('returns a requested json file', () => {
             const path = 'path/to/some/file.json';
             const payload = { someProperty: 'some value', prop: [1, 2] };
             jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
@@ -40,7 +40,7 @@ describe('JsonHelpers module', () => {
             expect(readJsonFileSync(path)).toSucceedWith(payload);
         });
 
-        it('should propagate an error', () => {
+        test('propagates any error', () => {
             const path = 'path/to/some/file.json';
             jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
                 if (typeof gotPath !== 'string') {
@@ -54,8 +54,8 @@ describe('JsonHelpers module', () => {
         });
     });
 
-    describe('saveJsonFile method', () => {
-        it('should save to the requested json file', () => {
+    describe('writeJsonFileSync function', () => {
+        test('saves to the requested json file', () => {
             const path = 'path/to/some/file.json';
             const payload = { someProperty: 'some value', prop: [1, 2] };
             jest.spyOn(fs, 'writeFileSync').mockImplementation((gotPath: unknown, gotPayload: unknown) => {
@@ -69,7 +69,7 @@ describe('JsonHelpers module', () => {
             expect(writeJsonFileSync(path, payload)).toSucceedWith(true);
         });
 
-        it('should propagate an error', () => {
+        test('propagates an error', () => {
             const path = 'path/to/some/file.json';
             const payload = { someProperty: 'some value', prop: [1, 2] };
             jest.spyOn(fs, 'writeFileSync').mockImplementation((gotPath: unknown) => {

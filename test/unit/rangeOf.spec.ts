@@ -38,7 +38,7 @@ describe('RangeOf class', () => {
     });
 
     describe('create static method', () => {
-        it('should fail if end is greater than end', () => {
+        test('fails if end is greater than end', () => {
             const min = 0;
             const max = 1000;
             let result: Result<RangeOf<number>>|undefined;
