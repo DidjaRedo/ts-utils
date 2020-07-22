@@ -19,35 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import '../helpers/jestHelpers';
+import '../helpers/jest';
 import * as Converters from '../../src/converters';
+import { ExtendedArray } from '../../src';
 
 describe('Converters module', () => {
     describe('string converter', () => {
-        it('should convert valid strings', () => {
+        test('converts valid strings', () => {
             ['A string', '1', 'true', ''].forEach((s) => {
-                const result = Converters.string.convert(s);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toEqual(s);
-                }
+                expect(Converters.string.convert(s)).toSucceedWith(s);
             });
         });
 
-        it('should fail for non-string values strings', () => {
+        test('fails for non-string values strings', () => {
             [1, true, {}, (): string => 'hello', ['true']].forEach((v) => {
-                const result = Converters.string.convert(v);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/not a string/i);
-                }
+                expect(Converters.string.convert(v)).toFailWith(/not a string/i);
             });
         });
     });
 
     describe('enumerated values converter', () => {
         const pie = Converters.enumeratedValue<'apple'|'blueberry'|'cherry'>(['apple', 'blueberry', 'cherry']);
-        it('should convert valid enumerated values', () => {
+        test('converts valid enumerated values', () => {
             [
                 'apple', 'blueberry', 'cherry',
             ].forEach((test) => {
@@ -55,7 +48,7 @@ describe('Converters module', () => {
             });
         });
 
-        it('should fail for invalid enumerated values', () => {
+        test('fails for invalid enumerated values', () => {
             [
                 'german chocolate',
                 'birthday',
@@ -66,53 +59,33 @@ describe('Converters module', () => {
     });
 
     describe('number converter', () => {
-        it('should convert valid numbers and numeric strings', () => {
+        test('converts valid numbers and numeric strings', () => {
             [-1, 0, 10, '100', '0', '-10'].forEach((v) => {
-                const result = Converters.number.convert(v);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toEqual(Number(v));
-                }
+                expect(Converters.number.convert(v)).toSucceedWith(Number(v));
             });
         });
 
-        it('should fail for non-numbers and numeric strings', () => {
+        test('fails for non-numbers and numeric strings', () => {
             ['test', true, '10der', '100 tests', {}, [], (): number => 100].forEach((v) => {
-                const result = Converters.number.convert(v);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/not a number/i);
-                }
+                expect(Converters.number.convert(v)).toFailWith(/not a number/i);
             });
         });
     });
 
     describe('boolean converter', () => {
-        it('should convert booleans and boolean strings', () => {
+        test('fails booleans and boolean strings', () => {
             [true, 'true', 'TRUE', 'True'].forEach((v) => {
-                const result = Converters.boolean.convert(v);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toBe(true);
-                }
+                expect(Converters.boolean.convert(v)).toSucceedWith(true);
             });
 
             [false, 'false', 'FALSE', 'False'].forEach((v) => {
-                const result = Converters.boolean.convert(v);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toBe(false);
-                }
+                expect(Converters.boolean.convert(v)).toSucceedWith(false);
             });
         });
 
-        it('should fail for non-booleans or non-boolean strings', () => {
+        test('fails for non-booleans or non-boolean strings', () => {
             [1, 0, -1, {}, [], (): boolean => true, 'truthy', 'f', 't'].forEach((v) => {
-                const result = Converters.boolean.convert(v);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/not a boolean/i);
-                }
+                expect(Converters.boolean.convert(v)).toFailWith(/not a boolean/i);
             });
         });
     });
@@ -122,32 +95,27 @@ describe('Converters module', () => {
         const allStrings = Converters.delimitedString('|', 'all');
         const filteredStrings = Converters.delimitedString('|', 'filtered');
 
-        it('should split a delimited string correctly', () => {
+        test('splits a delimited string correctly', () => {
             [
                 { test: 'a|b|c', expect: ['a', 'b', 'c'] },
                 { test: 'a||c', expect: ['a', 'c'], all: ['a', '', 'c'] },
             ].forEach((t) => {
                 for (const converter of [strings, filteredStrings, allStrings]) {
-                    const result = converter.convert(t.test);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
+                    expect(converter.convert(t.test)).toSucceedAndSatisfy((got: string[]) => {
                         if (t.all && (converter === allStrings)) {
-                            expect(result.value).toEqual(t.all);
+                            expect(got).toEqual(t.all);
                         }
                         else {
-                            expect(result.value).toEqual(t.expect);
+                            expect(got).toEqual(t.expect);
                         }
-                    }
+                        return true;
+                    });
                 }
             });
         });
 
-        it('should fail for a non-string', () => {
-            const result = strings.convert(true);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a string/i);
-            }
+        test('fails for a non-string', () => {
+            expect(strings.convert(true)).toFailWith(/not a string/i);
         });
     });
 
@@ -156,17 +124,13 @@ describe('Converters module', () => {
             const stringFirst = Converters.oneOf<string|number>([Converters.string, Converters.number]);
             const numFirst = Converters.oneOf<string|number>([Converters.number, Converters.string]);
 
-            it('should convert a value with the first converter that succeeds, ignoring errors', () => {
+            test('converts a value with the first converter that succeeds, ignoring errors', () => {
                 [
                     { src: 'Test', expect: 'Test' },
                     { src: 10, expect: 10 },
                     { src: '100', expect: '100' },
                 ].forEach((t) => {
-                    const result = stringFirst.convert(t.src);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toBe(t.expect);
-                    }
+                    expect(stringFirst.convert(t.src)).toSucceedWith(t.expect);
                 });
 
                 [
@@ -174,20 +138,12 @@ describe('Converters module', () => {
                     { src: 10, expect: 10 },
                     { src: '100', expect: 100 },
                 ].forEach((t) => {
-                    const result = numFirst.convert(t.src);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toBe(t.expect);
-                    }
+                    expect(numFirst.convert(t.src)).toSucceedWith(t.expect);
                 });
             });
 
-            it('should fail if none of the converters can handle the value', () => {
-                const result = numFirst.convert(true);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/no matching converter/i);
-                }
+            test('fails if none of the converters can handle the value', () => {
+                expect(numFirst.convert(true)).toFailWith(/no matching converter/i);
             });
         });
 
@@ -213,17 +169,13 @@ describe('Converters module', () => {
                 Converters.string.optional('ignoreErrors'),
             ], 'failOnError');
 
-            it('should convert a value with the first converter that returns undefined', () => {
+            test('converts a value with the first converter that returns undefined', () => {
                 [
                     { src: 'Test', expect: 'Test' },
                     { src: 10, expect: 10 },
                     { src: '100', expect: '100' },
                 ].forEach((t) => {
-                    const result = optionalStringFirst.convert(t.src);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toBe(t.expect);
-                    }
+                    expect(optionalStringFirst.convert(t.src)).toSucceedWith(t.expect);
                 });
 
                 [
@@ -231,104 +183,113 @@ describe('Converters module', () => {
                     { src: 10, expect: 10 },
                     { src: '100', expect: 100 },
                 ].forEach((t) => {
-                    const result = optionalNumFirst.convert(t.src);
-                    expect(result.isSuccess()).toBe(true);
-                    if (result.isSuccess()) {
-                        expect(result.value).toBe(t.expect);
-                    }
+                    expect(optionalNumFirst.convert(t.src)).toSucceedWith(t.expect);
                 });
             });
 
-            it('should fail if any of the converters return an error', () => {
+            test('fails if any of the converters return an error', () => {
                 [
                     { src: 10, expect: /not a string/i },
                 ].forEach((t) => {
-                    const result = stringFirst.convert(t.src);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(t.expect);
-                    }
+                    expect(stringFirst.convert(t.src)).toFailWith(t.expect);
                 });
 
                 [
                     { src: 'Test', expect: /not a number/i },
                 ].forEach((t) => {
-                    const result = numFirst.convert(t.src);
-                    expect(result.isFailure()).toBe(true);
-                    if (result.isFailure()) {
-                        expect(result.message).toMatch(t.expect);
-                    }
+                    expect(numFirst.convert(t.src)).toFailWith(t.expect);
                 });
             });
 
-            it('should fail if none of the converters can handle the value', () => {
-                const result = allOptionalNumFirst.convert(true);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/no matching converter/i);
-                }
+            test('fails if none of the converters can handle the value', () => {
+                expect(allOptionalNumFirst.convert(true)).toFailWith(/no matching converter/i);
             });
         });
     });
 
     describe('arrayOf converter', () => {
-        it('should convert a valid array', () => {
+        test('converts a valid array', () => {
             const srcArray = ['s1', 's2', 's3'];
-            const result = Converters.arrayOf(Converters.string).convert(srcArray);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(srcArray);
-            }
+            expect(Converters.arrayOf(Converters.string).convert(srcArray)).toSucceedWith(srcArray);
         });
 
-        it('should fail an array which contains values that cannot be converted if onError is "fail"', () => {
+        test('fails an array which contains values that cannot be converted if onError is "fail"', () => {
             const srcArray = ['s1', 's2', 's3', 10];
-            const result = Converters.arrayOf(Converters.string, 'failOnError').convert(srcArray);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a string/i);
-            }
+            expect(Converters.arrayOf(Converters.string, 'failOnError').convert(srcArray)).toFailWith(/not a string/i);
         });
 
-        it('should ignore values that cannot be converted if onError is "ignore"', () => {
+        test('ignores values that cannot be converted if onError is "ignore"', () => {
             const validArray = ['s1', 's2', 's3'];
             const badArray = [100, ...validArray, 10];
-            const result = Converters.arrayOf(Converters.string, 'ignoreErrors').convert(badArray);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(validArray);
-            }
+            expect(Converters.arrayOf(Converters.string, 'ignoreErrors').convert(badArray)).toSucceedWith(validArray);
         });
 
-        it('should default to onError="failOnError"', () => {
-            expect(Converters.arrayOf(Converters.string).convert([true]).isFailure()).toBe(true);
+        test('defaults to onError="failOnError"', () => {
+            expect(Converters.arrayOf(Converters.string).convert([true])).toFail();
         });
 
-        it('should ignore undefined values returned by a converter', () => {
+        test('ignores undefined values returned by a converter', () => {
             const validArray = ['s1', 's2', 's3'];
             const badArray = [100, ...validArray, 10];
-            const result = Converters.arrayOf(Converters.string.optional()).convert(badArray);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(validArray);
-            }
+            expect(Converters.arrayOf(Converters.string.optional()).convert(badArray)).toSucceedWith(validArray);
         });
-
-        it('should fail when converting a non-array', () => {
-            const result = Converters.arrayOf(Converters.string).convert(123);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not an array/i);
-            }
+        test('fails when converting a non-array', () => {
+            expect(Converters.arrayOf(Converters.string).convert(123)).toFailWith(/not an array/i);
         });
     });
 
+
+    describe('extendedArrayOf converter', () => {
+        test('converts a valid array', () => {
+            const srcArray = ['s1', 's2', 's3'];
+            expect(Converters.extendedArrayOf('strings', Converters.string).convert(srcArray))
+                .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
+                    expect(got.first()).toSucceedWith('s1');
+                    return true;
+                });
+        });
+
+        test('fails an array which contains values that cannot be converted if onError is "fail"', () => {
+            const srcArray = ['s1', 's2', 's3', 10];
+            expect(Converters.extendedArrayOf('strings', Converters.string, 'failOnError').convert(srcArray))
+                .toFailWith(/not a string/i);
+        });
+
+        test('ignores values that cannot be converted if onError is "ignore"', () => {
+            const validArray = ['s1', 's2', 's3'];
+            const badArray = [100, ...validArray, 10];
+            expect(Converters.extendedArrayOf('strings', Converters.string, 'ignoreErrors').convert(badArray))
+                .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
+                    expect(got.all()).toEqual(validArray);
+                    return true;
+                });
+        });
+
+        test('defaults to onError="failOnError"', () => {
+            expect(Converters.extendedArrayOf('strings', Converters.string).convert([true])).toFail();
+        });
+
+        test('ignores undefined values returned by a converter', () => {
+            const validArray = ['s1', 's2', 's3'];
+            const badArray = [100, ...validArray, 10];
+            expect(Converters.extendedArrayOf('strings', Converters.string.optional()).convert(badArray))
+                .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
+                    expect(got.all()).toEqual(validArray);
+                    return true;
+                });
+        });
+
+        test('fails when converting a non-array', () => {
+            expect(Converters.extendedArrayOf('strings', Converters.string).convert(123))
+                .toFailWith(/not an array/i);
+        });
+    });
 
     describe('rangeOf converter', () => {
         const min = 0;
         const max = 1000;
         const converter = Converters.rangeOf(Converters.number);
-        it('should convert a range with valid or omitted min and max specificatons', () => {
+        test('converts a range with valid or omitted min and max specificatons', () => {
             const expected = [
                 { min, max },
                 { min },
@@ -347,78 +308,57 @@ describe('Converters module', () => {
             });
 
             for (let i = 0; i < toConvert.length; i++) {
-                const conversion = converter.convert(toConvert[i]);
-                expect(conversion.isSuccess()).toBe(true);
-                if (conversion.isSuccess()) {
-                    expect(conversion.value).toEqual(expected[i]);
-                }
+                expect(converter.convert(toConvert[i])).toSucceedWith(expected[i]);
             }
         });
 
-        it('should convert and ignore extra fields', () => {
+        test('converts and ignore extra fields', () => {
             const expected = { min, max };
             const conversion = converter.convert({
                 min, max, extra: 'whatever',
             });
-            expect(conversion.isSuccess()).toBe(true);
-            if (conversion.isSuccess()) {
-                expect(conversion.value).toEqual(expected);
-            }
+            expect(conversion).toSucceedWith(expected);
         });
 
-        it('should fail if either min or max is invalid', () => {
+        test('fails if either min or max is invalid', () => {
             const bad = [
                 { min: 'not a number' },
                 { min, max: true },
             ];
             for (const t of bad) {
-                const conversion = converter.convert(t);
-                expect(conversion.isFailure()).toBe(true);
-                if (conversion.isFailure()) {
-                    expect(conversion.message).toMatch(/not a number/i);
-                }
+                expect(converter.convert(t)).toFailWith(/not a number/i);
             }
         });
 
-        it('should fail if the range is inverted', () => {
+        test('fails if the range is inverted', () => {
             const bad = { min: max, max: min };
-            const conversion = converter.convert(bad);
-            expect(conversion.isFailure()).toBe(true);
-            if (conversion.isFailure()) {
-                expect(conversion.message).toMatch(/inverted/i);
-            }
+            expect(converter.convert(bad)).toFailWith(/inverted/i);
         });
     });
 
     describe('recordOf converter', () => {
-        it('should convert a valid object', () => {
+        test('converts a valid object', () => {
             const srcObject = {
                 p1: 's1',
                 p2: 's2',
                 p3: 's3',
             };
-            const result = Converters.recordOf(Converters.string).convert(srcObject);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(srcObject);
-            }
+            expect(Converters.recordOf(Converters.string).convert(srcObject))
+                .toSucceedWith(srcObject);
         });
 
-        it('should fail an object which contains values that cannot be converted if onError is "fail"', () => {
+        test('fails an object which contains values that cannot be converted if onError is "fail"', () => {
             const srcObject = {
                 p1: 's1',
                 p2: 's2',
                 p3: 's3',
                 p4: 10,
             };
-            const result = Converters.recordOf(Converters.string, 'fail').convert(srcObject);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a string/i);
-            }
+            expect(Converters.recordOf(Converters.string, 'fail').convert(srcObject))
+                .toFailWith(/not a string/i);
         });
 
-        it('should ignore inherited or non-enumerable properties even if onError is "fail"', () => {
+        test('ignores inherited or non-enumerable properties even if onError is "fail"', () => {
             interface BaseObject {
                 p1: string;
                 p2: string;
@@ -445,56 +385,49 @@ describe('Converters module', () => {
             expect(srcObject.hasOwnProperty('base1')).toBe(false);
             expect(srcObject.p4).toBe(10);
 
-            const result = Converters.recordOf(Converters.string, 'fail').convert(srcObject);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                const value = result.value as Record<string, unknown>;
-                expect(value.p1).toEqual(srcObject.p1);
-                expect(value.p2).toEqual(srcObject.p2);
-                expect(value.p3).toEqual(srcObject.p3);
-                expect(value.p4).toBeUndefined();
-                expect(value.base1).toBeUndefined();
-            }
+            expect(Converters.recordOf(Converters.string, 'fail').convert(srcObject))
+                .toSucceedAndSatisfy((obj) => {
+                    const value = obj as Record<string, unknown>;
+                    expect(value.p1).toEqual(srcObject.p1);
+                    expect(value.p2).toEqual(srcObject.p2);
+                    expect(value.p3).toEqual(srcObject.p3);
+                    expect(value.p4).toBeUndefined();
+                    expect(value.base1).toBeUndefined();
+                    return true;
+                });
         });
 
-        it('should ignore values that cannot be converted if onError is "ignore"', () => {
+        test('ignores values that cannot be converted if onError is "ignore"', () => {
             const validObject = {
                 p1: 's1',
                 p2: 's2',
                 p3: 's3',
             };
             const badObject = { ...validObject, badField: 10 };
-            const result = Converters.recordOf(Converters.string, 'ignore').convert(badObject);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(validObject);
-            }
+            expect(
+                Converters.recordOf(Converters.string, 'ignore').convert(badObject)
+            ).toSucceedWith(validObject);
         });
 
-        it('should default to onError="fail"', () => {
-            expect(Converters.recordOf(Converters.string).convert({ bad: true }).isFailure()).toBe(true);
+        test('defailts to onError="fail"', () => {
+            expect(Converters.recordOf(Converters.string).convert({ bad: true })).toFail();
         });
 
-        it('should ignore undefined values returned by a converter', () => {
+        test('ignores undefined values returned by a converter', () => {
             const validObject = {
                 p1: 's1',
                 p2: 's2',
                 p3: 's3',
             };
             const badObject = { badField: 100, ...validObject };
-            const result = Converters.recordOf(Converters.string.optional()).convert(badObject);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(validObject);
-            }
+            expect(
+                Converters.recordOf(Converters.string.optional()).convert(badObject)
+            ).toSucceedWith(validObject);
         });
 
-        it('should fail when converting a non-object', () => {
-            const result = Converters.recordOf(Converters.string).convert(123);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a string-keyed object/i);
-            }
+        test('fails when converting a non-object', () => {
+            expect(Converters.recordOf(Converters.string).convert(123))
+                .toFailWith(/not a string-keyed object/i);
         });
     });
 
@@ -504,37 +437,25 @@ describe('Converters module', () => {
         const good = { first: 'test', second: 10 };
         const bad = { furst: 10, second: 'test' };
 
-        it('should succeed in converting a correctly-typed field that exists', () => {
-            const result = getFirstString.convert(good);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(good.first);
-            }
+        test('converts a correctly-typed field that exists', () => {
+            expect(getFirstString.convert(good))
+                .toSucceedWith(good.first);
         });
 
-        it('should fail for an incorrectly typed field', () => {
-            const result = getSecondNumber.convert(bad);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a number/i);
-            }
+        test('fails for an incorrectly typed field', () => {
+            expect(getSecondNumber.convert(bad))
+                .toFailWith(/not a number/i);
         });
 
-        it('should fail for a non-existent field', () => {
-            const result = getFirstString.convert(bad);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/field.*not found/i);
-            }
+        test('fails for a non-existent field', () => {
+            expect(getFirstString.convert(bad))
+                .toFailWith(/field.*not found/i);
         });
 
-        it('should fail if the parameter is not an object', () => {
+        test('fails if the parameter is not an object', () => {
             ['hello', 10, true, (): string => 'hello', undefined].forEach((v) => {
-                const result = getFirstString.convert(v);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/non-object/i);
-                }
+                expect(getFirstString.convert(v))
+                    .toFailWith(/non-object/i);
             });
         });
     });
@@ -545,37 +466,31 @@ describe('Converters module', () => {
         const good = { first: 'test', second: 10 };
         const bad = { furst: 10, second: 'test' };
 
-        it('should succeed in converting a correctly-typed field that exists', () => {
-            const result = getFirstString.convert(good);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(good.first);
-            }
+        test('converts a correctly-typed field that exists', () => {
+            expect(getFirstString.convert(good))
+                .toSucceedWith(good.first);
         });
 
-        it('should fail for an incorrectly typed field', () => {
-            const result = getSecondNumber.convert(bad);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a number/i);
-            }
+        test('fails for an incorrectly typed field', () => {
+            expect(getSecondNumber.convert(bad))
+                .toFailWith(/not a number/i);
         });
 
-        it('should succeed with undefined for a non-existent field', () => {
-            const result = getFirstString.convert(bad);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toBeUndefined();
-            }
+        test('succeeds with undefined for a non-existent field', () => {
+            expect(getFirstString.convert(bad))
+                .toSucceedWith(undefined);
         });
 
-        it('should fail if the parameter is not an object', () => {
+        test('succeeds with undefined if the converter fails on an undefined field', () => {
+            const ugly = { first: 'test', second: undefined };
+            expect(getSecondNumber.convert(ugly))
+                .toSucceedWith(undefined);
+        });
+
+        test('fails if the parameter is not an object', () => {
             ['hello', 10, true, (): string => 'hello', undefined].forEach((v) => {
-                const result = getFirstString.convert(v);
-                expect(result.isFailure()).toBe(true);
-                if (result.isFailure()) {
-                    expect(result.message).toMatch(/non-object/i);
-                }
+                expect(getFirstString.convert(v))
+                    .toFailWith(/non-object/i);
             });
         });
     });
@@ -600,7 +515,7 @@ describe('Converters module', () => {
             'numbers',
         ]);
 
-        it('should convert a valid object with missing optional fields', () => {
+        test('converts a valid object with missing optional fields', () => {
             const src = {
                 stringField: 'string1',
                 numField: -1,
@@ -613,14 +528,11 @@ describe('Converters module', () => {
                 boolField: true,
             };
 
-            const result = converter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
         });
 
-        it('should convert a valid object with optional fields present', () => {
+        test('converts a valid object with optional fields present', () => {
             const src = {
                 stringField: 'string1',
                 optionalStringField: 'optional string',
@@ -637,40 +549,32 @@ describe('Converters module', () => {
                 numbers: [-1, 0, 1, 2],
             };
 
-            const result = converter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
         });
 
-        it('should fail if any non-optional fields are missing', () => {
+        test('fails if any non-optional fields are missing', () => {
             const src = {
                 misnamedStringField: 'string1',
                 numField: -1,
                 boolField: true,
             };
-            const result = converter.convert(src);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/stringField not found/i);
-            }
+            expect(converter.convert(src))
+                .toFailWith(/stringField not found/i);
         });
 
-        it('should fail if any non-optional fields are mistyped', () => {
+        test('fails if any non-optional fields are mistyped', () => {
             const src = {
                 stringField: 'string1',
                 numField: true,
                 boolField: -1,
             };
-            const result = converter.convert(src);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a number/i);
-            }
+
+            expect(converter.convert(src))
+                .toFailWith(/not a number/i);
         });
 
-        it('should silently ignore fields without a converter', () => {
+        test('silently ignores fields without a converter', () => {
             const partialConverter = Converters.object<Want>({
                 stringField: Converters.string,
                 optionalStringField: Converters.optionalString,
@@ -694,24 +598,19 @@ describe('Converters module', () => {
                 boolField: true,
             };
 
-            const result = partialConverter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(partialConverter.convert(src))
+                .toSucceedWith(expected);
         });
 
         describe('with partial specified', () => {
-            it('should succeed if any of the added fields are missing', () => {
+            test('succeeds if any of the added fields are missing', () => {
                 const src = {
                     numField: -1,
                     boolField: true,
                 };
-                const result = converter.addPartial(['stringField']).convert(src);
-                expect(result.isSuccess()).toBe(true);
-                if (result.isSuccess()) {
-                    expect(result.value).toEqual(src);
-                }
+
+                expect(converter.addPartial(['stringField']).convert(src))
+                    .toSucceedWith(src);
             });
         });
     });
@@ -733,7 +632,7 @@ describe('Converters module', () => {
             numbers: Converters.field('nums', Converters.arrayOf(Converters.number)).optional(),
         });
 
-        it('should convert a valid object with empty optional fields', () => {
+        test('converts a valid object with empty optional fields', () => {
             const src = {
                 string1: 'string1',
                 num1: -1,
@@ -746,14 +645,11 @@ describe('Converters module', () => {
                 boolField: true,
             };
 
-            const result = converter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
         });
 
-        it('should convert a valid object with optional fields present', () => {
+        test('converts a valid object with optional fields present', () => {
             const src = {
                 string1: 'string1',
                 string2: 'optional string',
@@ -770,40 +666,33 @@ describe('Converters module', () => {
                 numbers: [-1, 0, 1, 2],
             };
 
-            const result = converter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
         });
 
-        it('should fail if any non-optional fields are missing', () => {
+        test('fails if any non-optional fields are missing', () => {
             const src = {
                 misnamedString1: 'string1',
                 num1: -1,
                 b1: true,
             };
-            const result = converter.convert(src);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/string1 not found/i);
-            }
+
+            expect(converter.convert(src))
+                .toFailWith(/string1 not found/i);
         });
 
-        it('should fail if any non-optional fields are mistyped', () => {
+        test('fails if any non-optional fields are mistyped', () => {
             const src = {
                 string1: 'string1',
                 num1: true,
                 b1: -1,
             };
-            const result = converter.convert(src);
-            expect(result.isFailure()).toBe(true);
-            if (result.isFailure()) {
-                expect(result.message).toMatch(/not a number/i);
-            }
+
+            expect(converter.convert(src))
+                .toFailWith(/not a number/i);
         });
 
-        it('should ignore mistyped optional fields', () => {
+        test('ignores mistyped optional fields', () => {
             const src = {
                 string1: 'string1',
                 string2: true,
@@ -817,14 +706,11 @@ describe('Converters module', () => {
                 boolField: true,
             };
 
-            const result = converter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
         });
 
-        it('should silently ignore fields without a converter', () => {
+        test('silently ignores fields without a converter', () => {
             const partialConverter = Converters.transform<Want>({
                 stringField: Converters.field('string1', Converters.string),
                 optionalStringField: Converters.field('string2', Converters.string).optional(),
@@ -848,11 +734,8 @@ describe('Converters module', () => {
                 boolField: true,
             };
 
-            const result = partialConverter.convert(src);
-            expect(result.isSuccess()).toBe(true);
-            if (result.isSuccess()) {
-                expect(result.value).toEqual(expected);
-            }
+            expect(partialConverter.convert(src))
+                .toSucceedWith(expected);
         });
     });
 });

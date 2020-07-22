@@ -23,14 +23,14 @@
 import { Result, fail, succeed } from './result';
 
 export class ExtendedArray<T> extends Array<T> {
-    protected readonly _itemDescription: string;
+    public readonly itemDescription: string;
 
     public constructor(itemDescription: string, ...items: T[]) {
         super(...items);
-        this._itemDescription = itemDescription;
+        this.itemDescription = itemDescription;
     }
 
-    public static isExtendedArray<T>(a: T[]): a is ExtendedArray<T> {
+    public static isExtendedArray<T>(a?: T[]): a is ExtendedArray<T> {
         return a instanceof ExtendedArray;
     }
 
@@ -40,23 +40,23 @@ export class ExtendedArray<T> extends Array<T> {
             return succeed(match[0]);
         }
         if (match.length === 0) {
-            return fail(`${this._itemDescription} not found`);
+            return fail(`${this.itemDescription} not found`);
         }
-        return fail(`${this._itemDescription} matches ${match.length} items`);
+        return fail(`${this.itemDescription} matches ${match.length} items`);
     }
 
     public first(failMessage?: string): Result<T> {
         if (this.length > 0) {
             return succeed(this[0]);
         }
-        return fail(failMessage ?? `${this._itemDescription} not found`);
+        return fail(failMessage ?? `${this.itemDescription} not found`);
     }
 
     public atLeastOne(failMessage?: string): Result<T[]> {
         if (this.length > 0) {
             return succeed(Array.from(this));
         }
-        return fail(failMessage ?? `${this._itemDescription} not found`);
+        return fail(failMessage ?? `${this.itemDescription} not found`);
     }
 
     public all(): T[] {
