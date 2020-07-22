@@ -60,7 +60,6 @@ describe('RangeOf class', () => {
             expect(RangeOf.createRange()).toSucceedAndSatisfy((r: RangeOf<number>) => {
                 expect(r.min).toBeUndefined();
                 expect(r.max).toBeUndefined();
-                return true;
             });
         });
     });

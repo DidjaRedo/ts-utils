@@ -108,7 +108,6 @@ describe('Converters module', () => {
                         else {
                             expect(got).toEqual(t.expect);
                         }
-                        return true;
                     });
                 }
             });
@@ -245,7 +244,6 @@ describe('Converters module', () => {
             expect(Converters.extendedArrayOf('strings', Converters.string).convert(srcArray))
                 .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
                     expect(got.first()).toSucceedWith('s1');
-                    return true;
                 });
         });
 
@@ -261,7 +259,6 @@ describe('Converters module', () => {
             expect(Converters.extendedArrayOf('strings', Converters.string, 'ignoreErrors').convert(badArray))
                 .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
                     expect(got.all()).toEqual(validArray);
-                    return true;
                 });
         });
 
@@ -275,7 +272,6 @@ describe('Converters module', () => {
             expect(Converters.extendedArrayOf('strings', Converters.string.optional()).convert(badArray))
                 .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
                     expect(got.all()).toEqual(validArray);
-                    return true;
                 });
         });
 
@@ -393,7 +389,6 @@ describe('Converters module', () => {
                     expect(value.p3).toEqual(srcObject.p3);
                     expect(value.p4).toBeUndefined();
                     expect(value.base1).toBeUndefined();
-                    return true;
                 });
         });
 
