@@ -10,10 +10,11 @@ declare global {
         interface Matchers<R> {
             /**
              * Use .toSucceedAndSatisfy to verify that a Result<T> is a success
-             * and that the result value matches the supplied predicate
-             * @param {(value: T) => boolean} predicate
+             * and that the supplied test function returns true (or void)
+             * for the resulting value
+             * @param {(value: T) => boolean|void} test
              */
-            toSucceedAndSatisfy<T>(predicate: (value: T) => boolean): R;
+            toSucceedAndSatisfy<T>(test: (value: T) => boolean|void): R;
         }
     }
 }
@@ -30,7 +31,7 @@ function passMessage<T>(received: Result<T>): () => string {
     ].join('\n');
 }
 
-function failMessage<T>(received: Result<T>, cbResult: Result<boolean|undefined>): () => string {
+function failMessage<T>(received: Result<T>, cbResult: Result<boolean|void>): () => string {
     const expected = 'successful callback';
     const got = [printReceivedResult(received)];
     if (cbResult.isFailure()) {
@@ -56,13 +57,13 @@ function failMessage<T>(received: Result<T>, cbResult: Result<boolean|undefined>
 }
 
 export default {
-    toSucceedAndSatisfy: function<T> (this: jest.MatcherContext, received: Result<T>, cb: (value: T) => boolean): jest.CustomMatcherResult {
+    toSucceedAndSatisfy: function<T> (this: jest.MatcherContext, received: Result<T>, test: (value: T) => boolean|void): jest.CustomMatcherResult {
         // For the normal (not '.not') case, we do not want to capture exceptions
         // so that the IDE can display exactly the line on which the failure case.
         // For the .not case, we want to swallow exceptions or expect failures since
         // we're just testing failure and not the reason.
         const capture = this.isNot;
-        const cbResult = predicate(received, cb, capture);
+        const cbResult = predicate(received, test, capture);
         const pass = cbResult.isSuccess() && (cbResult.value === true);
         if (pass) {
             return { pass: true, message: passMessage(received) };
