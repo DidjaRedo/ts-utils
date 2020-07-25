@@ -24,6 +24,8 @@ import '../helpers/jest';
 import {
     RangeOf,
     Result,
+    RangeOfProperties,
+    RangeOfFormats,
 } from '../../src';
 
 describe('RangeOf class', () => {
@@ -158,6 +160,133 @@ describe('RangeOf class', () => {
             const range = new RangeOf<number>(min, max);
             expect(range.findTransition(2000)).toBeUndefined();
             expect(range.findTransition(max)).toBeUndefined();
+        });
+    });
+
+    describe('toFormattedProperties method', () => {
+        function fakeFormat(value: number): string|undefined {
+            return (value === 0) ? undefined : `(${value})`;
+        }
+        test('formats all range combinations', () => {
+            type TestCase = [number|undefined, number|undefined, { min?: string, max?: string }]
+            const tests: TestCase[] = [
+                [10, undefined, { min: '(10)', max: undefined }],
+                [-10, 0, { min: '(-10)', max: undefined }],
+                [undefined, 999, { min: undefined, max: '(999)' }],
+                [0, 999, { min: undefined, max: '(999)' }],
+                [10, 20, { min: '(10)', max: '(20)' }],
+                [0, 0, { min: undefined, max: undefined }],
+            ];
+
+            for (const t of tests) {
+                const range = new RangeOf<number>(t[0], t[1]);
+                expect(range.toFormattedProperties(fakeFormat)).toEqual(t[2]);
+            }
+        });
+    });
+
+    describe('propertiesToString static method', () => {
+        test('formats all range combinations with default formats and no empty value', () => {
+            type TestCase = [RangeOfProperties<number>, string|undefined];
+            const tests: TestCase[] = [
+                [{ min: 10, max: undefined }, '10-'],
+                [{ min: 10, max: 0 }, '10-0'],
+                [{ min: undefined, max: 999 }, '-999'],
+                [{ min: 0, max: 999 }, '0-999'],
+                [{ min: 10, max: 20 }, '10-20'],
+                [{ min: undefined, max: undefined }, undefined],
+                [{ min: 0, max: 0 }, '0-0'],
+            ];
+
+            for (const t of tests) {
+                expect(RangeOf.propertiesToString(t[0])).toEqual(t[1]);
+            }
+        });
+
+        test('formats all range combinations with default formats and an empty value', () => {
+            type TestCase = [RangeOfProperties<number>, string|undefined];
+            const tests: TestCase[] = [
+                [{ min: 10, max: undefined }, '10-'],
+                [{ min: 10, max: 0 }, '10-'],
+                [{ min: undefined, max: 999 }, '-999'],
+                [{ min: 0, max: 999 }, '-999'],
+                [{ min: 10, max: 20 }, '10-20'],
+                [{ min: undefined, max: undefined }, undefined],
+                [{ min: 0, max: 0 }, undefined],
+            ];
+
+            for (const t of tests) {
+                expect(RangeOf.propertiesToString(t[0], undefined, 0)).toEqual(t[1]);
+            }
+        });
+
+        test('formats all range combinations with custom formats and an empty value', () => {
+            type TestCase = [RangeOfProperties<number>, string|undefined];
+            const tests: TestCase[] = [
+                [{ min: 10, max: undefined }, '10..'],
+                [{ min: 10, max: 0 }, '10..'],
+                [{ min: undefined, max: 999 }, '..999'],
+                [{ min: 0, max: 999 }, '..999'],
+                [{ min: 10, max: 20 }, '10..20'],
+                [{ min: undefined, max: undefined }, undefined],
+                [{ min: 0, max: 0 }, undefined],
+            ];
+            const customFormats: RangeOfFormats = {
+                minOnly: '{{min}}..',
+                maxOnly: '..{{max}}',
+                minMax: '{{min}}..{{max}}',
+            };
+
+            for (const t of tests) {
+                expect(RangeOf.propertiesToString(t[0], customFormats, 0)).toEqual(t[1]);
+            }
+        });
+    });
+
+    describe('format method', () => {
+        function fakeFormat(value: number): string|undefined {
+            return (value === 0) ? undefined : `(${value})`;
+        }
+
+        test('formats all range combinations', () => {
+            type TestCase = [number|undefined, number|undefined, string|undefined]
+            const tests: TestCase[] = [
+                [10, undefined, '(10)-'],
+                [-10, 0, '(-10)-'],
+                [undefined, 999, '-(999)'],
+                [0, 999, '-(999)'],
+                [10, 20, '(10)-(20)'],
+                [undefined, undefined, undefined],
+                [0, 0, undefined],
+            ];
+
+            for (const t of tests) {
+                const range = new RangeOf(t[0], t[1]);
+                expect(range.format(fakeFormat)).toEqual(t[2]);
+            }
+        });
+
+        test('formats all range combinations with custom formatters', () => {
+            type TestCase = [number|undefined, number|undefined, string|undefined]
+            const tests: TestCase[] = [
+                [10, undefined, '(10) -'],
+                [-10, 0, '(-10) -'],
+                [undefined, 999, '- (999)'],
+                [0, 999, '- (999)'],
+                [10, 20, '(10) - (20)'],
+                [undefined, undefined, undefined],
+                [0, 0, undefined],
+            ];
+            const customFormats: RangeOfFormats = {
+                minOnly: '{{min}} -',
+                maxOnly: '- {{max}}',
+                minMax: '{{min}} - {{max}}',
+            }
+
+            for (const t of tests) {
+                const range = new RangeOf(t[0], t[1]);
+                expect(range.format(fakeFormat, customFormats)).toEqual(t[2]);
+            }
         });
     });
 });
