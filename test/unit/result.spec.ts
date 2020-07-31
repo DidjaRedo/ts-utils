@@ -28,6 +28,7 @@ import {
     allSucceed,
     captureResult,
     fail,
+    mapFailures,
     mapResults,
     mapSuccess,
     populateObject,
