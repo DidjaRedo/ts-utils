@@ -32,7 +32,9 @@ import {
     mapSuccess,
     populateObject,
     succeed,
+    mapFailures,
 } from '../../src';
+import { InMemoryLogger } from '../../src/logger';
 
 describe('Result module', () => {
     describe('Success class', () => {
@@ -46,6 +48,14 @@ describe('Result module', () => {
                     gotValue = s.getValueOrThrow();
                 }).not.toThrow();
                 expect(gotValue).toEqual(value);
+            });
+
+            test('does not invoke a logger if supplied', () => {
+                const logger = { error: jest.fn() };
+                expect(() => {
+                    succeed('hello').getValueOrThrow(logger);
+                }).not.toThrow();
+                expect(logger.error).not.toHaveBeenCalled();
             });
         });
 
@@ -116,6 +126,24 @@ describe('Result module', () => {
                 const f = new Failure(errorMessage);
 
                 expect(() => f.getValueOrThrow()).toThrowError(errorMessage);
+            });
+
+            test('calls logger if supplied', () => {
+                const logger = { error: jest.fn() };
+                const errorMessage = 'this is an error message';
+                const f = new Failure(errorMessage);
+
+                expect(() => f.getValueOrThrow(logger)).toThrowError(errorMessage);
+                expect(logger.error).toHaveBeenCalledWith(errorMessage);
+            });
+
+            test('works with the utility logger class', () => {
+                const logger = new InMemoryLogger();
+                const errorMessage = 'this is an error message';
+                const f = new Failure(errorMessage);
+
+                expect(() => f.getValueOrThrow(logger)).toThrowError(errorMessage);
+                expect(logger.messages).toEqual([errorMessage]);
             });
         });
 
@@ -253,6 +281,19 @@ describe('Result module', () => {
                     expect(result.message).toContain(e);
                 }
             }
+        });
+    });
+
+    describe('mapFailures function', () => {
+        const strings = ['string1', 'STRING2', 'String_3'];
+        test('reports all error messages ignoring successful results', () => {
+            const results = [fail('failure 1'), ...strings.map((s) => succeed(s)), fail('failure 2')];
+            expect(mapFailures(results)).toEqual(['failure 1', 'failure 2']);
+        });
+
+        test('returns an empty array if all results succeed', () => {
+            const results = strings.map((s) => succeed(s));
+            expect(mapFailures(results)).toEqual([]);
         });
     });
 
