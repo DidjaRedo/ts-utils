@@ -23,9 +23,9 @@
 import '../helpers/jest';
 import {
     RangeOf,
-    Result,
-    RangeOfProperties,
     RangeOfFormats,
+    RangeOfProperties,
+    Result,
 } from '../../src';
 
 describe('RangeOf class', () => {
@@ -281,7 +281,7 @@ describe('RangeOf class', () => {
                 minOnly: '{{min}} -',
                 maxOnly: '- {{max}}',
                 minMax: '{{min}} - {{max}}',
-            }
+            };
 
             for (const t of tests) {
                 const range = new RangeOf(t[0], t[1]);

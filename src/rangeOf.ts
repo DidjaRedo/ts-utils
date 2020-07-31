@@ -32,7 +32,7 @@ export interface RangeOfFormats {
     minOnly: string;
     maxOnly: string;
     minMax: string;
-};
+}
 
 export const DEFAULT_RANGEOF_FORMATS = {
     minOnly: '{{min}}-',

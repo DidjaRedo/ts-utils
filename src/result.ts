@@ -24,10 +24,14 @@ export type Result<T> = Success<T> | Failure<T>;
 export type SuccessContinuation<T, TN> = (value: T) => Result<TN>;
 export type FailureContinuation<T> = (message: string) => Result<T>;
 
+export interface IResultLogger {
+    error(message: string): void;
+}
+
 export interface IResult<T> {
     isSuccess(): this is Success<T>;
     isFailure(): this is Failure<T>;
-    getValueOrThrow(): T;
+    getValueOrThrow(logger?: IResultLogger): T;
     getValueOrDefault(dflt?: T): T|undefined;
     onSuccess<TN>(cb: SuccessContinuation<T, TN>): Result<TN>;
     onFailure(cb: FailureContinuation<T>): Result<T>;
@@ -52,7 +56,7 @@ export class Success<T> implements IResult<T> {
         return this._value;
     }
 
-    public getValueOrThrow(): T {
+    public getValueOrThrow(_logger?: IResultLogger): T {
         return this._value;
     }
 
@@ -88,7 +92,10 @@ export class Failure<T> implements IResult<T> {
         return this._message;
     }
 
-    public getValueOrThrow(): never {
+    public getValueOrThrow(logger?: IResultLogger): never {
+        if (logger !== undefined) {
+            logger.error(this._message);
+        }
         throw new Error(this._message);
     }
 
@@ -189,8 +196,24 @@ export function mapSuccess<T>(resultsIn: Iterable<Result<T>>): Result<T[]> {
 }
 
 /**
+ * Maps an array of Result<T> to an array of strings consisting of all
+ * error messages returned by results in the source array. Ignores
+ * success results and returns an empty array if there were no errors.
+ * @param resultsIn results to be reported
+ */
+export function mapFailures<T>(resultsIn: Iterable<Result<T>>): string[] {
+    const errors: string[] = [];
+    for (const result of resultsIn) {
+        if (result.isFailure()) {
+            errors.push(result.message);
+        }
+    }
+    return errors;
+}
+
+/**
  * Returns success with true if all results are successful.  If any are unsuccessful,
- * returns failure with a concatenade summary of all failure messages.
+ * returns failure with a concatenated summary of all failure messages.
  * @param results The results to be tested.
  */
 export function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: T): Result<T> {
