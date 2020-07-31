@@ -28,11 +28,11 @@ import {
     allSucceed,
     captureResult,
     fail,
+    mapFailures,
     mapResults,
     mapSuccess,
     populateObject,
     succeed,
-    mapFailures,
 } from '../../src';
 import { InMemoryLogger } from '../../src/logger';
 
