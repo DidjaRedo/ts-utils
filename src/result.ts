@@ -173,7 +173,7 @@ export class DetailedFailure<T, TD> extends Failure<T> {
         return true;
     }
 
-    public onSuccess<TN>(_cb: SuccessContinuation<T, TN>): DetailedResult<TN, TD> {
+    public onSuccess<TN>(_cb: DetailedSuccessContinuation<T, TD, TN>): DetailedResult<TN, TD> {
         return new DetailedFailure<TN, TD>(this.message, this._detail);
     }
 
