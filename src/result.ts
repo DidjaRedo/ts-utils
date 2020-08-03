@@ -133,6 +133,29 @@ export function fail<T>(message: string): Failure<T> {
 }
 
 /**
+ * A DetailedFailure reports optional failure details in addition
+ * to the standard failure message.
+ */
+export class DetailedFailure<T, TD> extends Failure<T> {
+    protected _detail?: TD;
+
+    public constructor(message: string, detail?: TD) {
+        super(message);
+        this._detail = detail;
+    }
+
+    public get detail(): TD|undefined {
+        return this._detail;
+    }
+}
+
+export type DetailedResult<T, TD> = Success<T>|DetailedFailure<T, TD>;
+
+export function failWithDetail<T, TD>(message: string, detail?: TD): DetailedFailure<T, TD> {
+    return new DetailedFailure<T, TD>(message, detail);
+}
+
+/**
  * Wraps a function which returns a value of type <T> or throws
  * to produce Success<T> or Failure<T>
  * @param func The method to be captured
