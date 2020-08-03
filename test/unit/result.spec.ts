@@ -22,6 +22,7 @@
 import 'jest-extended';
 import '../helpers/jest';
 import {
+    DetailedResult,
     Failure,
     Result,
     Success,
@@ -216,6 +217,30 @@ describe('Result module', () => {
             const result = failWithDetail('message', 'detail');
             expect(result).toFailWith('message');
             expect(result.detail).toBe('detail');
+        });
+
+        test('isFailure indicates detailed failure', () => {
+            const result = failWithDetail('message', 'detail') as DetailedResult<string, string>;
+            if (result.isFailure()) {
+                expect(result.detail).toBe('detail');
+            }
+        });
+
+        test('onSuccess propagates detail', () => {
+            const detail = { detail: 'detail' };
+            expect(failWithDetail('error', detail).onSuccess((_v) => {
+                expect(typeof _v).toBe('never');
+                return succeed('weird');
+            })).toFailWithDetail('error', detail);
+        });
+
+        test('onFailure passes detail', () => {
+            const detail = { detail: 'detail' };
+            expect(failWithDetail('error', detail).onFailure((message, detail) => {
+                expect(message).toBe('error');
+                expect(detail).toEqual(detail);
+                return succeed('it worked');
+            })).toSucceedWith('it worked');
         });
     });
 
