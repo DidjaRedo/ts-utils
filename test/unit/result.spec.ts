@@ -28,6 +28,7 @@ import {
     allSucceed,
     captureResult,
     fail,
+    failWithDetail,
     mapFailures,
     mapResults,
     mapSuccess,
@@ -207,6 +208,14 @@ describe('Result module', () => {
             test('returns the message', () => {
                 expect(new Failure('oops').toString()).toBe('oops');
             });
+        });
+    });
+
+    describe('detailedFailure class', () => {
+        test('reports detail in addition to message', () => {
+            const result = failWithDetail('message', 'detail');
+            expect(result).toFailWith('message');
+            expect(result.detail).toBe('detail');
         });
     });
 
