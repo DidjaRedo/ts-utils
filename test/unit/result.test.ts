@@ -35,6 +35,7 @@ import {
     mapSuccess,
     populateObject,
     succeed,
+    succeedWithDetail,
 } from '../../src';
 import { InMemoryLogger } from '../../src/logger';
 
@@ -212,6 +213,37 @@ describe('Result module', () => {
         });
     });
 
+    describe('detailedSuccess class', () => {
+        test('reports value', () => {
+            const result = succeedWithDetail('message');
+            expect(result).toSucceedWith('message');
+        });
+
+        test('isSuccess indicates detailed success', () => {
+            const result = succeedWithDetail<string, string>('original message') as DetailedResult<string, string>;
+            // The only difference between Success and DetailedSuccess is the call signature for
+            // onFailure and onSuccess
+            expect(result.onFailure((_message, detail) => {
+                expect(typeof detail).toBe('never');
+                return succeedWithDetail('hello');
+            })).toSucceedWith('original message');
+        });
+
+        test('onSuccess passes value', () => {
+            expect(succeedWithDetail('value').onSuccess((v) => {
+                expect(v).toEqual('value');
+                return succeedWithDetail('it worked!');
+            })).toSucceedWith('it worked!');
+        });
+
+        test('onFailure propagates success value', () => {
+            expect(succeedWithDetail<string, string>('pass through').onFailure((_message, detail) => {
+                expect(typeof detail).toBe('never');
+                return failWithDetail('failed', 'should not happen');
+            })).toSucceedWith('pass through');
+        });
+    });
+
     describe('detailedFailure class', () => {
         test('reports detail in addition to message', () => {
             const result = failWithDetail('message', 'detail');
@@ -239,7 +271,7 @@ describe('Result module', () => {
             expect(failWithDetail('error', detail).onFailure((message, detail) => {
                 expect(message).toBe('error');
                 expect(detail).toEqual(detail);
-                return succeed('it worked');
+                return succeedWithDetail('it worked');
             })).toSucceedWith('it worked');
         });
     });

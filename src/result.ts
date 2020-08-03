@@ -132,7 +132,26 @@ export function fail<T>(message: string): Failure<T> {
     return new Failure<T>(message);
 }
 
+export type DetailedSuccessContinuation<T, TD, TN> = (value: T) => DetailedResult<TN, TD>;
 export type DetailedFailureContinuation<T, TD> = (message: string, detail: TD) => DetailedResult<T, TD>;
+
+export class DetailedSuccess<T, TD> extends Success<T> {
+    public constructor(value: T) {
+        super(value);
+    }
+
+    public isSuccess(): this is DetailedSuccess<T, TD> {
+        return true;
+    }
+
+    public onSuccess<TN>(cb: DetailedSuccessContinuation<T, TD, TN>): DetailedResult<TN, TD> {
+        return cb(this.value);
+    }
+
+    public onFailure(_cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD> {
+        return this;
+    }
+}
 
 /**
  * A DetailedFailure reports optional failure details in addition
@@ -163,7 +182,11 @@ export class DetailedFailure<T, TD> extends Failure<T> {
     }
 }
 
-export type DetailedResult<T, TD> = Success<T>|DetailedFailure<T, TD>;
+export type DetailedResult<T, TD> = DetailedSuccess<T, TD>|DetailedFailure<T, TD>;
+
+export function succeedWithDetail<T, TD>(value: T): DetailedSuccess<T, TD> {
+    return new DetailedSuccess<T, TD>(value);
+}
 
 export function failWithDetail<T, TD>(message: string, detail: TD): DetailedFailure<T, TD> {
     return new DetailedFailure<T, TD>(message, detail);
