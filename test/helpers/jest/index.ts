@@ -1,6 +1,8 @@
 import './types';
 import matchers from './matchers';
 
+export { MockFileConfig, MockFileSystem } from './helpers';
+
 type JestGlobal = NodeJS.Global & { expect: jest.Expect };
 
 function isJestGlobal(g: NodeJS.Global): g is JestGlobal {

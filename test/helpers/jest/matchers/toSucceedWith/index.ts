@@ -11,9 +11,9 @@ declare global {
             /**
              * Use .toSucceedWith to verify that a Result<T> is a success
              * and that the result value matches the supplied value
-             * @param {T} expected
+             * @param {unknown} expected
              */
-            toSucceedWith<T>(expected: T): R;
+            toSucceedWith(expected: unknown): R;
         }
     }
 }
@@ -35,7 +35,7 @@ function failMessage<T>(received: Result<T>, expected: T): () => string {
 }
 
 export default {
-    toSucceedWith: function<T> (received: Result<T>, expected: T): jest.CustomMatcherResult {
+    toSucceedWith: function<T> (received: Result<T>, expected: unknown): jest.CustomMatcherResult {
         const pass = predicate(received, expected);
         if (pass) {
             return { pass: true, message: passMessage(received, expected) };
