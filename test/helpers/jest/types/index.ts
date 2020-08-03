@@ -53,6 +53,14 @@ declare global {
             toFailWith<T>(expected: string|RegExp|undefined): R;
 
             /**
+             * Use .toFailWithDetail to verify that a DetailedResult<T> is
+             * a failure that matches both a supplied expected failure value
+             * (string, RegExp or undefined) and a supplied failure detail.
+             * @param {string|RegExp|undefined} message
+             */
+            toFailWithDetail<TD>(message: string|RegExp|undefined, detail: TD): R;
+
+            /**
              * Use .toFailTest to test a custom matcher by
              * verifying that a test case fails.
              */
