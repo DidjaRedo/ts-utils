@@ -132,26 +132,40 @@ export function fail<T>(message: string): Failure<T> {
     return new Failure<T>(message);
 }
 
+export type DetailedFailureContinuation<T, TD> = (message: string, detail: TD) => DetailedResult<T, TD>;
+
 /**
  * A DetailedFailure reports optional failure details in addition
  * to the standard failure message.
  */
 export class DetailedFailure<T, TD> extends Failure<T> {
-    protected _detail?: TD;
+    protected _detail: TD;
 
-    public constructor(message: string, detail?: TD) {
+    public constructor(message: string, detail: TD) {
         super(message);
         this._detail = detail;
     }
 
-    public get detail(): TD|undefined {
+    public get detail(): TD {
         return this._detail;
+    }
+
+    public isFailure(): this is DetailedFailure<T, TD> {
+        return true;
+    }
+
+    public onSuccess<TN>(_cb: SuccessContinuation<T, TN>): DetailedResult<TN, TD> {
+        return new DetailedFailure<TN, TD>(this.message, this._detail);
+    }
+
+    public onFailure(cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD> {
+        return cb(this.message, this._detail);
     }
 }
 
 export type DetailedResult<T, TD> = Success<T>|DetailedFailure<T, TD>;
 
-export function failWithDetail<T, TD>(message: string, detail?: TD): DetailedFailure<T, TD> {
+export function failWithDetail<T, TD>(message: string, detail: TD): DetailedFailure<T, TD> {
     return new DetailedFailure<T, TD>(message, detail);
 }
 

@@ -3,6 +3,7 @@ import ToFailTest from './toFailTest';
 import ToFailTestAndMatchSnapshot from './toFailTestAndMatchSnapshot';
 import ToFailTestWith from './toFailTestWith';
 import ToFailWith from './toFailWith';
+import ToFailWithDetail from './toFailWithDetail';
 import ToSucceed from './toSucceed';
 import ToSucceedAndMatchInlineSnapshot from './toSucceedAndMatchInlineSnapshot';
 import ToSucceedAndMatchSnapshot from './toSucceedAndMatchSnapshot';
@@ -15,6 +16,7 @@ export default {
     ...ToFailTestAndMatchSnapshot,
     ...ToFailTestWith,
     ...ToFailWith,
+    ...ToFailWithDetail,
     ...ToSucceed,
     ...ToSucceedAndMatchInlineSnapshot,
     ...ToSucceedAndMatchSnapshot,
