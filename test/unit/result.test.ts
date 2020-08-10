@@ -34,6 +34,7 @@ import {
     mapResults,
     mapSuccess,
     populateObject,
+    propagateWithDetail,
     succeed,
     succeedWithDetail,
 } from '../../src';
@@ -262,7 +263,7 @@ describe('Result module', () => {
             const detail = { detail: 'detail' };
             expect(failWithDetail('error', detail).onSuccess((_v) => {
                 expect(typeof _v).toBe('never');
-                return succeed('weird');
+                return succeedWithDetail('weird');
             })).toFailWithDetail('error', detail);
         });
 
@@ -273,6 +274,16 @@ describe('Result module', () => {
                 expect(detail).toEqual(detail);
                 return succeedWithDetail('it worked');
             })).toSucceedWith('it worked');
+        });
+    });
+
+    describe('propagateWithDetail function', () => {
+        test('propagates success', () => {
+            expect(propagateWithDetail(succeed('hello'), 'detail')).toSucceedWith('hello');
+        });
+
+        test('propagates failure', () => {
+            expect(propagateWithDetail(fail('oops'), 'detail')).toFailWithDetail('oops', 'detail');
         });
     });
 
