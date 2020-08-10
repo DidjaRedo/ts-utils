@@ -192,6 +192,10 @@ export function failWithDetail<T, TD>(message: string, detail: TD): DetailedFail
     return new DetailedFailure<T, TD>(message, detail);
 }
 
+export function propagateWithDetail<T, TD>(result: Result<T>, detail: TD): DetailedResult<T, TD> {
+    return result.isSuccess() ? succeedWithDetail(result.value) : failWithDetail(result.message, detail);
+}
+
 /**
  * Wraps a function which returns a value of type <T> or throws
  * to produce Success<T> or Failure<T>
