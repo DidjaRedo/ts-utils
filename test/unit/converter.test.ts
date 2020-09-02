@@ -21,14 +21,14 @@
  */
 import '../helpers/jest';
 import {
-    Converter,
+    BaseConverter,
     Result,
     fail,
     succeed,
 } from '../../src';
 
-describe('Converter class', () => {
-    const numberConverter = new Converter<number>((from: unknown) => {
+describe('BaseConverter class', () => {
+    const numberConverter = new BaseConverter<number>((from: unknown) => {
         if (typeof from !== 'number') {
             const num: number = (typeof from === 'string' ? Number(from) : NaN);
             return isNaN(num)
@@ -37,7 +37,7 @@ describe('Converter class', () => {
         }
         return succeed(from);
     });
-    const stringConverter = new Converter<string>((from: unknown) => {
+    const stringConverter = new BaseConverter<string>((from: unknown) => {
         return typeof from === 'string'
             ? succeed(from as string)
             : fail(`Not a string: ${JSON.stringify(from)}`);

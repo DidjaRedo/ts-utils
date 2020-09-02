@@ -22,13 +22,17 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { Result, captureResult } from './result';
+import { BaseConverter, Converter } from './converter';
+import { Result, captureResult, fail, succeed } from './result';
+
+import Mustache from 'mustache';
+import { arrayOf } from './converters';
 
 export type JsonPrimitive = boolean | number | string | null | undefined;
 export interface JsonObject { [key: string]: JsonValue }
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface JsonArray extends Array<JsonValue> {}
+export interface JsonArray extends Array<JsonValue> { }
 
 export function readJsonFileSync(srcPath: string): Result<JsonValue> {
     return captureResult(() => {
@@ -45,3 +49,44 @@ export function writeJsonFileSync(srcPath: string, value: JsonValue): Result<boo
         return true;
     });
 }
+
+export function templatedJsonConverter(view?: unknown): Converter<JsonValue> {
+    return new BaseConverter<JsonValue>((from: unknown, self: Converter<JsonValue>) => {
+        if ((from === null) || (typeof from === 'number') || (typeof from === 'boolean')) {
+            return succeed(from);
+        }
+
+        if (typeof from === 'string') {
+            if ((view !== undefined) && from.includes('{{')) {
+                return captureResult(() => Mustache.render(from, view));
+            }
+            return succeed(from);
+        }
+
+        if (typeof from !== 'object') {
+            return fail(`Cannot convert ${JSON.stringify(from)} to JSON`);
+        }
+
+        if (Array.isArray(from)) {
+            return arrayOf(self, 'failOnError').convert(from);
+        }
+
+        const src = from as JsonObject;
+        const json: JsonObject = {};
+        for (const prop in src) {
+            // istanbul ignore else
+            if (src.hasOwnProperty(prop)) {
+                const result = self.convert(src[prop]).onSuccess((v) => {
+                    json[prop] = v;
+                    return succeed(v);
+                });
+                if (result.isFailure()) {
+                    return result;
+                }
+            }
+        }
+        return succeed(json);
+    });
+}
+
+export const jsonConverter = templatedJsonConverter();
