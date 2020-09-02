@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { BaseConverter, Converter } from './converter';
 import { RangeOf, RangeOfProperties } from './rangeOf';
 import { Result, captureResult, fail, succeed } from './result';
-import { Converter } from './converter';
 import { ExtendedArray } from './extendedArray';
 import { isKeyOf } from './utils';
 
@@ -32,7 +32,7 @@ type OnError = 'failOnError' | 'ignoreErrors';
  * A converter to convert unknown to string. Values of type
  * string succeed.  Anything else fails.
  */
-export const string = new Converter<string>((from: unknown) => {
+export const string = new BaseConverter<string>((from: unknown) => {
     return typeof from === 'string'
         ? succeed(from as string)
         : fail(`Not a string: ${JSON.stringify(from)}`);
@@ -44,7 +44,7 @@ export const string = new Converter<string>((from: unknown) => {
  * supplied enumerated values.  Anything else fails.
  */
 export function enumeratedValue<T>(values: T[]): Converter<T> {
-    return new Converter<T>((from: unknown): Result<T> => {
+    return new BaseConverter<T>((from: unknown): Result<T> => {
         const index = values.indexOf(from as T);
         return (index >= 0 ? succeed(values[index]) : fail(`Invalid enumerated value ${JSON.stringify(from)}`));
     });
@@ -54,7 +54,7 @@ export function enumeratedValue<T>(values: T[]): Converter<T> {
  * A converter to convert unknown to a number.  Numbers and strings
  * with a numeric format succeed.  Anything else fails.
  */
-export const number = new Converter<number>((from: unknown) => {
+export const number = new BaseConverter<number>((from: unknown) => {
     if (typeof from !== 'number') {
         const num: number = (typeof from === 'string' ? Number(from) : NaN);
         return isNaN(num)
@@ -69,7 +69,7 @@ export const number = new Converter<number>((from: unknown) => {
  * case-insensitive strings 'true' and 'false' succeed.  Anything
  * else fails.
  */
-export const boolean = new Converter<boolean>((from: unknown) => {
+export const boolean = new BaseConverter<boolean>((from: unknown) => {
     if (typeof from === 'boolean') {
         return succeed(from as boolean);
     }
@@ -94,7 +94,7 @@ export const optionalString = string.optional();
  * @param delimiter The delimiter at which to split.
  */
 export function delimitedString(delimiter: string, options: 'filtered'|'all' = 'filtered'): Converter<string[]> {
-    return new Converter<string[]>((from: unknown) => {
+    return new BaseConverter<string[]>((from: unknown) => {
         const result = string.convert(from);
         if (result.isSuccess()) {
             let strings = result.value.split(delimiter);
@@ -135,7 +135,7 @@ export const optionalBoolean = boolean.optional();
  * @param onError Specifies treatment of unconvertable elements
  */
 export function oneOf<T>(converters: Array<Converter<T>>, onError: OnError = 'ignoreErrors'): Converter<T> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         const errors: string[] = [];
         for (const converter of converters) {
             const result = converter.convert(from);
@@ -162,7 +162,7 @@ export function oneOf<T>(converters: Array<Converter<T>>, onError: OnError = 'ig
  * @param ignoreErrors Specifies treatment of unconvertable elements
  */
 export function arrayOf<T>(converter: Converter<T>, onError: OnError = 'failOnError'): Converter<T[]> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         if (!Array.isArray(from)) {
             return fail(`Not an array: ${JSON.stringify(from)}`);
         }
@@ -206,7 +206,7 @@ export function extendedArrayOf<T>(label: string, converter: Converter<T>, onErr
  * @param ignoreErrors Specifies treatment of unconvertable elements
  */
 export function recordOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 'fail'): Converter<Record<string, T>> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         if ((typeof from !== 'object') || Array.isArray(from)) {
             return fail(`Not a string-keyed object: ${JSON.stringify(from)}`);
         }
@@ -240,7 +240,7 @@ export function recordOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 
  * @param converter Converter used to convert the extracted field.
  */
 export function field<T>(name: string, converter: Converter<T>): Converter<T> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         if (typeof from === 'object' && from !== null) {
             if (isKeyOf(name, from)) {
                 return converter.convert(from[name]).onFailure((message) => {
@@ -262,7 +262,7 @@ export function field<T>(name: string, converter: Converter<T>): Converter<T> {
  * @param converter Converter used to convert the extracted field.
  */
 export function optionalField<T>(name: string, converter: Converter<T>): Converter<T|undefined> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         if (typeof from === 'object' && from !== null) {
             if (isKeyOf(name, from)) {
                 const result = converter.convert(from[name]).onFailure((message) => {
@@ -284,7 +284,7 @@ export function optionalField<T>(name: string, converter: Converter<T>): Convert
 
 export type FieldConverters<T> = { [ key in keyof T ]: Converter<T[key]> };
 
-export class ObjectConverter<T> extends Converter<T> {
+export class ObjectConverter<T> extends BaseConverter<T> {
     public readonly fields: FieldConverters<T>;
     public readonly optionalFields: (keyof T)[];
 
@@ -314,7 +314,7 @@ export class ObjectConverter<T> extends Converter<T> {
     }
 
     public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>> {
-        return new ObjectConverter(this.fields, optional);
+        return new ObjectConverter<Partial<T>>(this.fields as FieldConverters<Partial<T>>, optional);
     }
 
     public addPartial(addOptionalFields: (keyof T)[]): ObjectConverter<Partial<T>> {
@@ -353,7 +353,7 @@ export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): O
  * to be used to construct it.
  */
 export function transform<T>(fields: FieldConverters<T>): Converter<T> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         const converted = {} as { [ key in keyof T]: T[key] };
         const errors: string[] = [];
 
@@ -379,7 +379,7 @@ export function transform<T>(fields: FieldConverters<T>): Converter<T> {
  * @param constructor Optional static constructor to instantiate the object
  */
 export function rangeTypeOf<T, RT extends RangeOf<T>>(converter: Converter<T>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT> {
-    return new Converter((from: unknown) => {
+    return new BaseConverter((from: unknown) => {
         const result = object({
             min: converter,
             max: converter,
@@ -394,4 +394,3 @@ export function rangeTypeOf<T, RT extends RangeOf<T>>(converter: Converter<T>, c
 export function rangeOf<T>(converter: Converter<T>): Converter<RangeOf<T>> {
     return rangeTypeOf<T, RangeOf<T>>(converter, RangeOf.createRange);
 }
-

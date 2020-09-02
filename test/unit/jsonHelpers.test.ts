@@ -21,7 +21,7 @@
  */
 
 import '../helpers/jest';
-import { readJsonFileSync, writeJsonFileSync } from '../../src/jsonHelpers';
+import { jsonConverter, readJsonFileSync, templatedJsonConverter, writeJsonFileSync } from '../../src/jsonHelpers';
 import fs from 'fs';
 
 describe('JsonHelpers module', () => {
@@ -81,6 +81,70 @@ describe('JsonHelpers module', () => {
             });
 
             expect(writeJsonFileSync(path, payload)).toFailWith(/mock error/i);
+        });
+    });
+
+    describe('jsonConverter', () => {
+        test('converts valid json', () => {
+            [
+                'string',
+                123,
+                false,
+                null,
+                { stringVal: 'string', boolVal: true, numVal: 100 },
+                {
+                    stringVal: 'string',
+                    subObject: {
+                        stringVal: 'string',
+                        boolVal: false,
+                        nullVal: null,
+                    },
+                    array: ['string 1', 'string 2', 'string 3', 3],
+                },
+            ].forEach((t) => {
+                expect(jsonConverter.convert(t)).toSucceedWith(t);
+            });
+        });
+
+        test('fails on invalid json', () => {
+            [
+                undefined,
+                {
+                    func: () => true,
+                },
+                () => true,
+                [() => 123],
+            ].forEach((t) => {
+                expect(jsonConverter.convert(t)).toFailWith(/cannot convert/i);
+            });
+        });
+    });
+
+    describe('templatedJsonConverter', () => {
+        test('applies mustache templates to string values', () => {
+            const src = {
+                stringVal: 'Hello {{test}}',
+                subObject: {
+                    literal: 'This is a literal string',
+                    subSubObject: {
+                        hello: 'Hello {{subTest}}',
+                    },
+                },
+            };
+            const view = {
+                test: 'Top Level Test',
+                subTest: 'Nested Test',
+            };
+            const expected = {
+                stringVal: `Hello ${view.test}`,
+                subObject: {
+                    literal: 'This is a literal string',
+                    subSubObject: {
+                        hello: `Hello ${view.subTest}`,
+                    },
+                },
+            };
+            expect(templatedJsonConverter(view).convert(src)).toSucceedWith(expected);
         });
     });
 });
