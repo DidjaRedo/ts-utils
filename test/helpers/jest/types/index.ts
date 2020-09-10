@@ -3,6 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 import { Result } from '../ts-utils';
 
+/* eslint-disable @typescript-eslint/no-unused-vars, no-unused-vars */
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace jest {
@@ -18,6 +19,14 @@ declare global {
              * @param {unknown} expected
              */
             toSucceedWith(expected: unknown): R;
+
+            /**
+             * Use .toSucceedWithDetail to verify that a DetailedResult<T, TD> is
+             * a success and that the result value and detail matches the supplied
+             * values
+             * @param {unknown} expected
+             */
+            toSucceedWithDetail<TD>(expected: unknown, detail: TD|undefined): R;
 
             /**
              * Use .toSucceedAndSatisfy to verify that a Result<T> is a success

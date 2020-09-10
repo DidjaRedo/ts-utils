@@ -4,9 +4,11 @@ import { printExpectedDetailedResult, printReceivedDetailedResult } from '../../
 import { DetailedResult } from '../../ts-utils';
 import { matcherHint } from 'jest-matcher-utils';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace jest {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
         interface Matchers<R> {
             /**
              * Use .toFailWithDetail to verify that a DetailedResult<T> is

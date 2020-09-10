@@ -53,7 +53,7 @@ export function printReceivedDetailedResult<T, TD>(received: DetailedResult<T, T
     return [
         'Received:',
         (received.isSuccess()
-            ? `  Success with ${printReceived(received.value)}`
+            ? `  Success with "${printReceived(received.value)}"\n  Detail: "${printReceived(received.detail)}"`
             : `  Failure with "${received.message}"\n  Detail: "${printReceived(received.detail)}"`),
     ].join('\n');
 }
