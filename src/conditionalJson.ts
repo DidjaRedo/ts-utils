@@ -98,6 +98,7 @@ export class ConditionalJsonFragment {
     }
 }
 
+/*
 export function resolveConditionalJsonProperty(target: JsonObject, propName: string, from: unknown, context: unknown): Result<JsonValue> {
     if (!(from instanceof ConditionalJsonFragment)) {
         return resolveConditionalJson(from, context).onSuccess((v) => {
@@ -108,8 +109,9 @@ export function resolveConditionalJsonProperty(target: JsonObject, propName: str
 
     return succeed(result);
 }
+*/
 
-export function resolveConditionalJson(from: unknown, context: unknown): Result<JsonValue> {
+export function resolveConditionalJson(from: unknown, context: unknown): DetailedResult<JsonValue> {
     if (isJsonPrimitive(from)) {
         return succeed(from);
     }
