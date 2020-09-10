@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+/* eslint-disable no-use-before-define */
 export type Result<T> = Success<T> | Failure<T>;
 export type SuccessContinuation<T, TN> = (value: T) => Result<TN>;
 export type FailureContinuation<T> = (message: string) => Result<T>;
@@ -136,8 +137,15 @@ export type DetailedSuccessContinuation<T, TD, TN> = (value: T) => DetailedResul
 export type DetailedFailureContinuation<T, TD> = (message: string, detail: TD) => DetailedResult<T, TD>;
 
 export class DetailedSuccess<T, TD> extends Success<T> {
-    public constructor(value: T) {
+    protected _detail?: TD;
+
+    public constructor(value: T, detail?: TD) {
         super(value);
+        this._detail = detail;
+    }
+
+    public get detail(): TD|undefined {
+        return this._detail;
     }
 
     public isSuccess(): this is DetailedSuccess<T, TD> {
@@ -184,8 +192,8 @@ export class DetailedFailure<T, TD> extends Failure<T> {
 
 export type DetailedResult<T, TD> = DetailedSuccess<T, TD>|DetailedFailure<T, TD>;
 
-export function succeedWithDetail<T, TD>(value: T): DetailedSuccess<T, TD> {
-    return new DetailedSuccess<T, TD>(value);
+export function succeedWithDetail<T, TD>(value: T, detail?: TD): DetailedSuccess<T, TD> {
+    return new DetailedSuccess<T, TD>(value, detail);
 }
 
 export function failWithDetail<T, TD>(message: string, detail: TD): DetailedFailure<T, TD> {
@@ -193,7 +201,7 @@ export function failWithDetail<T, TD>(message: string, detail: TD): DetailedFail
 }
 
 export function propagateWithDetail<T, TD>(result: Result<T>, detail: TD): DetailedResult<T, TD> {
-    return result.isSuccess() ? succeedWithDetail(result.value) : failWithDetail(result.message, detail);
+    return result.isSuccess() ? succeedWithDetail(result.value, detail) : failWithDetail(result.message, detail);
 }
 
 /**
