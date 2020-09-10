@@ -1,6 +1,6 @@
 {
   "name": "@fgv/ts-utils",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Assorted Typescript Utilities",
   "main": "dist/index.js",
   "scripts": {
@@ -29,11 +29,11 @@
   },
   "homepage": "https://github.com/DidjaRedo/ts-utils#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.12",
+    "@types/jest": "^26.0.13",
     "@types/mustache": "^4.0.1",
-    "@types/node": "^14.6.2",
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
+    "@types/node": "^14.6.4",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "eslint": "^7.8.1",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",

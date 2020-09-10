@@ -28,6 +28,8 @@ import { Result, captureResult, fail, succeed } from './result';
 import Mustache from 'mustache';
 import { arrayOf } from './converters';
 
+/* eslint-disable no-use-before-define */
+
 export type JsonPrimitive = boolean | number | string | null | undefined;
 export interface JsonObject { [key: string]: JsonValue }
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;

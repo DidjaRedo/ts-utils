@@ -290,6 +290,8 @@ export class ObjectConverter<T> extends BaseConverter<T> {
 
     public constructor(fields: FieldConverters<T>, optional?: (keyof T)[]) {
         super((from: unknown) => {
+            // eslint bug thinks key is used before defined
+            // eslint-disable-next-line no-use-before-define
             const converted = {} as { [key in keyof T]: T[key] };
             const errors: string[] = [];
             for (const key in fields) {
@@ -354,6 +356,8 @@ export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): O
  */
 export function transform<T>(fields: FieldConverters<T>): Converter<T> {
     return new BaseConverter((from: unknown) => {
+        // eslint bug thinks key is used before defined
+        // eslint-disable-next-line no-use-before-define
         const converted = {} as { [ key in keyof T]: T[key] };
         const errors: string[] = [];
 
