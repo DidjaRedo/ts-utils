@@ -220,6 +220,12 @@ describe('Result module', () => {
             expect(result).toSucceedWith('message');
         });
 
+        test('reports detail', () => {
+            const result = succeedWithDetail('message', 'detail');
+            expect(result).toSucceedWith('message');
+            expect(result.detail).toBe('detail');
+        });
+
         test('isSuccess indicates detailed success', () => {
             const result = succeedWithDetail<string, string>('original message') as DetailedResult<string, string>;
             // The only difference between Success and DetailedSuccess is the call signature for
@@ -233,6 +239,14 @@ describe('Result module', () => {
         test('onSuccess passes value', () => {
             expect(succeedWithDetail('value').onSuccess((v) => {
                 expect(v).toEqual('value');
+                return succeedWithDetail('it worked!');
+            })).toSucceedWith('it worked!');
+        });
+
+        test('onSuccess propagates detail', () => {
+            expect(succeedWithDetail('value', 'detail').onSuccess((v, d) => {
+                expect(v).toEqual('value');
+                expect(d).toEqual('detail');
                 return succeedWithDetail('it worked!');
             })).toSucceedWith('it worked!');
         });

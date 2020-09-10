@@ -69,7 +69,7 @@ export class Success<T> implements IResult<T> {
         return cb(this.value);
     }
 
-    public onFailure<TN>(_: FailureContinuation<T>): Result<T> {
+    public onFailure(_: FailureContinuation<T>): Result<T> {
         return this;
     }
 }
@@ -133,7 +133,7 @@ export function fail<T>(message: string): Failure<T> {
     return new Failure<T>(message);
 }
 
-export type DetailedSuccessContinuation<T, TD, TN> = (value: T) => DetailedResult<TN, TD>;
+export type DetailedSuccessContinuation<T, TD, TN> = (value: T, detail?: TD) => DetailedResult<TN, TD>;
 export type DetailedFailureContinuation<T, TD> = (message: string, detail: TD) => DetailedResult<T, TD>;
 
 export class DetailedSuccess<T, TD> extends Success<T> {
@@ -153,7 +153,7 @@ export class DetailedSuccess<T, TD> extends Success<T> {
     }
 
     public onSuccess<TN>(cb: DetailedSuccessContinuation<T, TD, TN>): DetailedResult<TN, TD> {
-        return cb(this.value);
+        return cb(this.value, this._detail);
     }
 
     public onFailure(_cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD> {

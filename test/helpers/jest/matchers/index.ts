@@ -9,6 +9,7 @@ import ToSucceedAndMatchInlineSnapshot from './toSucceedAndMatchInlineSnapshot';
 import ToSucceedAndMatchSnapshot from './toSucceedAndMatchSnapshot';
 import ToSucceedAndSatisfy from './toSucceedAndSatisfy';
 import ToSucceedWith from './toSucceedWith';
+import toSucceedWithDetail from './toSucceedWithDetail';
 
 export default {
     ...ToFail,
@@ -22,4 +23,5 @@ export default {
     ...ToSucceedAndMatchSnapshot,
     ...ToSucceedAndSatisfy,
     ...ToSucceedWith,
+    ...toSucceedWithDetail,
 };
