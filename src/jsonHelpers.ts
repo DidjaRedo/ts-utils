@@ -29,7 +29,10 @@ import Mustache from 'mustache';
 import { arrayOf } from './converters';
 
 export type JsonPrimitive = boolean | number | string | null | undefined;
+// eslint-disable-next-line no-use-before-define
 export interface JsonObject { [key: string]: JsonValue }
+
+// eslint-disable-next-line no-use-before-define
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface JsonArray extends Array<JsonValue> { }
