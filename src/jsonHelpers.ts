@@ -31,7 +31,10 @@ import { arrayOf } from './converters';
 /* eslint-disable no-use-before-define */
 
 export type JsonPrimitive = boolean | number | string | null | undefined;
+// eslint-disable-next-line no-use-before-define
 export interface JsonObject { [key: string]: JsonValue }
+
+// eslint-disable-next-line no-use-before-define
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface JsonArray extends Array<JsonValue> { }
@@ -50,6 +53,10 @@ export function writeJsonFileSync(srcPath: string, value: JsonValue): Result<boo
         fs.writeFileSync(fullPath, JSON.stringify(value, undefined, 2));
         return true;
     });
+}
+
+export function isJsonPrimitive(from: unknown): from is JsonPrimitive {
+    return ((typeof from === 'boolean') || (typeof from === 'number') || (typeof from === 'string') || (from === null));
 }
 
 export function templatedJsonConverter(view?: unknown): Converter<JsonValue> {

@@ -21,10 +21,33 @@
  */
 
 import '../helpers/jest';
-import { jsonConverter, readJsonFileSync, templatedJsonConverter, writeJsonFileSync } from '../../src/jsonHelpers';
+import { isJsonPrimitive, jsonConverter, readJsonFileSync, templatedJsonConverter, writeJsonFileSync } from '../../src/jsonHelpers';
 import fs from 'fs';
 
 describe('JsonHelpers module', () => {
+    describe('isJsonPrimitive function', () => {
+        test('returns true for a JSON primitive', () => {
+            [
+                'string',
+                10,
+                true,
+                null,
+            ].forEach((t) => {
+                expect(isJsonPrimitive(t)).toBe(true);
+            });
+        });
+
+        test('returns false for non-JSON primitives', () => {
+            [
+                [1, 2, 3],
+                { a: true },
+                () => 'hello',
+            ].forEach((t) => {
+                expect(isJsonPrimitive(t)).toBe(false);
+            });
+        });
+    });
+
     describe('readJsonFilSync function', () => {
         test('returns a requested json file', () => {
             const path = 'path/to/some/file.json';
