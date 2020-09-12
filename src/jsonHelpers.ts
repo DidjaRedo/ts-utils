@@ -55,6 +55,10 @@ export function writeJsonFileSync(srcPath: string, value: JsonValue): Result<boo
     });
 }
 
+export function isJsonPrimitive(from: unknown): from is JsonPrimitive {
+    return ((typeof from === 'boolean') || (typeof from === 'number') || (typeof from === 'string') || (from === null));
+}
+
 export function templatedJsonConverter(view?: unknown): Converter<JsonValue> {
     return new BaseConverter<JsonValue>((from: unknown, self: Converter<JsonValue>) => {
         if ((from === null) || (typeof from === 'number') || (typeof from === 'boolean')) {

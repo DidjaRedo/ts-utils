@@ -292,12 +292,20 @@ describe('Result module', () => {
     });
 
     describe('propagateWithDetail function', () => {
-        test('propagates success', () => {
-            expect(propagateWithDetail(succeed('hello'), 'detail')).toSucceedWith('hello');
+        test('propagates value and success detail on success if defined', () => {
+            expect(propagateWithDetail(succeed('hello'), 'e', 's')).toSucceedWithDetail('hello', 's');
         });
 
-        test('propagates failure', () => {
+        test('propagates value and default detail on success if success detail is not defined', () => {
+            expect(propagateWithDetail(succeed('hello'), 'detail')).toSucceedWithDetail('hello', 'detail');
+        });
+
+        test('propagates message and failure detail if success detail is not defined', () => {
             expect(propagateWithDetail(fail('oops'), 'detail')).toFailWithDetail('oops', 'detail');
+        });
+
+        test('propagates message and failure detail if success detail is defined', () => {
+            expect(propagateWithDetail(fail('oops'), 'e', 's')).toFailWithDetail('oops', 'e');
         });
     });
 

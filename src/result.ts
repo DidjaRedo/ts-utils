@@ -200,8 +200,10 @@ export function failWithDetail<T, TD>(message: string, detail: TD): DetailedFail
     return new DetailedFailure<T, TD>(message, detail);
 }
 
-export function propagateWithDetail<T, TD>(result: Result<T>, detail: TD): DetailedResult<T, TD> {
-    return result.isSuccess() ? succeedWithDetail(result.value, detail) : failWithDetail(result.message, detail);
+export function propagateWithDetail<T, TD>(result: Result<T>, detail: TD, successDetail?: TD): DetailedResult<T, TD> {
+    return result.isSuccess()
+        ? succeedWithDetail(result.value, successDetail ?? detail)
+        : failWithDetail(result.message, detail);
 }
 
 /**
