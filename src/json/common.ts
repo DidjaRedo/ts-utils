@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-
 /* eslint-disable no-use-before-define */
 
 export type JsonPrimitive = boolean | number | string | null | undefined;
