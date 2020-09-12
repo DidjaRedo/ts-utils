@@ -115,7 +115,8 @@ export class JsonMerger {
         return JsonConverters.json.convert(src);
     }
 
-    protected _mergeArray(_target: JsonArray, _src: JsonArray): Result<JsonArray> {
-        return fail('not implemented');
+    protected _mergeArray(target: JsonArray, src: JsonArray): Result<JsonArray> {
+        target.push(...src);
+        return succeed(target);
     }
 }
