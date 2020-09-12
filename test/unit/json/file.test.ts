@@ -20,34 +20,16 @@
  * SOFTWARE.
  */
 
-import '../helpers/jest';
-import { isJsonPrimitive, jsonConverter, readJsonFileSync, templatedJsonConverter, writeJsonFileSync } from '../../src/jsonHelpers';
+import '../../helpers/jest';
+
+import {
+    readJsonFileSync,
+    writeJsonFileSync,
+} from '../../../src/json/file';
+
 import fs from 'fs';
 
-describe('JsonHelpers module', () => {
-    describe('isJsonPrimitive function', () => {
-        test('returns true for a JSON primitive', () => {
-            [
-                'string',
-                10,
-                true,
-                null,
-            ].forEach((t) => {
-                expect(isJsonPrimitive(t)).toBe(true);
-            });
-        });
-
-        test('returns false for non-JSON primitives', () => {
-            [
-                [1, 2, 3],
-                { a: true },
-                () => 'hello',
-            ].forEach((t) => {
-                expect(isJsonPrimitive(t)).toBe(false);
-            });
-        });
-    });
-
+describe('JsonFile module', () => {
     describe('readJsonFilSync function', () => {
         test('returns a requested json file', () => {
             const path = 'path/to/some/file.json';
@@ -104,70 +86,6 @@ describe('JsonHelpers module', () => {
             });
 
             expect(writeJsonFileSync(path, payload)).toFailWith(/mock error/i);
-        });
-    });
-
-    describe('jsonConverter', () => {
-        test('converts valid json', () => {
-            [
-                'string',
-                123,
-                false,
-                null,
-                { stringVal: 'string', boolVal: true, numVal: 100 },
-                {
-                    stringVal: 'string',
-                    subObject: {
-                        stringVal: 'string',
-                        boolVal: false,
-                        nullVal: null,
-                    },
-                    array: ['string 1', 'string 2', 'string 3', 3],
-                },
-            ].forEach((t) => {
-                expect(jsonConverter.convert(t)).toSucceedWith(t);
-            });
-        });
-
-        test('fails on invalid json', () => {
-            [
-                undefined,
-                {
-                    func: () => true,
-                },
-                () => true,
-                [() => 123],
-            ].forEach((t) => {
-                expect(jsonConverter.convert(t)).toFailWith(/cannot convert/i);
-            });
-        });
-    });
-
-    describe('templatedJsonConverter', () => {
-        test('applies mustache templates to string values', () => {
-            const src = {
-                stringVal: 'Hello {{test}}',
-                subObject: {
-                    literal: 'This is a literal string',
-                    subSubObject: {
-                        hello: 'Hello {{subTest}}',
-                    },
-                },
-            };
-            const view = {
-                test: 'Top Level Test',
-                subTest: 'Nested Test',
-            };
-            const expected = {
-                stringVal: `Hello ${view.test}`,
-                subObject: {
-                    literal: 'This is a literal string',
-                    subSubObject: {
-                        hello: `Hello ${view.subTest}`,
-                    },
-                },
-            };
-            expect(templatedJsonConverter(view).convert(src)).toSucceedWith(expected);
         });
     });
 });

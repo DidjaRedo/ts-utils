@@ -20,46 +20,14 @@
  * SOFTWARE.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { BaseConverter, Converter } from './converter';
-import { Result, captureResult, fail, succeed } from './result';
+import { BaseConverter, Converter } from '../converter';
+import { JsonObject, JsonValue } from './common';
+import { captureResult, fail, succeed } from '../result';
 
 import Mustache from 'mustache';
-import { arrayOf } from './converters';
+import { arrayOf } from '../converters';
 
-/* eslint-disable no-use-before-define */
-
-export type JsonPrimitive = boolean | number | string | null | undefined;
-// eslint-disable-next-line no-use-before-define
-export interface JsonObject { [key: string]: JsonValue }
-
-// eslint-disable-next-line no-use-before-define
-export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface JsonArray extends Array<JsonValue> { }
-
-export function readJsonFileSync(srcPath: string): Result<JsonValue> {
-    return captureResult(() => {
-        const fullPath = path.resolve(srcPath);
-        const body = fs.readFileSync(fullPath, 'utf8').toString();
-        return JSON.parse(body) as JsonValue;
-    });
-}
-
-export function writeJsonFileSync(srcPath: string, value: JsonValue): Result<boolean> {
-    return captureResult(() => {
-        const fullPath = path.resolve(srcPath);
-        fs.writeFileSync(fullPath, JSON.stringify(value, undefined, 2));
-        return true;
-    });
-}
-
-export function isJsonPrimitive(from: unknown): from is JsonPrimitive {
-    return ((typeof from === 'boolean') || (typeof from === 'number') || (typeof from === 'string') || (from === null));
-}
-
-export function templatedJsonConverter(view?: unknown): Converter<JsonValue> {
+export function templatedJson(view?: unknown): Converter<JsonValue> {
     return new BaseConverter<JsonValue>((from: unknown, self: Converter<JsonValue>) => {
         if ((from === null) || (typeof from === 'number') || (typeof from === 'boolean')) {
             return succeed(from);
@@ -98,4 +66,5 @@ export function templatedJsonConverter(view?: unknown): Converter<JsonValue> {
     });
 }
 
-export const jsonConverter = templatedJsonConverter();
+export const json = templatedJson(undefined);
+

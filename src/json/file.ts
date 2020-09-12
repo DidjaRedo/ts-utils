@@ -19,14 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Json from './json';
-export * as JsonConverters from './json/converters';
-export * as JsonFile from './json/file';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { Result, captureResult } from '../result';
+
+import { JsonValue } from './common';
+
+export function readJsonFileSync(srcPath: string): Result<JsonValue> {
+    return captureResult(() => {
+        const fullPath = path.resolve(srcPath);
+        const body = fs.readFileSync(fullPath, 'utf8').toString();
+        return JSON.parse(body) as JsonValue;
+    });
+}
+
+export function writeJsonFileSync(srcPath: string, value: JsonValue): Result<boolean> {
+    return captureResult(() => {
+        const fullPath = path.resolve(srcPath);
+        fs.writeFileSync(fullPath, JSON.stringify(value, undefined, 2));
+        return true;
+    });
+}

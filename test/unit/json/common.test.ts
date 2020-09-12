@@ -19,14 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Json from './json';
-export * as JsonConverters from './json/converters';
-export * as JsonFile from './json/file';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import '../../helpers/jest';
+
+import { isJsonPrimitive } from '../../../src/json';
+
+describe('json/common module', () => {
+    describe('isJsonPrimitive function', () => {
+        test('returns true for a JSON primitive', () => {
+            [
+                'string',
+                10,
+                true,
+                null,
+            ].forEach((t) => {
+                expect(isJsonPrimitive(t)).toBe(true);
+            });
+        });
+
+        test('returns false for non-JSON primitives', () => {
+            [
+                [1, 2, 3],
+                { a: true },
+                () => 'hello',
+            ].forEach((t) => {
+                expect(isJsonPrimitive(t)).toBe(false);
+            });
+        });
+    });
+});

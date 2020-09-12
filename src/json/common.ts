@@ -19,14 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Json from './json';
-export * as JsonConverters from './json/converters';
-export * as JsonFile from './json/file';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+
+/* eslint-disable no-use-before-define */
+
+export type JsonPrimitive = boolean | number | string | null | undefined;
+export interface JsonObject { [key: string]: JsonValue }
+
+export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface JsonArray extends Array<JsonValue> { }
+
+export function isJsonPrimitive(from: unknown): from is JsonPrimitive {
+    return ((typeof from === 'boolean') || (typeof from === 'number') || (typeof from === 'string') || (from === null));
+}
