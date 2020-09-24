@@ -233,6 +233,40 @@ export function recordOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 
 }
 
 /**
+ * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
+ * If onError is 'fail' (default),  then the entire conversion fails if any element
+ * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
+ * @param converter Converter used to convert each item in the record
+ * @param ignoreErrors Specifies treatment of unconvertable elements
+ */
+export function mapOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 'fail'): Converter<Map<string, T>> {
+    return new BaseConverter((from: unknown) => {
+        if ((typeof from !== 'object') || Array.isArray(from)) {
+            return fail(`Not a string-keyed object: ${JSON.stringify(from)}`);
+        }
+
+        const map = new Map<string, T>();
+        const errors: string[] = [];
+
+        for (const key in from) {
+            if (isKeyOf(key, from)) {
+                const result = converter.convert(from[key] as unknown);
+                if (result.isSuccess()) {
+                    map.set(key, result.value);
+                }
+                else {
+                    errors.push(result.message);
+                }
+            }
+        }
+
+        return (errors.length === 0) || (onError === 'ignore')
+            ? succeed(map)
+            : fail(errors.join('\n'));
+    });
+}
+
+/**
  * A helper function to extract and convert a field from an object. Succeeds and returns
  * the converted value if the field exists in the supplied parameter and can be converted.
  * Fails otherwise.

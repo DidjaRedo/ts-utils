@@ -426,6 +426,115 @@ describe('Converters module', () => {
         });
     });
 
+    describe('mapOf converter', () => {
+        test('converts a valid object', () => {
+            const srcObject = {
+                p1: 's1',
+                p2: 's2',
+                p3: 's3',
+            };
+            const expected = new Map<string, string>([
+                ['p1', 's1'],
+                ['p2', 's2'],
+                ['p3', 's2'],
+            ]);
+            expect(Converters.mapOf(Converters.string).convert(srcObject))
+                .toSucceedWith(expected);
+        });
+
+        test('fails an object which contains values that cannot be converted if onError is "fail"', () => {
+            const srcObject = {
+                p1: 's1',
+                p2: 's2',
+                p3: 's3',
+                p4: 10,
+            };
+            expect(Converters.mapOf(Converters.string, 'fail').convert(srcObject))
+                .toFailWith(/not a string/i);
+        });
+
+        test('ignores inherited or non-enumerable properties even if onError is "fail"', () => {
+            interface BaseObject {
+                p1: string;
+                p2: string;
+                p3: string;
+                p4: number;
+                base1: number;
+            }
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const BaseObjectFunc = function (this: BaseObject): void {
+                this.p1 = 's1';
+                this.p2 = 's2';
+                this.p3 = 's3';
+                Object.defineProperty(this, 'p4', { value: 10, enumerable: false });
+            };
+            BaseObjectFunc.prototype.base1 = 100;
+
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const BaseObject = BaseObjectFunc as unknown as { new (): BaseObject };
+
+            const srcObject = new BaseObject();
+
+            // make sure our source object looks as expected
+            expect(srcObject.base1).toBe(100);
+            expect(srcObject.hasOwnProperty('base1')).toBe(false);
+            expect(srcObject.p4).toBe(10);
+
+            expect(Converters.mapOf(Converters.string, 'fail').convert(srcObject))
+                .toSucceedAndSatisfy((obj) => {
+                    const value = obj as Map<string, unknown>;
+                    expect(value.get('p1')).toEqual(srcObject.p1);
+                    expect(value.get('p2')).toEqual(srcObject.p2);
+                    expect(value.get('p3')).toEqual(srcObject.p3);
+                    expect(value.get('p4')).toBeUndefined();
+                    expect(value.get('base1')).toBeUndefined();
+                });
+        });
+
+        test('ignores values that cannot be converted if onError is "ignore"', () => {
+            const validObject = {
+                p1: 's1',
+                p2: 's2',
+                p3: 's3',
+            };
+            const expected = new Map<string, string>([
+                ['p1', 's1'],
+                ['p2', 's2'],
+                ['p3', 's3'],
+            ]);
+            const badObject = { ...validObject, badField: 10 };
+            expect(
+                Converters.mapOf(Converters.string, 'ignore').convert(badObject)
+            ).toSucceedWith(expected);
+        });
+
+        test('defaults to onError="fail"', () => {
+            expect(Converters.mapOf(Converters.string).convert({ bad: true })).toFail();
+        });
+
+        test('ignores undefined values returned by a converter', () => {
+            const validObject = {
+                p1: 's1',
+                p2: 's2',
+                p3: 's3',
+            };
+            const expected = new Map<string, string>([
+                ['p1', 's1'],
+                ['p2', 's2'],
+                ['p3', 's3'],
+            ]);
+            const badObject = { badField: 100, ...validObject };
+            expect(
+                Converters.mapOf(Converters.string.optional()).convert(badObject)
+            ).toSucceedWith(expected);
+        });
+
+        test('fails when converting a non-object', () => {
+            expect(Converters.mapOf(Converters.string).convert(123))
+                .toFailWith(/not a string-keyed object/i);
+        });
+    });
+
     describe('field converter', () => {
         const getFirstString = Converters.field('first', Converters.string);
         const getSecondNumber = Converters.field('second', Converters.number);
