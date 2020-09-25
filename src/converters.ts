@@ -23,6 +23,8 @@
 import { BaseConverter, Converter } from './converter';
 import { RangeOf, RangeOfProperties } from './rangeOf';
 import { Result, captureResult, fail, succeed } from './result';
+
+import { DateTime } from 'luxon';
 import { ExtendedArray } from './extendedArray';
 import { isKeyOf } from './utils';
 
@@ -106,6 +108,26 @@ export function delimitedString(delimiter: string, options: 'filtered'|'all' = '
         return fail(result.message);
     });
 }
+
+/**
+ * A converter to convert an iso formatted string, a number or a Date object to a Date object
+ */
+export const isoDate = new BaseConverter<Date>((from: unknown) => {
+    if (typeof from === 'string') {
+        const dt = DateTime.fromISO(from);
+        if (dt.isValid) {
+            return succeed(dt.toJSDate());
+        }
+        return fail(`Invalid date: ${dt.invalidExplanation}`);
+    }
+    else if (typeof from === 'number') {
+        return succeed(new Date(from));
+    }
+    else if (from instanceof Date) {
+        return succeed(from);
+    }
+    return fail(`Cannot convert ${JSON.stringify(from)} to Date`);
+});
 
 /**
  * A converter to convert an optional number value. Values of type number
