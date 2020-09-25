@@ -118,6 +118,31 @@ describe('Converters module', () => {
         });
     });
 
+    describe('isoDate converter', () => {
+        test('converts an ISO formatted string to a Date object', () => {
+            const date = new Date();
+            expect(Converters.isoDate.convert(date.toISOString())).toSucceedWith(date);
+        });
+
+        test('converts a number to a Date object', () => {
+            const date = new Date();
+            expect(Converters.isoDate.convert(date.getTime())).toSucceedWith(date);
+        });
+
+        test('converts a Date object to a Date', () => {
+            const date = new Date();
+            expect(Converters.isoDate.convert(date)).toSucceedWith(date);
+        });
+
+        test('fails for a malformed date', () => {
+            expect(Converters.isoDate.convert('whatever')).toFailWith(/invalid date/i);
+        });
+
+        test('fails for an unexpected type', () => {
+            expect(Converters.isoDate.convert({ date: new Date() })).toFailWith(/cannot convert/i);
+        });
+    });
+
     describe('oneOf converter', () => {
         describe('with onError set to ignoreOrrors', () => {
             const stringFirst = Converters.oneOf<string|number>([Converters.string, Converters.number]);
