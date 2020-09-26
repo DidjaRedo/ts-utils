@@ -246,6 +246,32 @@ export function mapResults<T>(resultsIn: Iterable<Result<T>>): Result<T[]> {
 }
 
 /**
+ * Maps an array of DetailedResult<T, TD> to an array of <T>, if all results are
+ * successful or yield ignorable errors.  If any results fail with an error that
+ * cannot be ignored, returns failure with a concatenated summary of all failure messages.
+ * @param resultsIn The results to be mapped.
+ * @param ignore Error detail values that should be ignored
+ */
+export function mapDetailedResults<T, TD>(resultsIn: Iterable<DetailedResult<T, TD>>, ignore: TD[]): Result<T[]> {
+    const errors: string[] = [];
+    const elements: T[] = [];
+
+    for (const result of resultsIn) {
+        if (result.isSuccess()) {
+            elements.push(result.value);
+        }
+        else if (!ignore.includes(result.detail)) {
+            errors.push(result.message);
+        }
+    }
+
+    if (errors.length > 0) {
+        return fail(errors.join('\n'));
+    }
+    return succeed(elements);
+}
+
+/**
  * Maps an array of Result<T> to an array of <T>, omitting any error
  * results.  If no results were successful, returns failure with a
  * concatenated summary of all failure messages.
