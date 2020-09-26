@@ -30,6 +30,7 @@ import {
     captureResult,
     fail,
     failWithDetail,
+    mapDetailedResults,
     mapFailures,
     mapResults,
     mapSuccess,
@@ -353,6 +354,54 @@ describe('Result module', () => {
             if (result.isFailure()) {
                 for (const e of errors) {
                     expect(result.message).toContain(e);
+                }
+            }
+        });
+    });
+
+    describe('mapDetailedResults function', () => {
+        type TestDetail = 'real'|'fake';
+        const strings = ['string1', 'STRING2', 'String_3'];
+        const results = strings.map((s) => succeedWithDetail<string, TestDetail>(s, 'real'));
+
+        test('reports all values if all results are successful', () => {
+            expect(mapDetailedResults(results, ['fake'])).toSucceedWith(strings);
+        });
+
+        test('reports an error if any results fail with an unlisted error', () => {
+            const errors = ['Biff!', 'Pow!', 'Bam!'];
+            const errorResults = errors.map((s) => failWithDetail<string, TestDetail>(s, 'real'));
+            const badResults = [...results, ...errorResults];
+            const result = mapDetailedResults(badResults, ['fake']);
+            expect(result.isFailure()).toBe(true);
+            if (result.isFailure()) {
+                for (const e of errors) {
+                    expect(result.message).toContain(e);
+                }
+            }
+        });
+
+        test('ignores listed errors', () => {
+            const errors = ['Biff!', 'Pow!', 'Bam!'];
+            const errorResults = errors.map((s) => failWithDetail<string, TestDetail>(s, 'fake'));
+            const badResults = [...results, ...errorResults];
+            expect(mapDetailedResults(badResults, ['fake'])).toSucceedWith(strings);
+        });
+
+        test('omits listed errors even if some other result fails with an unlisted error', () => {
+            const realErrors = ['Biff!', 'Pow!', 'Bam!'];
+            const fakeErrors = ['Zap!'];
+            const realErrorResults = realErrors.map((s) => failWithDetail<string, TestDetail>(s, 'real'));
+            const fakeErrorResults = fakeErrors.map((s) => failWithDetail<string, TestDetail>(s, 'fake'));
+            const badResults = [...results, ...fakeErrorResults, ...realErrorResults];
+            const result = mapDetailedResults(badResults, ['fake']);
+            expect(result.isFailure()).toBe(true);
+            if (result.isFailure()) {
+                for (const e of realErrors) {
+                    expect(result.message).toContain(e);
+                }
+                for (const e of fakeErrors) {
+                    expect(result.message).not.toContain(e);
                 }
             }
         });
