@@ -22,10 +22,15 @@
 import '../helpers/jest';
 import {
     BaseConverter,
+    Converter,
     Result,
     fail,
     succeed,
 } from '../../src';
+
+interface TestContext {
+    value: string;
+}
 
 describe('BaseConverter class', () => {
     const numberConverter = new BaseConverter<number>((from: unknown) => {
@@ -42,10 +47,27 @@ describe('BaseConverter class', () => {
             ? succeed(from as string)
             : fail(`Not a string: ${JSON.stringify(from)}`);
     });
+    const contextConverter = new BaseConverter<string, TestContext>((from: unknown, _self: Converter<string, TestContext>, context?: TestContext): Result<string> => {
+        if (typeof from === 'string') {
+            const v = context?.value ?? '';
+            return succeed(from.replace('{{value}}', v));
+        }
+        return fail('Cannot convert non-string');
+    });
+
+    describe('convert method', () => {
+        test('passes context if supplied', () => {
+            expect(contextConverter.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
+        });
+    });
 
     describe('convertOptional method', () => {
         test('ignores errors by default', () => {
             expect(stringConverter.convertOptional(true)).toSucceed();
+        });
+
+        test('passes context if supplied', () => {
+            expect(contextConverter.convertOptional('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
         });
     });
 
@@ -86,6 +108,11 @@ describe('BaseConverter class', () => {
                 expect(optionalString.convert(true)).toSucceed();
             });
         });
+
+        test('passes context to base converter', () => {
+            const optionalTest = contextConverter.optional();
+            expect(optionalTest.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
+        });
     });
 
     describe('map method', () => {
@@ -110,6 +137,15 @@ describe('BaseConverter class', () => {
             expect(mappingConverter.convert('test'))
                 .toFailWith(/not a number/i);
         });
+
+        test('passes a supplied context to the base converter', () => {
+            const testMap = contextConverter.map((from: string): Result<{ got: string}> => {
+                return succeed({ got: from });
+            });
+            expect(testMap.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith({
+                got: 'expected is expected',
+            });
+        });
     });
 
     describe('mapConvert method', () => {
@@ -125,6 +161,16 @@ describe('BaseConverter class', () => {
 
         test('reports a failure from the initial conversion without invoking the second', () => {
             expect(converter.convert(true)).toFailWith(/not a string/i);
+        });
+
+        test('passes a supplied context to the base converter', () => {
+            const tc = new BaseConverter<{ got: string }>((from: unknown) => {
+                return succeed({ got: from as string });
+            });
+            const cc = contextConverter.mapConvert(tc);
+            expect(cc.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith({
+                got: 'expected is expected',
+            });
         });
     });
 
@@ -171,6 +217,11 @@ describe('BaseConverter class', () => {
                 ['hello', {}, true].forEach((v) => {
                     expect(constrained.convert(v)).toFailWith(/not a number/i);
                 });
+            });
+
+            test('passes a supplied context to the base converter', () => {
+                const constrained = contextConverter.withConstraint((s) => s.includes('expected'));
+                expect(constrained.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
             });
         });
     });
