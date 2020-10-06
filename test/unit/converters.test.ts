@@ -38,6 +38,30 @@ describe('Converters module', () => {
         });
     });
 
+    describe('templateString converter', () => {
+        test('converts valid strings', () => {
+            ['A string', '1', 'true', ''].forEach((s) => {
+                expect(Converters.templateString().convert(s)).toSucceedWith(s);
+            });
+        });
+
+        test('fails for non-string values strings', () => {
+            [1, true, {}, (): string => 'hello', ['true']].forEach((v) => {
+                expect(Converters.templateString().convert(v)).toFailWith(/not a string/i);
+            });
+        });
+
+        test('uses supplied context to populate template values', () => {
+            const converter = Converters.templateString({ value: 'DEFAULT VALUE' });
+            expect(converter.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
+        });
+
+        test('uses default context to populate template values in none supplied at conversion time', () => {
+            const converter = Converters.templateString({ value: 'DEFAULT VALUE' });
+            expect(converter.convert('{{value}} is expected')).toSucceedWith('DEFAULT VALUE is expected');
+        });
+    });
+
     describe('enumerated values converter', () => {
         const pie = Converters.enumeratedValue<'apple'|'blueberry'|'cherry'>(['apple', 'blueberry', 'cherry']);
         test('converts valid enumerated values', () => {
@@ -55,6 +79,11 @@ describe('Converters module', () => {
             ].forEach((test) => {
                 expect(pie.convert(test)).toFailWith(/invalid enumerated/i);
             });
+        });
+
+        test('uses a context for expected values if supplied', () => {
+            expect(pie.convert('apple', ['cherry'])).toFailWith(/invalid enumerated/i);
+            expect(pie.convert('apple', ['apple'])).toSucceedWith('apple');
         });
     });
 
@@ -111,6 +140,11 @@ describe('Converters module', () => {
                     });
                 }
             });
+        });
+
+        test('uses delimeter from context if supplied', () => {
+            const converter = Converters.delimitedString(',');
+            expect(converter.convert('a|b|c', '|')).toSucceedWith(['a', 'b', 'c']);
         });
 
         test('fails for a non-string', () => {
@@ -260,6 +294,13 @@ describe('Converters module', () => {
         test('fails when converting a non-array', () => {
             expect(Converters.arrayOf(Converters.string).convert(123)).toFailWith(/not an array/i);
         });
+
+        test('passes a supplied context to the base converter', () => {
+            const context = { value: 'expected' };
+            const sourceArray = ['{{value}} is expected', 'hello'];
+            const expected = ['expected is expected', 'hello'];
+            expect(Converters.arrayOf(Converters.templateString()).convert(sourceArray, context)).toSucceedWith(expected);
+        });
     });
 
 
@@ -303,6 +344,15 @@ describe('Converters module', () => {
         test('fails when converting a non-array', () => {
             expect(Converters.extendedArrayOf('strings', Converters.string).convert(123))
                 .toFailWith(/not an array/i);
+        });
+
+        test('passes a supplied context to the base converter', () => {
+            const context = { value: 'expected' };
+            const sourceArray = ['{{value}} is expected', 'hello'];
+            const expected = ['expected is expected', 'hello'];
+            expect(Converters.extendedArrayOf('templateStrings', Converters.templateString()).convert(sourceArray, context)).toSucceedWith(
+                expect.arrayContaining(expected)
+            );
         });
     });
 
@@ -445,6 +495,20 @@ describe('Converters module', () => {
             ).toSucceedWith(validObject);
         });
 
+        test('passes a supplied context to the base converter', () => {
+            const source = {
+                s1: '{{value}} is expected',
+                s2: 's2',
+            };
+            const context = { value: 'expected' };
+            const expected = {
+                s1: 'expected is expected',
+                s2: 's2',
+            };
+            const converter = Converters.templateString({ value: 'DEFAULT VALUE' });
+            expect(Converters.recordOf(converter).convert(source, context)).toSucceedWith(expected);
+        });
+
         test('fails when converting a non-object', () => {
             expect(Converters.recordOf(Converters.string).convert(123))
                 .toFailWith(/not a string-keyed object/i);
@@ -554,6 +618,20 @@ describe('Converters module', () => {
             ).toSucceedWith(expected);
         });
 
+        test('passes a supplied context to the base conveter', () => {
+            const source = {
+                p1: '{{expected}} is expected',
+                p2: 'p2',
+            };
+            const context = { value: 'expected' };
+            const expected = new Map<string, string>([
+                ['p1', 'expected is expected'],
+                ['p2', 'p2'],
+            ]);
+            const converter = Converters.templateString({ value: 'DEFAULT VALUE' });
+            expect(Converters.mapOf(converter).convert(source, context)).toSucceedWith(expected);
+        });
+
         test('fails when converting a non-object', () => {
             expect(Converters.mapOf(Converters.string).convert(123))
                 .toFailWith(/not a string-keyed object/i);
@@ -587,6 +665,13 @@ describe('Converters module', () => {
                     .toFailWith(/non-object/i);
             });
         });
+
+        test('passes a supplied context to the base converter', () => {
+            const source = { first: '{{value}} is expected' };
+            const context = { value: 'expected' };
+            const getFirstTemplate = Converters.field('first', Converters.templateString({ value: 'DEFAULT VALUE' }));
+            expect(getFirstTemplate.convert(source, context)).toSucceedWith('expected is expected');
+        });
     });
 
     describe('optionalField converter', () => {
@@ -614,6 +699,13 @@ describe('Converters module', () => {
             const ugly = { first: 'test', second: undefined };
             expect(getSecondNumber.convert(ugly))
                 .toSucceedWith(undefined);
+        });
+
+        test('passes a supplied context to the base converter', () => {
+            const source = { first: '{{value}} is expected' };
+            const context = { value: 'expected' };
+            const getFirstTemplate = Converters.optionalField('first', Converters.templateString({ value: 'DEFAULT VALUE' }));
+            expect(getFirstTemplate.convert(source, context)).toSucceedWith('expected is expected');
         });
 
         test('fails if the parameter is not an object', () => {
