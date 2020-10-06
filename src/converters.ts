@@ -334,11 +334,11 @@ export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>
  * @param name The name of the field to be extracted.
  * @param converter Converter used to convert the extracted field.
  */
-export function optionalField<T>(name: string, converter: Converter<T>): Converter<T|undefined> {
-    return new BaseConverter((from: unknown) => {
+export function optionalField<T, TC=undefined>(name: string, converter: Converter<T, TC>): Converter<T|undefined, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
         if (typeof from === 'object' && from !== null) {
             if (isKeyOf(name, from)) {
-                const result = converter.convert(from[name]).onFailure((message) => {
+                const result = converter.convert(from[name], context).onFailure((message) => {
                     return fail(`${name}: ${message}`);
                 });
 

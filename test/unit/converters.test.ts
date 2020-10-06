@@ -701,6 +701,13 @@ describe('Converters module', () => {
                 .toSucceedWith(undefined);
         });
 
+        test('passes a supplied context to the base converter', () => {
+            const source = { first: '{{value}} is expected' };
+            const context = { value: 'expected' };
+            const getFirstTemplate = Converters.optionalField('first', Converters.templateString({ value: 'DEFAULT VALUE' }));
+            expect(getFirstTemplate.convert(source, context)).toSucceedWith('expected is expected');
+        });
+
         test('fails if the parameter is not an object', () => {
             ['hello', 10, true, (): string => 'hello', undefined].forEach((v) => {
                 expect(getFirstString.convert(v))
