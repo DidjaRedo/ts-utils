@@ -23,7 +23,7 @@ import { Result, fail, succeed } from './result';
 
 type OnError = 'failOnError' | 'ignoreErrors';
 
-export interface Converter<T, TC=unknown> {
+export interface Converter<T, TC=undefined> {
     /**
      * Converts from unknown to <T>
      * @param from The unknown to be converted
@@ -55,19 +55,19 @@ export interface Converter<T, TC=unknown> {
      *
      * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
      * */
-    optional(onError?: OnError): Converter<T|undefined>;
+    optional(onError?: OnError): Converter<T|undefined, TC>;
 
     /**
      * Applies a (possibly) mapping conversion to the converted value.
      * @param mapper A function which maps from the converted type to some other type.
      */
-    map<T2>(mapper: (from: T) => Result<T2>): Converter<T2>;
+    map<T2>(mapper: (from: T) => Result<T2>): Converter<T2, TC>;
 
     /**
      * Applies an additional converter to the converted value.
      * @param mapConverter The converter to be applied to the converted value
      */
-    mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2>;
+    mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC>;
 
     /**
      * Creates a converter with an optional constraint.  If the base converter
@@ -77,13 +77,13 @@ export interface Converter<T, TC=unknown> {
      *
      * @param constraint Constraint evaluation function
      */
-    withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T>;
+    withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC>;
 }
 
 /**
  * Simple templated converter wrapper to simplify typed conversion from unknown.
  */
-export class BaseConverter<T, TC=unknown> implements Converter<T, TC> {
+export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     private _converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>;
 
     public constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>) {
@@ -129,7 +129,7 @@ export class BaseConverter<T, TC=unknown> implements Converter<T, TC> {
      * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
      * */
     public optional(onError?: OnError): Converter<T|undefined, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T|undefined>, context?: TC) => {
+        return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
             onError = onError ?? 'ignoreErrors';
             return this.convertOptional(from, context, onError);
         });
@@ -140,7 +140,7 @@ export class BaseConverter<T, TC=unknown> implements Converter<T, TC> {
      * @param mapper A function which maps from the converted type to some other type.
      */
     public map<T2>(mapper: (from: T) => Result<T2>): Converter<T2, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T2>, context?: TC) => {
+        return new BaseConverter((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
             const innerResult = this._converter(from, this, context);
             if (innerResult.isSuccess()) {
                 return mapper(innerResult.value);
@@ -154,7 +154,7 @@ export class BaseConverter<T, TC=unknown> implements Converter<T, TC> {
      * @param mapConverter The converter to be applied to the converted value
      */
     public mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T2>, context?: TC) => {
+        return new BaseConverter((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
             const innerResult = this._converter(from, this, context);
             if (innerResult.isSuccess()) {
                 return mapConverter.convert(innerResult.value);
@@ -172,7 +172,7 @@ export class BaseConverter<T, TC=unknown> implements Converter<T, TC> {
      * @param constraint Constraint evaluation function
      */
     public withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T>, context?: TC) => {
+        return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
             const result = this._converter(from, this, context);
             if (result.isSuccess()) {
                 const constraintResult = constraint(result.value);
