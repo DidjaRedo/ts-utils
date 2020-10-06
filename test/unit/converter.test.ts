@@ -53,11 +53,15 @@ describe('BaseConverter class', () => {
             return succeed(from.replace('{{value}}', v));
         }
         return fail('Cannot convert non-string');
-    });
+    }, { value: 'DEFAULT VALUE' });
 
     describe('convert method', () => {
         test('passes context if supplied', () => {
             expect(contextConverter.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
+        });
+
+        test('uses default context if no context is supplied', () => {
+            expect(contextConverter.convert('{{value}} is expected')).toSucceedWith('DEFAULT VALUE is expected');
         });
     });
 
@@ -68,6 +72,10 @@ describe('BaseConverter class', () => {
 
         test('passes context if supplied', () => {
             expect(contextConverter.convertOptional('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
+        });
+
+        test('uses default context if no context is supplied', () => {
+            expect(contextConverter.convertOptional('{{value}} is expected')).toSucceedWith('DEFAULT VALUE is expected');
         });
     });
 
@@ -113,6 +121,11 @@ describe('BaseConverter class', () => {
             const optionalTest = contextConverter.optional();
             expect(optionalTest.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
         });
+
+        test('passes default context to base converter if none supplied', () => {
+            const optionalTest = contextConverter.optional();
+            expect(optionalTest.convert('{{value}} is expected')).toSucceedWith('DEFAULT VALUE is expected');
+        });
     });
 
     describe('map method', () => {
@@ -146,6 +159,15 @@ describe('BaseConverter class', () => {
                 got: 'expected is expected',
             });
         });
+
+        test('passes default context to the base converter if no context is supplied', () => {
+            const testMap = contextConverter.map((from: string): Result<{ got: string}> => {
+                return succeed({ got: from });
+            });
+            expect(testMap.convert('{{value}} is expected')).toSucceedWith({
+                got: 'DEFAULT VALUE is expected',
+            });
+        });
     });
 
     describe('mapConvert method', () => {
@@ -170,6 +192,16 @@ describe('BaseConverter class', () => {
             const cc = contextConverter.mapConvert(tc);
             expect(cc.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith({
                 got: 'expected is expected',
+            });
+        });
+
+        test('passes default context to the base converter if none is supplied', () => {
+            const tc = new BaseConverter<{ got: string }>((from: unknown) => {
+                return succeed({ got: from as string });
+            });
+            const cc = contextConverter.mapConvert(tc);
+            expect(cc.convert('{{value}} is expected')).toSucceedWith({
+                got: 'DEFAULT VALUE is expected',
             });
         });
     });
@@ -218,11 +250,16 @@ describe('BaseConverter class', () => {
                     expect(constrained.convert(v)).toFailWith(/not a number/i);
                 });
             });
+        });
 
-            test('passes a supplied context to the base converter', () => {
-                const constrained = contextConverter.withConstraint((s) => s.includes('expected'));
-                expect(constrained.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
-            });
+        test('passes a supplied context to the base converter', () => {
+            const constrained = contextConverter.withConstraint((s) => s.includes('expected'));
+            expect(constrained.convert('{{value}} is expected', { value: 'expected' })).toSucceedWith('expected is expected');
+        });
+
+        test('passes the default context to the base converter if none is supplied', () => {
+            const constrained = contextConverter.withConstraint((s) => s.includes('expected'));
+            expect(constrained.convert('{{value}} is expected')).toSucceedWith('DEFAULT VALUE is expected');
         });
     });
 });

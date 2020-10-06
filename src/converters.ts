@@ -26,6 +26,7 @@ import { Result, captureResult, fail, succeed } from './result';
 
 import { DateTime } from 'luxon';
 import { ExtendedArray } from './extendedArray';
+import Mustache from 'mustache';
 import { isKeyOf } from './utils';
 
 type OnError = 'failOnError' | 'ignoreErrors';
@@ -41,14 +42,29 @@ export const string = new BaseConverter<string>((from: unknown) => {
 });
 
 /**
- *
- * @param values A converter to convert unknown to one of a set of
- * supplied enumerated values.  Anything else fails.
+ * Helper function to create a converter which converts unknown to string, applying
+ * template conversions supplied at construction time or at runtime as context.
+ * @param defaultContext optional default context to use for template values
  */
-export function enumeratedValue<T>(values: T[]): Converter<T> {
-    return new BaseConverter<T>((from: unknown): Result<T> => {
-        const index = values.indexOf(from as T);
-        return (index >= 0 ? succeed(values[index]) : fail(`Invalid enumerated value ${JSON.stringify(from)}`));
+export function templateString(defaultContext?: unknown): Converter<string, unknown> {
+    return new BaseConverter<string, unknown>((from: unknown, _self: Converter<string, unknown>, context?: unknown) => {
+        if (typeof from !== 'string') {
+            return fail(`Not a string: ${JSON.stringify(from)}`);
+        }
+        return captureResult(() => Mustache.render(from, context));
+    }, defaultContext);
+}
+
+/**
+ * A converter to convert unknown to one of a set of supplied enumerated values. Anything else fails.
+ * Allowed enumerated values can also be supplied as context at conversion time.
+ * @param values Array of allowed values
+ */
+export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
+    return new BaseConverter((from: unknown, _self: Converter<T, T[]>, context?: T[]): Result<T> => {
+        const v = context ?? values;
+        const index = v.indexOf(from as T);
+        return (index >= 0 ? succeed(v[index]) : fail(`Invalid enumerated value ${JSON.stringify(from)}`));
     });
 }
 
@@ -92,14 +108,15 @@ export const optionalString = string.optional();
 
 /**
  * Creates a converter which converts any string into an array of strings
- * by separating at a supplied delimiter.
+ * by separating at a supplied delimiter. Delimeter may also be supplied
+ * as context at conversion time.
  * @param delimiter The delimiter at which to split.
  */
-export function delimitedString(delimiter: string, options: 'filtered'|'all' = 'filtered'): Converter<string[]> {
-    return new BaseConverter<string[]>((from: unknown) => {
+export function delimitedString(delimiter: string, options: 'filtered'|'all' = 'filtered'): Converter<string[], string> {
+    return new BaseConverter<string[], string>((from: unknown, _self: Converter<string[], string>, context?: string) => {
         const result = string.convert(from);
         if (result.isSuccess()) {
-            let strings = result.value.split(delimiter);
+            let strings = result.value.split(context ?? delimiter);
             if (options !== 'all') {
                 strings = strings.filter((s) => (s.trim().length > 0));
             }
@@ -183,8 +200,8 @@ export function oneOf<T>(converters: Array<Converter<T>>, onError: OnError = 'ig
  * @param converter Converter used to convert each item in the array
  * @param ignoreErrors Specifies treatment of unconvertable elements
  */
-export function arrayOf<T>(converter: Converter<T>, onError: OnError = 'failOnError'): Converter<T[]> {
-    return new BaseConverter((from: unknown) => {
+export function arrayOf<T, TC=undefined>(converter: Converter<T, TC>, onError: OnError = 'failOnError'): Converter<T[], TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T[], TC>, context?: TC) => {
         if (!Array.isArray(from)) {
             return fail(`Not an array: ${JSON.stringify(from)}`);
         }
@@ -192,7 +209,7 @@ export function arrayOf<T>(converter: Converter<T>, onError: OnError = 'failOnEr
         const successes: T[] = [];
         const errors: string[] = [];
         for (const item of from) {
-            const result = converter.convert(item);
+            const result = converter.convert(item, context);
             if (result.isSuccess() && result.value !== undefined) {
                 successes.push(result.value);
             }
@@ -214,7 +231,7 @@ export function arrayOf<T>(converter: Converter<T>, onError: OnError = 'failOnEr
  * @param converter Converter used to convert each item in the array
  * @param ignoreErrors Specifies treatment of unconvertable elements
  */
-export function extendedArrayOf<T>(label: string, converter: Converter<T>, onError: OnError = 'failOnError'): Converter<ExtendedArray<T>> {
+export function extendedArrayOf<T, TC=undefined>(label: string, converter: Converter<T, TC>, onError: OnError = 'failOnError'): Converter<ExtendedArray<T>, TC> {
     return arrayOf(converter, onError).map((items: T[]) => {
         return captureResult(() => new ExtendedArray(label, ...items));
     });
@@ -227,8 +244,8 @@ export function extendedArrayOf<T>(label: string, converter: Converter<T>, onErr
  * @param converter Converter used to convert each item in the record
  * @param ignoreErrors Specifies treatment of unconvertable elements
  */
-export function recordOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 'fail'): Converter<Record<string, T>> {
-    return new BaseConverter((from: unknown) => {
+export function recordOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 'fail'|'ignore' = 'fail'): Converter<Record<string, T>, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<Record<string, T>, TC>, context?: TC) => {
         if ((typeof from !== 'object') || Array.isArray(from)) {
             return fail(`Not a string-keyed object: ${JSON.stringify(from)}`);
         }
@@ -238,7 +255,7 @@ export function recordOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 
 
         for (const key in from) {
             if (isKeyOf(key, from)) {
-                const result = converter.convert(from[key] as unknown);
+                const result = converter.convert(from[key] as unknown, context);
                 if (result.isSuccess()) {
                     record[key] = result.value;
                 }
@@ -261,8 +278,8 @@ export function recordOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 
  * @param converter Converter used to convert each item in the record
  * @param ignoreErrors Specifies treatment of unconvertable elements
  */
-export function mapOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 'fail'): Converter<Map<string, T>> {
-    return new BaseConverter((from: unknown) => {
+export function mapOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 'fail'|'ignore' = 'fail'): Converter<Map<string, T>, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<Map<string, T>, TC>, context?: TC) => {
         if ((typeof from !== 'object') || Array.isArray(from)) {
             return fail(`Not a string-keyed object: ${JSON.stringify(from)}`);
         }
@@ -272,7 +289,7 @@ export function mapOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 'fa
 
         for (const key in from) {
             if (isKeyOf(key, from)) {
-                const result = converter.convert(from[key] as unknown);
+                const result = converter.convert(from[key] as unknown, context);
                 if (result.isSuccess()) {
                     map.set(key, result.value);
                 }
@@ -295,11 +312,11 @@ export function mapOf<T>(converter: Converter<T>, onError: 'fail'|'ignore' = 'fa
  * @param name The name of the field to be extracted.
  * @param converter Converter used to convert the extracted field.
  */
-export function field<T>(name: string, converter: Converter<T>): Converter<T> {
-    return new BaseConverter((from: unknown) => {
+export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
         if (typeof from === 'object' && from !== null) {
             if (isKeyOf(name, from)) {
-                return converter.convert(from[name]).onFailure((message) => {
+                return converter.convert(from[name], context).onFailure((message) => {
                     return fail(`Field ${name}: ${message}`);
                 });
             }

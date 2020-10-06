@@ -84,10 +84,12 @@ export interface Converter<T, TC=undefined> {
  * Simple templated converter wrapper to simplify typed conversion from unknown.
  */
 export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
-    private _converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>;
+    protected readonly _defaultContext?: TC;
+    private readonly _converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>;
 
-    public constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>) {
+    public constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>, defaultContext?: TC) {
         this._converter = converter;
+        this._defaultContext = defaultContext;
     }
 
     /**
@@ -96,7 +98,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * @returns An @see Result with a value or an error message
      */
     public convert(from: unknown, context?: TC): Result<T> {
-        return this._converter(from, this, context);
+        return this._converter(from, this, context ?? this._defaultContext);
     }
 
     /**
@@ -110,7 +112,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
      */
     public convertOptional(from: unknown, context?: TC, onError?: OnError): Result<T|undefined> {
-        const result = this._converter(from, this, context);
+        const result = this._converter(from, this, this._context(context));
         if (result.isFailure()) {
             onError = onError ?? 'ignoreErrors';
             return ((from === undefined) || onError === 'ignoreErrors') ? succeed(undefined) : result;
@@ -131,7 +133,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     public optional(onError?: OnError): Converter<T|undefined, TC> {
         return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
             onError = onError ?? 'ignoreErrors';
-            return this.convertOptional(from, context, onError);
+            return this.convertOptional(from, this._context(context), onError);
         });
     }
 
@@ -141,7 +143,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      */
     public map<T2>(mapper: (from: T) => Result<T2>): Converter<T2, TC> {
         return new BaseConverter((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
-            const innerResult = this._converter(from, this, context);
+            const innerResult = this._converter(from, this, this._context(context));
             if (innerResult.isSuccess()) {
                 return mapper(innerResult.value);
             }
@@ -155,7 +157,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      */
     public mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC> {
         return new BaseConverter((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
-            const innerResult = this._converter(from, this, context);
+            const innerResult = this._converter(from, this, this._context(context));
             if (innerResult.isSuccess()) {
                 return mapConverter.convert(innerResult.value);
             }
@@ -173,7 +175,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      */
     public withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC> {
         return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
-            const result = this._converter(from, this, context);
+            const result = this._converter(from, this, this._context(context));
             if (result.isSuccess()) {
                 const constraintResult = constraint(result.value);
                 if (typeof constraintResult === 'boolean') {
@@ -183,5 +185,9 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
             }
             return result;
         });
+    }
+
+    protected _context(supplied?: TC): TC|undefined {
+        return supplied ?? this._defaultContext;
     }
 }
