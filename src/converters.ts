@@ -173,11 +173,11 @@ export const optionalBoolean = boolean.optional();
  * @param converters An ordered list of converters to be considered
  * @param onError Specifies treatment of unconvertable elements
  */
-export function oneOf<T>(converters: Array<Converter<T>>, onError: OnError = 'ignoreErrors'): Converter<T> {
-    return new BaseConverter((from: unknown) => {
+export function oneOf<T, TC=unknown>(converters: Array<Converter<T, TC>>, onError: OnError = 'ignoreErrors'): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self, context?: TC) => {
         const errors: string[] = [];
         for (const converter of converters) {
-            const result = converter.convert(from);
+            const result = converter.convert(from, context);
             if (result.isSuccess() && (result.value !== undefined)) {
                 return result;
             }
@@ -355,14 +355,14 @@ export function optionalField<T, TC=undefined>(name: string, converter: Converte
     });
 }
 
-export type FieldConverters<T> = { [ key in keyof T ]: Converter<T[key]> };
+export type FieldConverters<T, TC=unknown> = { [ key in keyof T ]: Converter<T[key], TC> };
 
-export class ObjectConverter<T> extends BaseConverter<T> {
+export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
     public readonly fields: FieldConverters<T>;
     public readonly optionalFields: (keyof T)[];
 
-    public constructor(fields: FieldConverters<T>, optional?: (keyof T)[]) {
-        super((from: unknown) => {
+    public constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]) {
+        super((from: unknown, _self, context?: TC) => {
             // eslint bug thinks key is used before defined
             // eslint-disable-next-line no-use-before-define
             const converted = {} as { [key in keyof T]: T[key] };
@@ -371,8 +371,8 @@ export class ObjectConverter<T> extends BaseConverter<T> {
                 if (fields[key]) {
                     const isOptional = optional?.includes(key) ?? false;
                     const result = isOptional
-                        ? optionalField(key, fields[key]).convert(from)
-                        : field(key, fields[key]).convert(from);
+                        ? optionalField(key, fields[key]).convert(from, context)
+                        : field(key, fields[key]).convert(from, context);
                     if (result.isSuccess() && (result.value !== undefined)) {
                         converted[key] = result.value;
                     }
@@ -388,11 +388,11 @@ export class ObjectConverter<T> extends BaseConverter<T> {
         this.optionalFields = optional ?? [];
     }
 
-    public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>> {
-        return new ObjectConverter<Partial<T>>(this.fields as FieldConverters<Partial<T>>, optional);
+    public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
+        return new ObjectConverter<Partial<T>, TC>(this.fields as FieldConverters<Partial<T>, TC>, optional);
     }
 
-    public addPartial(addOptionalFields: (keyof T)[]): ObjectConverter<Partial<T>> {
+    public addPartial(addOptionalFields: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
         return this.partial([...this.optionalFields, ...addOptionalFields]);
     }
 }
@@ -427,8 +427,8 @@ export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): O
  * @param fields An object defining the shape of the target object and the field converters
  * to be used to construct it.
  */
-export function transform<T>(fields: FieldConverters<T>): Converter<T> {
-    return new BaseConverter((from: unknown) => {
+export function transform<T, TC=unknown>(fields: FieldConverters<T, TC>): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self, context?: TC) => {
         // eslint bug thinks key is used before defined
         // eslint-disable-next-line no-use-before-define
         const converted = {} as { [ key in keyof T]: T[key] };
@@ -436,7 +436,7 @@ export function transform<T>(fields: FieldConverters<T>): Converter<T> {
 
         for (const key in fields) {
             if (fields[key]) {
-                const result = fields[key].convert(from);
+                const result = fields[key].convert(from, context);
                 if (result.isSuccess() && (result.value !== undefined)) {
                     converted[key] = result.value;
                 }
@@ -455,12 +455,12 @@ export function transform<T>(fields: FieldConverters<T>): Converter<T> {
  * @param converter Converter used to convert min and max extent of the raid
  * @param constructor Optional static constructor to instantiate the object
  */
-export function rangeTypeOf<T, RT extends RangeOf<T>>(converter: Converter<T>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT> {
-    return new BaseConverter((from: unknown) => {
+export function rangeTypeOf<T, RT extends RangeOf<T>, TC=unknown>(converter: Converter<T, TC>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT, TC> {
+    return new BaseConverter((from: unknown, _self, context?: TC) => {
         const result = object({
             min: converter,
             max: converter,
-        }, ['min', 'max']).convert(from);
+        }, ['min', 'max']).convert(from, context);
         if (result.isSuccess()) {
             return constructor({ min: result.value.min, max: result.value.max });
         }
@@ -468,6 +468,6 @@ export function rangeTypeOf<T, RT extends RangeOf<T>>(converter: Converter<T>, c
     });
 }
 
-export function rangeOf<T>(converter: Converter<T>): Converter<RangeOf<T>> {
-    return rangeTypeOf<T, RangeOf<T>>(converter, RangeOf.createRange);
+export function rangeOf<T, TC=unknown>(converter: Converter<T, TC>): Converter<RangeOf<T>, TC> {
+    return rangeTypeOf<T, RangeOf<T>, TC>(converter, RangeOf.createRange);
 }
