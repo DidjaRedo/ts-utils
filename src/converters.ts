@@ -173,7 +173,7 @@ export const optionalBoolean = boolean.optional();
  * @param converters An ordered list of converters to be considered
  * @param onError Specifies treatment of unconvertable elements
  */
-export function oneOf<T>(converters: Array<Converter<T>>, onError: OnError = 'ignoreErrors'): Converter<T> {
+export function oneOf<T>(converters: Array<Converter<T, unknown>>, onError: OnError = 'ignoreErrors'): Converter<T, unknown> {
     return new BaseConverter((from: unknown) => {
         const errors: string[] = [];
         for (const converter of converters) {
@@ -355,9 +355,9 @@ export function optionalField<T, TC=undefined>(name: string, converter: Converte
     });
 }
 
-export type FieldConverters<T> = { [ key in keyof T ]: Converter<T[key]> };
+export type FieldConverters<T> = { [ key in keyof T ]: Converter<T[key], unknown> };
 
-export class ObjectConverter<T> extends BaseConverter<T> {
+export class ObjectConverter<T> extends BaseConverter<T, unknown> {
     public readonly fields: FieldConverters<T>;
     public readonly optionalFields: (keyof T)[];
 
@@ -427,7 +427,7 @@ export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): O
  * @param fields An object defining the shape of the target object and the field converters
  * to be used to construct it.
  */
-export function transform<T>(fields: FieldConverters<T>): Converter<T> {
+export function transform<T>(fields: FieldConverters<T>): Converter<T, unknown> {
     return new BaseConverter((from: unknown) => {
         // eslint bug thinks key is used before defined
         // eslint-disable-next-line no-use-before-define
@@ -455,7 +455,7 @@ export function transform<T>(fields: FieldConverters<T>): Converter<T> {
  * @param converter Converter used to convert min and max extent of the raid
  * @param constructor Optional static constructor to instantiate the object
  */
-export function rangeTypeOf<T, RT extends RangeOf<T>>(converter: Converter<T>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT> {
+export function rangeTypeOf<T, RT extends RangeOf<T>>(converter: Converter<T>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT, unknown> {
     return new BaseConverter((from: unknown) => {
         const result = object({
             min: converter,

@@ -200,6 +200,15 @@ describe('Converters module', () => {
                 });
             });
 
+            test('can combine converters with different context types', () => {
+                type TestEnum = 'enum1'|'enum2';
+                const enumConverter = Converters.enumeratedValue<TestEnum>(['enum1', 'enum2']);
+                const enumFirst = Converters.oneOf<TestEnum|number>([enumConverter, Converters.number]);
+                expect(enumFirst.convert('enum1')).toSucceedWith('enum1');
+                expect(enumFirst.convert(123)).toSucceedWith(123);
+                expect(enumFirst.convert('enum7')).toFailWith(/invalid enumerated value/i);
+            });
+
             test('fails if none of the converters can handle the value', () => {
                 expect(numFirst.convert(true)).toFailWith(/no matching converter/i);
             });
@@ -720,6 +729,7 @@ describe('Converters module', () => {
         interface Want {
             stringField: string;
             optionalStringField?: string;
+            enumField: 'enum1'|'enum2',
             numField: number;
             boolField: boolean;
             numbers?: number[];
@@ -728,6 +738,7 @@ describe('Converters module', () => {
         const converter = Converters.object<Want>({
             stringField: Converters.string,
             optionalStringField: Converters.string,
+            enumField: Converters.enumeratedValue<'enum1'|'enum2'>(['enum1', 'enum2']),
             numField: Converters.number,
             boolField: Converters.boolean,
             numbers: Converters.arrayOf(Converters.number),
@@ -739,12 +750,14 @@ describe('Converters module', () => {
         test('converts a valid object with missing optional fields', () => {
             const src = {
                 stringField: 'string1',
+                enumField: 'enum1',
                 numField: -1,
                 boolField: true,
             };
 
             const expected: Want = {
                 stringField: 'string1',
+                enumField: 'enum1',
                 numField: -1,
                 boolField: true,
             };
@@ -757,6 +770,7 @@ describe('Converters module', () => {
             const src = {
                 stringField: 'string1',
                 optionalStringField: 'optional string',
+                enumField: 'enum2',
                 numField: -1,
                 boolField: true,
                 numbers: [-1, 0, 1, '2'],
@@ -765,6 +779,7 @@ describe('Converters module', () => {
             const expected: Want = {
                 stringField: 'string1',
                 optionalStringField: 'optional string',
+                enumField: 'enum2',
                 numField: -1,
                 boolField: true,
                 numbers: [-1, 0, 1, 2],
@@ -799,6 +814,7 @@ describe('Converters module', () => {
             const partialConverter = Converters.object<Want>({
                 stringField: Converters.string,
                 optionalStringField: Converters.optionalString,
+                enumField: Converters.enumeratedValue<'enum1'|'enum2'>(['enum1', 'enum2']),
                 numField: Converters.number,
                 boolField: Converters.boolean,
                 numbers: undefined,
@@ -807,6 +823,7 @@ describe('Converters module', () => {
             const src = {
                 stringField: 'string1',
                 optionalStringField: 'optional string',
+                enumField: 'enum1',
                 numField: -1,
                 boolField: true,
                 numbers: [-1, 0, 1, '2'],
@@ -815,6 +832,7 @@ describe('Converters module', () => {
             const expected: Want = {
                 stringField: 'string1',
                 optionalStringField: 'optional string',
+                enumField: 'enum1',
                 numField: -1,
                 boolField: true,
             };
@@ -827,6 +845,7 @@ describe('Converters module', () => {
             test('succeeds if any of the added fields are missing', () => {
                 const src = {
                     numField: -1,
+                    enumField: 'enum1',
                     boolField: true,
                 };
 
