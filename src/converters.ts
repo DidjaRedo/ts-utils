@@ -412,6 +412,36 @@ export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): O
     return new ObjectConverter(fields, optional);
 }
 
+export type DiscriminatedObjectConverters<T> = Record<string, ObjectConverter<T>>;
+
+/**
+ * Helper to convert a discriminated property without changing shape.  Takes the name of the
+ * discriminator property and a string-keyed record of object converters, and invokes the
+ * converter that corresponds to the value of the discriminator property in the source object.
+ * Fails if the source is not an object or if the discriminator property is missing or has
+ * a value not present in the converters.
+ * @param discriminatorProp Name of the property used to discriminate types
+ * @param converters String-keyed record of converters to invoke, where key corresponds to a value of the
+ * discriminator property.
+ */
+export function discriminatedObject<T, TC=unknown>(discriminatorProp: string, converters: DiscriminatedObjectConverters<T>): Converter<T, TC> {
+    return new BaseConverter((from: unknown) => {
+        if ((typeof from !== 'object') || Array.isArray(from) || from === null) {
+            return fail(`Not a discriminated object: "${JSON.stringify(from)}"`);
+        }
+        if ((!isKeyOf(discriminatorProp, from)) || (!from[discriminatorProp])) {
+            return fail(`Discriminator property ${discriminatorProp} not present in "${JSON.stringify(from)}"`);
+        }
+
+        const discriminatorValue = from[discriminatorProp];
+        const converter = converters[discriminatorValue];
+        if (converter === undefined) {
+            return fail(`No converter for discriminator ${discriminatorProp}="${discriminatorValue}"`);
+        }
+        return converter.convert(from);
+    });
+}
+
 /**
  * Helper to convert an object to a new object with a different shape. The source parameter is
  * an object with key names that correspond to the target object, and an approriate _field_
