@@ -412,7 +412,7 @@ export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): O
     return new ObjectConverter(fields, optional);
 }
 
-export type DiscriminatedObjectConverters<T> = Record<string, ObjectConverter<T>>;
+export type DiscriminatedObjectConverters<T, TD extends string = string, TC=unknown> = Record<TD, Converter<T, TC>>;
 
 /**
  * Helper to convert a discriminated property without changing shape.  Takes the name of the
@@ -424,7 +424,7 @@ export type DiscriminatedObjectConverters<T> = Record<string, ObjectConverter<T>
  * @param converters String-keyed record of converters to invoke, where key corresponds to a value of the
  * discriminator property.
  */
-export function discriminatedObject<T, TC=unknown>(discriminatorProp: string, converters: DiscriminatedObjectConverters<T>): Converter<T, TC> {
+export function discriminatedObject<T, TD extends string = string, TC=unknown>(discriminatorProp: string, converters: DiscriminatedObjectConverters<T, TD>): Converter<T, TC> {
     return new BaseConverter((from: unknown) => {
         if ((typeof from !== 'object') || Array.isArray(from) || from === null) {
             return fail(`Not a discriminated object: "${JSON.stringify(from)}"`);
@@ -433,7 +433,7 @@ export function discriminatedObject<T, TC=unknown>(discriminatorProp: string, co
             return fail(`Discriminator property ${discriminatorProp} not present in "${JSON.stringify(from)}"`);
         }
 
-        const discriminatorValue = from[discriminatorProp];
+        const discriminatorValue = from[discriminatorProp] as TD;
         const converter = converters[discriminatorValue];
         if (converter === undefined) {
             return fail(`No converter for discriminator ${discriminatorProp}="${discriminatorValue}"`);

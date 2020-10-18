@@ -873,7 +873,8 @@ describe('Converters module', () => {
             which: Converters.enumeratedValue<'number thing'>(['number thing']),
             property: Converters.number,
         });
-        const thing = Converters.discriminatedObject<StringThing|NumberThing>('which', {
+        type ThingDiscriminator = 'string thing'|'number thing';
+        const thing = Converters.discriminatedObject<Thing, ThingDiscriminator>('which', {
             'string thing': stConvert,
             'number thing': ntConvert,
         });
@@ -888,8 +889,20 @@ describe('Converters module', () => {
         test('fails to convert discriminated but incorrect objects', () => {
             const stNot = { which: 'string thing', property: 123 };
             const ntNot = { which: 'number thing', property: 'hello' };
-            expect(thing.convert(stNot)).toFailWith(/blargle/i);
-            expect(thing.convert(ntNot)).toFailWith(/blargle/i);
+            expect(thing.convert(stNot)).toFailWith(/not a string/i);
+            expect(thing.convert(ntNot)).toFailWith(/not a number/i);
+        });
+
+        test('fails to convert non-discriminated or incorrectly discriminnated objects objects', () => {
+            expect(thing.convert({ property: 'hello' })).toFailWith(/discriminator.*not present/i);
+            expect(thing.convert({ which: null, property: 'hello' })).toFailWith(/discriminator.*not present/i);
+            expect(thing.convert({ which: 'boolean thing', property: true })).toFailWith(/no converter for discriminator/i);
+        });
+
+        test('fails for non-objects', () => {
+            expect(thing.convert('string thing')).toFailWith(/not a discriminated object/i);
+            expect(thing.convert([{ which: 'string thing', property: 'hello' }])).toFailWith(/not a discriminated object/i);
+            expect(thing.convert(null)).toFailWith(/not a discriminated object/i);
         });
     });
 
