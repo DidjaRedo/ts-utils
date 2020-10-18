@@ -855,6 +855,44 @@ describe('Converters module', () => {
         });
     });
 
+    describe('discriminated object converter', () => {
+        interface StringThing {
+            which: 'string thing';
+            property: string;
+        }
+        interface NumberThing {
+            which: 'number thing';
+            property: number;
+        }
+        type Thing = StringThing|NumberThing;
+        const stConvert = Converters.object<StringThing>({
+            which: Converters.enumeratedValue<'string thing'>(['string thing']),
+            property: Converters.string,
+        });
+        const ntConvert = Converters.object<NumberThing>({
+            which: Converters.enumeratedValue<'number thing'>(['number thing']),
+            property: Converters.number,
+        });
+        const thing = Converters.discriminatedObject<StringThing|NumberThing>('which', {
+            'string thing': stConvert,
+            'number thing': ntConvert,
+        });
+
+        test('converts any properly discriminated value', () => {
+            const st: StringThing = { which: 'string thing', property: 'hello' };
+            const nt: NumberThing = { which: 'number thing', property: 123 };
+            expect(thing.convert(st)).toSucceedWith(st);
+            expect(thing.convert(nt)).toSucceedWith(nt);
+        });
+
+        test('fails to convert discriminated but incorrect objects', () => {
+            const stNot = { which: 'string thing', property: 123 };
+            const ntNot = { which: 'number thing', property: 'hello' };
+            expect(thing.convert(stNot)).toFailWith(/blargle/i);
+            expect(thing.convert(ntNot)).toFailWith(/blargle/i);
+        });
+    });
+
     describe('transform converter', () => {
         interface Want {
             stringField: string;
