@@ -20,8 +20,53 @@
  * SOFTWARE.
  */
 
+import { Result, fail, succeed } from './result';
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function isKeyOf<T extends object>(key: string|number|symbol, item: T): key is keyof T {
     return item.hasOwnProperty(key);
 }
 
+type KeyedThingFactory<TS, TD> = (key: string, thing: TS) => Result<TD>;
+
+/**
+ * Applies a factory method to convert a Record<string, TS> into a Map<string, TD>
+ * @param src The Record object to be converted
+ * @param factory The factory method used to convert elements
+ */
+export function recordToMap<TS, TD>(src: Record<string, TS>, factory: KeyedThingFactory<TS, TD>): Result<Map<string, TD>> {
+    const map = new Map<string, TD>();
+    for (const key in src) {
+        if (src[key] !== undefined) {
+            const itemResult = factory(key, src[key]);
+            if (itemResult.isSuccess()) {
+                map.set(key, itemResult.value);
+            }
+            else {
+                return fail(`${key}: ${itemResult.message}`);
+            }
+        }
+    }
+    return succeed(map);
+}
+
+/**
+ * Applies a factory method to convert a Map<string, TS> into a Record<string, TD>
+ * @param src The Map object to be converted
+ * @param factory The factory method used to convert elements
+ */
+export function mapToRecord<TS, TD>(src: Map<string, TS>, factory: KeyedThingFactory<TS, TD>): Result<Record<string, TD>> {
+    const record: Record<string, TD> = {};
+    for (const kvp of src) {
+        if (kvp[1] !== undefined) {
+            const itemResult = factory(kvp[0], kvp[1]);
+            if (itemResult.isSuccess()) {
+                record[kvp[0]] = itemResult.value;
+            }
+            else {
+                return fail(`${kvp[0]}: ${itemResult.message}`);
+            }
+        }
+    }
+    return succeed(record);
+}
