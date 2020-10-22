@@ -122,6 +122,16 @@ describe('Result module', () => {
                 }
             });
         });
+
+        describe('withDetail method', () => {
+            test('reports success with the supplied detail', () => {
+                expect(succeed('hello').withDetail('fred')).toSucceedWithDetail('hello', 'fred');
+            });
+
+            test('reports success with the success detail if supplied', () => {
+                expect(succeed('hello').withDetail('fred', 'wilma')).toSucceedWithDetail('hello', 'wilma');
+            });
+        });
     });
 
     describe('Failure class', () => {
@@ -208,6 +218,16 @@ describe('Result module', () => {
             });
         });
 
+        describe('withDetail method', () => {
+            test('reports failure with the supplied detail', () => {
+                expect(fail('oops').withDetail('fred')).toFailWithDetail('oops', 'fred');
+            });
+
+            test('reports failure with the default detail even if success detail is supplied', () => {
+                expect(fail('oops').withDetail('fred', 'wilma')).toFailWithDetail('oops', 'fred');
+            });
+        });
+
         describe('toString method', () => {
             test('returns the message', () => {
                 expect(new Failure('oops').toString()).toBe('oops');
@@ -258,6 +278,16 @@ describe('Result module', () => {
                 return failWithDetail('failed', 'should not happen');
             })).toSucceedWith('pass through');
         });
+
+        describe('withDetail method', () => {
+            test('reports success with the supplied detail, overriding original detail', () => {
+                expect(succeedWithDetail('hello', 10).withDetail('fred')).toSucceedWithDetail('hello', 'fred');
+            });
+
+            test('reports success with the success detail if supplied, overriding original detail', () => {
+                expect(succeedWithDetail('hello', 10).withDetail('fred', 'wilma')).toSucceedWithDetail('hello', 'wilma');
+            });
+        });
     });
 
     describe('detailedFailure class', () => {
@@ -289,6 +319,16 @@ describe('Result module', () => {
                 expect(detail).toEqual(detail);
                 return succeedWithDetail('it worked');
             })).toSucceedWith('it worked');
+        });
+
+        describe('withDetail method', () => {
+            test('reports failure with the supplied detail, overriding any original detail', () => {
+                expect(failWithDetail('oops', 10).withDetail('fred')).toFailWithDetail('oops', 'fred');
+            });
+
+            test('reports failure with the default detail, everriding any original detail, even if success detail is supplied', () => {
+                expect(failWithDetail('oops', 10).withDetail('fred', 'wilma')).toFailWithDetail('oops', 'fred');
+            });
         });
     });
 
