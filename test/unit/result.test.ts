@@ -123,6 +123,12 @@ describe('Result module', () => {
             });
         });
 
+        describe('withFailureDetail method', () => {
+            test('reports success with no detail', () => {
+                expect(succeed('hello').withFailureDetail('fred')).toSucceedWithDetail('hello', undefined);
+            });
+        });
+
         describe('withDetail method', () => {
             test('reports success with the supplied detail', () => {
                 expect(succeed('hello').withDetail('fred')).toSucceedWithDetail('hello', 'fred');
@@ -218,6 +224,12 @@ describe('Result module', () => {
             });
         });
 
+        describe('withFailureDetail method', () => {
+            test('reports failure with the supplied detail', () => {
+                expect(fail('oops').withFailureDetail('fred')).toFailWithDetail('oops', 'fred');
+            });
+        });
+
         describe('withDetail method', () => {
             test('reports failure with the supplied detail', () => {
                 expect(fail('oops').withDetail('fred')).toFailWithDetail('oops', 'fred');
@@ -279,6 +291,12 @@ describe('Result module', () => {
             })).toSucceedWith('pass through');
         });
 
+        describe('withFailureDetail method', () => {
+            test('reports success with detail undefined', () => {
+                expect(succeedWithDetail('hello', 10).withFailureDetail('fred')).toSucceedWithDetail('hello', undefined);
+            });
+        });
+
         describe('withDetail method', () => {
             test('reports success with the supplied detail, overriding original detail', () => {
                 expect(succeedWithDetail('hello', 10).withDetail('fred')).toSucceedWithDetail('hello', 'fred');
@@ -319,6 +337,12 @@ describe('Result module', () => {
                 expect(detail).toEqual(detail);
                 return succeedWithDetail('it worked');
             })).toSucceedWith('it worked');
+        });
+
+        describe('withFailureDetail method', () => {
+            test('reports failure with the supplied detail, overriding any original detail', () => {
+                expect(failWithDetail('oops', 10).withFailureDetail('fred')).toFailWithDetail('oops', 'fred');
+            });
         });
 
         describe('withDetail method', () => {

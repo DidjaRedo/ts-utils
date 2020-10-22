@@ -36,6 +36,7 @@ export interface IResult<T> {
     getValueOrDefault(dflt?: T): T|undefined;
     onSuccess<TN>(cb: SuccessContinuation<T, TN>): Result<TN>;
     onFailure(cb: FailureContinuation<T>): Result<T>;
+    withFailureDetail<TD>(detail: TD): DetailedResult<T, TD>;
     withDetail<TD>(detail: TD, successDetail?: TD): DetailedResult<T, TD>;
 }
 
@@ -72,6 +73,10 @@ export class Success<T> implements IResult<T> {
 
     public onFailure(_: FailureContinuation<T>): Result<T> {
         return this;
+    }
+
+    public withFailureDetail<TD>(_detail: TD): DetailedResult<T, TD> {
+        return succeedWithDetail(this.value);
     }
 
     public withDetail<TD>(detail: TD, successDetail?: TD): DetailedResult<T, TD> {
@@ -115,6 +120,10 @@ export class Failure<T> implements IResult<T> {
 
     public onFailure(cb: FailureContinuation<T>): Result<T> {
         return cb(this.message);
+    }
+
+    public withFailureDetail<TD>(detail: TD): DetailedResult<T, TD> {
+        return failWithDetail(this.message, detail);
     }
 
     public withDetail<TD>(detail: TD, _successDetail?: TD): DetailedResult<T, TD> {
