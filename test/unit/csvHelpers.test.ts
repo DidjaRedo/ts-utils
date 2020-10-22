@@ -40,7 +40,7 @@ describe('csvHelpers module', () => {
         ];
 
         test('returns a requested CSV file', () => {
-            jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
+            const spy = jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
                 if (typeof gotPath !== 'string') {
                     throw new Error('Mock implementation only accepts string');
                 }
@@ -49,11 +49,12 @@ describe('csvHelpers module', () => {
             });
 
             expect(readCsvFileSync(path)).toSucceedWith(csvPayload);
+            spy.mockRestore();
         });
 
         test('propagates any error', () => {
             const path = 'path/to/some/file.csv';
-            jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
+            const spy = jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
                 if (typeof gotPath !== 'string') {
                     throw new Error('Mock implementation only accepts string');
                 }
@@ -62,6 +63,7 @@ describe('csvHelpers module', () => {
             });
 
             expect(readCsvFileSync(path)).toFailWith(/mock error/i);
+            spy.mockRestore();
         });
     });
 });
