@@ -735,79 +735,104 @@ describe('Converters module', () => {
             numbers?: number[];
         }
 
-        const converter = Converters.object<Want>({
+        const wantConverters: Converters.FieldConverters<Want> = {
             stringField: Converters.string,
             optionalStringField: Converters.string,
             enumField: Converters.enumeratedValue<'enum1'|'enum2'>(['enum1', 'enum2']),
             numField: Converters.number,
             boolField: Converters.boolean,
             numbers: Converters.arrayOf(Converters.number),
-        }, [
-            'optionalStringField',
-            'numbers',
-        ]);
+        };
 
-        test('converts a valid object with missing optional fields', () => {
-            const src = {
-                stringField: 'string1',
-                enumField: 'enum1',
-                numField: -1,
-                boolField: true,
-            };
+        const optionalFields: (keyof Want)[] = ['optionalStringField', 'numbers'];
 
-            const expected: Want = {
-                stringField: 'string1',
-                enumField: 'enum1',
-                numField: -1,
-                boolField: true,
-            };
+        [
+            {
+                converter: Converters.object<Want>(wantConverters, optionalFields),
+                description: 'with optional fields supplied directly',
+            },
+            {
+                converter: Converters.object<Want>(wantConverters, { optionalFields }),
+                description: 'with optional properties supplied as ObjectConverterOptions',
+            },
+        ].forEach((t) => {
+            describe(t.description, () => {
+                const converter = t.converter;
+                test('converts a valid object with missing optional fields', () => {
+                    const src = {
+                        stringField: 'string1',
+                        enumField: 'enum1',
+                        numField: -1,
+                        boolField: true,
+                    };
 
-            expect(converter.convert(src))
-                .toSucceedWith(expected);
-        });
+                    const expected: Want = {
+                        stringField: 'string1',
+                        enumField: 'enum1',
+                        numField: -1,
+                        boolField: true,
+                    };
 
-        test('converts a valid object with optional fields present', () => {
-            const src = {
-                stringField: 'string1',
-                optionalStringField: 'optional string',
-                enumField: 'enum2',
-                numField: -1,
-                boolField: true,
-                numbers: [-1, 0, 1, '2'],
-            };
+                    expect(converter.convert(src))
+                        .toSucceedWith(expected);
+                });
 
-            const expected: Want = {
-                stringField: 'string1',
-                optionalStringField: 'optional string',
-                enumField: 'enum2',
-                numField: -1,
-                boolField: true,
-                numbers: [-1, 0, 1, 2],
-            };
+                test('converts a valid object with optional fields present', () => {
+                    const src = {
+                        stringField: 'string1',
+                        optionalStringField: 'optional string',
+                        enumField: 'enum2',
+                        numField: -1,
+                        boolField: true,
+                        numbers: [-1, 0, 1, '2'],
+                    };
 
-            expect(converter.convert(src))
-                .toSucceedWith(expected);
-        });
+                    const expected: Want = {
+                        stringField: 'string1',
+                        optionalStringField: 'optional string',
+                        enumField: 'enum2',
+                        numField: -1,
+                        boolField: true,
+                        numbers: [-1, 0, 1, 2],
+                    };
 
-        test('fails if any non-optional fields are missing', () => {
-            const src = {
-                misnamedStringField: 'string1',
-                numField: -1,
-                boolField: true,
-            };
-            expect(converter.convert(src))
-                .toFailWith(/stringField not found/i);
-        });
+                    expect(converter.convert(src))
+                        .toSucceedWith(expected);
+                });
 
-        test('fails if any non-optional fields are mistyped', () => {
-            const src = {
-                stringField: 'string1',
-                numField: true,
-                boolField: -1,
-            };
+                test('fails if any non-optional fields are missing', () => {
+                    const src = {
+                        misnamedStringField: 'string1',
+                        numField: -1,
+                        boolField: true,
+                    };
+                    expect(converter.convert(src))
+                        .toFailWith(/stringField not found/i);
+                });
 
-            expect(converter.convert(src))
-                .toFailWith(/not a number/i);
+                test('fails if any non-optional fields are mistyped', () => {
+                    const src = {
+                        stringField: 'string1',
+                        numField: true,
+                        boolField: -1,
+                    };
+                    expect(converter.convert(src))
+                        .toFailWith(/not a number/i);
+                });
+
+                describe('with partial specified', () => {
+                    test('succeeds if any of the added fields are missing', () => {
+                        const src = {
+                            numField: -1,
+                            enumField: 'enum1',
+                            boolField: true,
+                        };
+
+                        expect(converter.addPartial(['stringField']).convert(src))
+                            .toSucceedWith(src);
+                    });
+                });
+            });
         });
 
         test('silently ignores fields without a converter', () => {
@@ -839,19 +864,6 @@ describe('Converters module', () => {
 
             expect(partialConverter.convert(src))
                 .toSucceedWith(expected);
-        });
-
-        describe('with partial specified', () => {
-            test('succeeds if any of the added fields are missing', () => {
-                const src = {
-                    numField: -1,
-                    enumField: 'enum1',
-                    boolField: true,
-                };
-
-                expect(converter.addPartial(['stringField']).convert(src))
-                    .toSucceedWith(src);
-            });
         });
     });
 

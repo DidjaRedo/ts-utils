@@ -355,13 +355,52 @@ export function optionalField<T, TC=undefined>(name: string, converter: Converte
     });
 }
 
+/**
+ * Options for an @see ObjectConverter.
+ */
+export interface ObjectConverterOptions<T> {
+    /**
+     * If present, lists optional fields. Missing non-optional fields cause an error.
+     */
+    optionalFields?: (keyof T)[];
+    /**
+     * If true, unrecognized fields yield an error.  If false or undefined (default),
+     * unrecognized fields are ignored.
+     */
+    strict?: boolean;
+}
+
+/**
+ * Per-property converters for each of the properties in type T.
+ */
 export type FieldConverters<T, TC=unknown> = { [ key in keyof T ]: Converter<T[key], TC> };
 
+/**
+ * Converter to convert an object of type T without changing shape, given a @see FieldConverters<T>.
+ * If all of the required fields exist and can be converted, returns a new object with the converted
+ * values under the original key names.  If any required fields do not exist or cannot be converted,
+ * the entire conversion fails.  See @see ObjectConverterOptions for other conversion options.
+ */
 export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
     public readonly fields: FieldConverters<T>;
-    public readonly optionalFields: (keyof T)[];
+    public readonly options: ObjectConverterOptions<T>;
 
-    public constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]) {
+    /**
+     * Constructs a new @see ObjectConverter<T> using options supplied in an
+     * optional @see ObjectConverterOptions<T>.
+     * @param fields A @see FieldConverters<T> containing converters for each field
+     * @param options An optional @see ObjectConverterOptions to configure the conversion
+     */
+    public constructor(fields: FieldConverters<T, TC>, options?: ObjectConverterOptions<T>)
+
+    /**
+     * Constructs a new @see ObjectConverter<T> using optional fields supplied in an
+     * optional array of keyof T.
+     * @param fields A @see FieldConverters<T> containing converters for each field
+     * @param optional An optional array of keyof T listing fields that are not required.
+     */
+    public constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]);
+    public constructor(fields: FieldConverters<T, TC>, opt?: ObjectConverterOptions<T>|(keyof T)[]) {
         super((from: unknown, _self, context?: TC) => {
             // eslint bug thinks key is used before defined
             // eslint-disable-next-line no-use-before-define
@@ -369,7 +408,7 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
             const errors: string[] = [];
             for (const key in fields) {
                 if (fields[key]) {
-                    const isOptional = optional?.includes(key) ?? false;
+                    const isOptional = this.options.optionalFields?.includes(key) ?? false;
                     const result = isOptional
                         ? optionalField(key, fields[key]).convert(from, context)
                         : field(key, fields[key]).convert(from, context);
@@ -385,15 +424,22 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
         });
 
         this.fields = fields;
-        this.optionalFields = optional ?? [];
+        if (Array.isArray(opt)) {
+            this.options = { optionalFields: opt };
+        }
+        else {
+            this.options = opt ?? {};
+        }
     }
 
-    public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
-        return new ObjectConverter<Partial<T>, TC>(this.fields as FieldConverters<Partial<T>, TC>, optional);
+    public partial(options: ObjectConverterOptions<T>): ObjectConverter<Partial<T>, TC>;
+    public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>, TC>;
+    public partial(opt?: ObjectConverterOptions<T>|(keyof T)[]): ObjectConverter<Partial<T>, TC> {
+        return new ObjectConverter<Partial<T>, TC>(this.fields as FieldConverters<Partial<T>, TC>, opt as ObjectConverterOptions<Partial<T>>);
     }
 
     public addPartial(addOptionalFields: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
-        return this.partial([...this.optionalFields, ...addOptionalFields]);
+        return this.partial([...this.options.optionalFields ?? [], ...addOptionalFields]);
     }
 }
 
@@ -407,9 +453,11 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
  * Fields that succeed but convert to undefined are omitted from the result object but do not
  * fail the conversion.
  * @param fields An object containing defining the shape and converters to be applied.
+ * @param opt An @see ObjectConverterOptions<T> containing options for the object converter, or
+ * an array of (keyof T) containing optional keys.
  */
-export function object<T>(fields: FieldConverters<T>, optional?: (keyof T)[]): ObjectConverter<T> {
-    return new ObjectConverter(fields, optional);
+export function object<T>(fields: FieldConverters<T>, opt?: (keyof T)[]|ObjectConverterOptions<T>): ObjectConverter<T> {
+    return new ObjectConverter(fields, opt as ObjectConverterOptions<T>);
 }
 
 export type DiscriminatedObjectConverters<T, TD extends string = string, TC=unknown> = Record<TD, Converter<T, TC>>;
