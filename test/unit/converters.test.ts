@@ -669,7 +669,7 @@ describe('Converters module', () => {
         });
 
         test('fails if the parameter is not an object', () => {
-            ['hello', 10, true, (): string => 'hello', undefined].forEach((v) => {
+            ['hello', 10, ['hello'], true, (): string => 'hello', undefined].forEach((v) => {
                 expect(getFirstString.convert(v))
                     .toFailWith(/non-object/i);
             });
@@ -718,7 +718,7 @@ describe('Converters module', () => {
         });
 
         test('fails if the parameter is not an object', () => {
-            ['hello', 10, true, (): string => 'hello', undefined].forEach((v) => {
+            ['hello', 10, ['hello'], true, (): string => 'hello', undefined].forEach((v) => {
                 expect(getFirstString.convert(v))
                     .toFailWith(/non-object/i);
             });
@@ -734,6 +734,10 @@ describe('Converters module', () => {
             boolField: boolean;
             numbers?: number[];
         }
+        const allFields: (keyof Want)[] = [
+            'stringField', 'optionalStringField', 'enumField', 'numField', 'boolField', 'numbers',
+        ];
+        const optionalFields: (keyof Want)[] = ['optionalStringField', 'numbers'];
 
         const wantConverters: Converters.FieldConverters<Want> = {
             stringField: Converters.string,
@@ -744,8 +748,6 @@ describe('Converters module', () => {
             numbers: Converters.arrayOf(Converters.number),
         };
 
-        const optionalFields: (keyof Want)[] = ['optionalStringField', 'numbers'];
-
         [
             {
                 converter: Converters.object<Want>(wantConverters, optionalFields),
@@ -755,9 +757,19 @@ describe('Converters module', () => {
                 converter: Converters.object<Want>(wantConverters, { optionalFields }),
                 description: 'with optional properties supplied as ObjectConverterOptions',
             },
+            {
+                converter: Converters.object<Want>(wantConverters),
+                description: 'with optional fields supplied via addPartial',
+                add: optionalFields,
+            },
+            {
+                converter: Converters.object<Want>(wantConverters, ['optionalStringField']),
+                description: 'with optional fields supplied both directly and via addPartial',
+                add: ['numbers'] as (keyof Want)[],
+            },
         ].forEach((t) => {
             describe(t.description, () => {
-                const converter = t.converter;
+                const converter = (t.add ? t.converter.addPartial(t.add) : t.converter);
                 test('converts a valid object with missing optional fields', () => {
                     const src = {
                         stringField: 'string1',
@@ -835,35 +847,81 @@ describe('Converters module', () => {
             });
         });
 
-        test('silently ignores fields without a converter', () => {
-            const partialConverter = Converters.object<Want>({
+        describe('for unknown properties', () => {
+            const converters: Converters.FieldConverters<Want> = {
                 stringField: Converters.string,
                 optionalStringField: Converters.optionalString,
                 enumField: Converters.enumeratedValue<'enum1'|'enum2'>(['enum1', 'enum2']),
                 numField: Converters.number,
                 boolField: Converters.boolean,
                 numbers: undefined,
+            };
+
+            [
+                {
+                    description: 'a field with undefined converter',
+                    src: {
+                        stringField: 'string1',
+                        optionalStringField: 'optional string',
+                        enumField: 'enum1',
+                        numField: -1,
+                        boolField: true,
+                        numbers: [-1, 0, 1, '2'],
+                    },
+                },
+                {
+                    description: 'an unknown field',
+                    src: {
+                        stringField: 'string1',
+                        optionalStringField: 'optional string',
+                        enumField: 'enum1',
+                        numField: -1,
+                        boolField: true,
+                        extraField: [-1, 0, 1, '2'],
+                    },
+                },
+            ].forEach((t) => {
+                test(`silently ignores ${t.description} by default`, () => {
+                    const partialConverter = Converters.object<Want>(converters);
+
+                    const expected: Want = {
+                        stringField: 'string1',
+                        optionalStringField: 'optional string',
+                        enumField: 'enum1',
+                        numField: -1,
+                        boolField: true,
+                    };
+
+                    expect(partialConverter.convert(t.src)).toSucceedWith(expected);
+                });
+
+                test(`fails for ${t.description} in strict mode`, () => {
+                    const strictConverter = Converters.object<Want>(converters, { strict: true });
+
+                    expect(strictConverter.convert(t.src)).toFailWith(/unexpected property/);
+                });
+            });
+        });
+
+        describe('for non-object source', () => {
+            const tests = [
+                'string',
+                [{ stringField: 'hello' }],
+                () => { return { stringField: 'hello' }; },
+            ];
+            test('fails in non-strict mode', () => {
+                const converter = Converters.object<Want>(wantConverters, allFields);
+                tests.forEach((t) => {
+                    expect(converter.convert(t)).toFailWith(/non-object/);
+                });
             });
 
-            const src = {
-                stringField: 'string1',
-                optionalStringField: 'optional string',
-                enumField: 'enum1',
-                numField: -1,
-                boolField: true,
-                numbers: [-1, 0, 1, '2'],
-            };
-
-            const expected: Want = {
-                stringField: 'string1',
-                optionalStringField: 'optional string',
-                enumField: 'enum1',
-                numField: -1,
-                boolField: true,
-            };
-
-            expect(partialConverter.convert(src))
-                .toSucceedWith(expected);
+            test('fails in strict mode', () => {
+                const converter = Converters.object<Want>(wantConverters, { optionalFields: allFields, strict: true });
+                tests.forEach((t) => {
+                    expect(converter.convert(t)).toFailWith(/not an object/);
+                });
+            });
         });
     });
 

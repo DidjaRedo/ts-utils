@@ -314,7 +314,7 @@ export function mapOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 'fa
  */
 export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
-        if (typeof from === 'object' && from !== null) {
+        if (typeof from === 'object' && (!Array.isArray(from)) && from !== null) {
             if (isKeyOf(name, from)) {
                 return converter.convert(from[name], context).onFailure((message) => {
                     return fail(`Field ${name}: ${message}`);
@@ -336,7 +336,7 @@ export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>
  */
 export function optionalField<T, TC=undefined>(name: string, converter: Converter<T, TC>): Converter<T|undefined, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
-        if (typeof from === 'object' && from !== null) {
+        if (typeof from === 'object' && (!Array.isArray(from)) && from !== null) {
             if (isKeyOf(name, from)) {
                 const result = converter.convert(from[name], context).onFailure((message) => {
                     return fail(`${name}: ${message}`);
@@ -418,6 +418,19 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
                     else if (result.isFailure()) {
                         errors.push(result.message);
                     }
+                }
+            }
+
+            if (this.options.strict === true) {
+                if ((typeof from === 'object') && (!Array.isArray(from))) {
+                    for (const key in from) {
+                        if (from.hasOwnProperty(key) && (!isKeyOf(key, fields) || (fields[key] === undefined))) {
+                            errors.push(`${key}: unexpected property in source object`);
+                        }
+                    }
+                }
+                else {
+                    errors.push('source is not an object');
                 }
             }
             return (errors.length === 0) ? succeed(converted) : fail(errors.join('\n'));
