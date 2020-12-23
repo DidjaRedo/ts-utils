@@ -306,6 +306,52 @@ export function mapOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 'fa
 }
 
 /**
+ * A helper function to extract and convert an element from an array. Succeeds and returns
+ * the converted value if the element exists in the supplied parameter and can be converted.
+ * Fails otherwise.
+ * @param index The index of the field to be extracted.
+ * @param converter Converter used to convert the extracted element.
+ */
+export function element<T, TC=undefined>(index: number, converter: Converter<T, TC>): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
+        if (index < 0) {
+            return fail(`${index}: cannot convert for a negative element index`);
+        }
+        else if (!Array.isArray(from)) {
+            return fail('element converter: source is not an array');
+        }
+        else if (index >= from.length) {
+            return fail(`${index}: element converter index out of range (0..${from.length - 1})`);
+        }
+        return converter.convert(from[index], context);
+    });
+}
+
+/**
+ * A helper function to extract and convert an optional element from an array. Succeeds
+ * and returns the converted value if the element exists in the supplied parameter and can
+ * be converted. Succeeds with undefined if the parameter is an array but the index is too
+ * large. Fails if the supplied parameter is not an array, if the requested index is negative,
+ * or if the element cannot be converted.
+ * @param name The name of the field to be extracted.
+ * @param converter Converter used to convert the extracted field.
+ */
+export function optionalElement<T, TC=undefined>(index: number, converter: Converter<T, TC>): Converter<T|undefined, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
+        if (index < 0) {
+            return fail(`${index}: cannot convert for a negative element index`);
+        }
+        else if (!Array.isArray(from)) {
+            return fail('element converter: source is not an array');
+        }
+        else if (index >= from.length) {
+            return succeed(undefined);
+        }
+        return converter.convert(from[index], context);
+    });
+}
+
+/**
  * A helper function to extract and convert a field from an object. Succeeds and returns
  * the converted value if the field exists in the supplied parameter and can be converted.
  * Fails otherwise.

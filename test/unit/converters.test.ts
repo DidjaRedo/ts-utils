@@ -647,6 +647,99 @@ describe('Converters module', () => {
         });
     });
 
+    describe('element converter', () => {
+        const good = ['test', 10];
+
+        test('converts a correctly-typed field that exists', () => {
+            [
+                { index: 0, converter: Converters.element(0, Converters.string) },
+                { index: 1, converter: Converters.element(1, Converters.number) },
+            ].forEach((t) => {
+                expect(t.converter.convert(good)).toSucceedWith(good[t.index]);
+            });
+        });
+
+        test('fails for an incorrectly typed field', () => {
+            [
+                { index: 0, converter: Converters.element(0, Converters.number) },
+                { index: 1, converter: Converters.element(1, Converters.string) },
+            ].forEach((t) => {
+                expect(t.converter.convert(good)).toFailWith(/not a/i);
+            });
+        });
+
+        test('fails for a non-existent element', () => {
+            const converter = Converters.element(3, Converters.string);
+            expect(converter.convert(good)).toFailWith(/out of range/i);
+        });
+
+        test('fails for a negative element', () => {
+            const converter = Converters.element(-1, Converters.string);
+            expect(converter.convert(good)).toFailWith(/negative/i);
+        });
+
+        test('fails if the source is not an array', () => {
+            const converter = Converters.element(0, Converters.string);
+            ['hello', 10, { field: 'hello' }, true, (): string => 'hello', undefined].forEach((v) => {
+                expect(converter.convert(v)).toFailWith(/not an array/i);
+            });
+        });
+
+        test('passes a supplied context to the base converter', () => {
+            const source = ['{{value}} is expected'];
+            const context = { value: 'expected' };
+            const converter = Converters.element(0, Converters.templateString({ value: 'DEFAULT VALUE' }));
+            expect(converter.convert(source, context)).toSucceedWith('expected is expected');
+        });
+    });
+
+    describe('optionalElement converter', () => {
+        const good = ['test', 10];
+
+        test('converts a correctly-typed field that exists', () => {
+            [
+                { index: 0, converter: Converters.optionalElement(0, Converters.string) },
+                { index: 1, converter: Converters.optionalElement(1, Converters.number) },
+            ].forEach((t) => {
+                expect(t.converter.convert(good)).toSucceedWith(good[t.index]);
+            });
+        });
+
+        test('fails for an incorrectly typed field', () => {
+            [
+                { index: 0, converter: Converters.optionalElement(0, Converters.number) },
+                { index: 1, converter: Converters.optionalElement(1, Converters.string) },
+            ].forEach((t) => {
+                expect(t.converter.convert(good)).toFailWith(/not a/i);
+            });
+        });
+
+        test('succeeds with undefined for a non-existent element', () => {
+            const converter = Converters.optionalElement(3, Converters.string);
+            expect(converter.convert(good)).toSucceedWith(undefined);
+        });
+
+        test('fails for a negative element', () => {
+            const converter = Converters.optionalElement(-1, Converters.string);
+            expect(converter.convert(good)).toFailWith(/negative/i);
+        });
+
+        test('fails if the source is not an array', () => {
+            const converter = Converters.optionalElement(0, Converters.string);
+            ['hello', 10, { field: 'hello' }, true, (): string => 'hello', undefined].forEach((v) => {
+                expect(converter.convert(v)).toFailWith(/not an array/i);
+            });
+        });
+
+        test('passes a supplied context to the base converter', () => {
+            const source = ['{{value}} is expected'];
+            const context = { value: 'expected' };
+            const converter = Converters.optionalElement(0, Converters.templateString({ value: 'DEFAULT VALUE' }));
+            expect(converter.convert(source, context)).toSucceedWith('expected is expected');
+        });
+    });
+
+
     describe('field converter', () => {
         const getFirstString = Converters.field('first', Converters.string);
         const getSecondNumber = Converters.field('second', Converters.number);
