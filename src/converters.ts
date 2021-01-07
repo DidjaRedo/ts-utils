@@ -69,6 +69,17 @@ export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
 }
 
 /**
+ * A converter to convert unknown to some value. Succeeds with the supplied value if an identity
+ * comparison succeeds, fails otherwise.
+ * @param value The value to be compared
+ */
+export function value<T>(value: T): Converter<T, unknown> {
+    return new BaseConverter<T, unknown>((from: unknown, _self: Converter<T, unknown>, _context?: unknown): Result<T> => {
+        return (from === value) ? succeed(value) : fail(`${JSON.stringify(from)}: does not match ${JSON.stringify(value)}`);
+    });
+}
+
+/**
  * A converter to convert unknown to a number.  Numbers and strings
  * with a numeric format succeed.  Anything else fails.
  */
@@ -236,6 +247,18 @@ export function extendedArrayOf<T, TC=undefined>(label: string, converter: Conve
         return captureResult(() => new ExtendedArray(label, ...items));
     });
 }
+
+/**
+ * Converter to convert an unknown to an array of strings. Conversion succeeds
+ * and returns the supplied value if it as an array of strings, fails otherwise.
+ */
+export const stringArray = arrayOf(string);
+
+/**
+ * Converter to convert an unknown to an array of numbers. Conversion succeeds
+ * and returns the supplied value if it as an array of numbers, fails otherwise.
+ */
+export const numberArray = arrayOf(number);
 
 /**
  * A helper wrapper to convert the string-keyed properties of an object to a Record of T.

@@ -152,6 +152,31 @@ describe('Converters module', () => {
         });
     });
 
+    describe('value converter', () => {
+        test('converts identical values', () => {
+            [
+                'this',
+                10,
+                true,
+                [1, 2, 3],
+            ].forEach((t) => {
+                expect(Converters.value(t).convert(t)).toSucceedWith(t);
+            });
+        });
+
+        test('fails for non-identical values', () => {
+            [
+                { from: 'this', to: 'that' },
+                { from: 10, to: '10' },
+                { from: true, to: false },
+                { from: true, to: 'true' },
+                { from: [1, 2, 3], to: [1, 2, 3] },
+            ].forEach((t) => {
+                expect(Converters.value(t.to).convert(t.from)).toFailWith(/does not match/i);
+            });
+        });
+    });
+
     describe('isoDate converter', () => {
         test('converts an ISO formatted string to a Date object', () => {
             const date = new Date();
