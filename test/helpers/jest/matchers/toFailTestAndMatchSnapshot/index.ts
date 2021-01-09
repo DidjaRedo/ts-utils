@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { matcherName, predicate } from './predicate';
 
 import { Context } from 'jest-snapshot/build/types';

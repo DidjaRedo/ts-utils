@@ -1,7 +1,8 @@
-
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { Context } from 'jest-snapshot/build/types';
 import { Result } from '../../ts-utils';
 import { matcherHint } from 'jest-matcher-utils';
+import { printReceivedResult } from '../../utils/matcherHelpers';
 import { toMatchInlineSnapshot } from 'jest-snapshot';
 
 declare global {
@@ -29,8 +30,8 @@ export default {
                 pass: false, message: (): string => {
                     return [
                         matcherHint(`${matcherName}`, 'callback'),
-                        '  Expected: Callback to succeed with a result that matches the snapshot',
-                        '  Received: Callback failed',
+                        'Expected:\n  Callback to succeed with a result that matches the snapshot',
+                        printReceivedResult(received),
                     ].join('\n');
                 },
             };
