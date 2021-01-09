@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { Failure, Success } from '../../ts-utils';
 import { matcherName, predicate } from './predicate';
 

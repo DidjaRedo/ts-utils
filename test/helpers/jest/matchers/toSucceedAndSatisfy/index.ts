@@ -1,7 +1,7 @@
+import { Result, ResultValueType } from '../../ts-utils';
 import { matcherName, predicate } from './predicate';
 import { printExpectedResult, printReceivedResult } from '../../utils/matcherHelpers';
 
-import { Result } from '../../ts-utils';
 import { matcherHint } from 'jest-matcher-utils';
 
 declare global {
@@ -14,7 +14,7 @@ declare global {
              * for the resulting value
              * @param {(value: T) => boolean|void} test
              */
-            toSucceedAndSatisfy<T>(test: (value: T) => boolean|void): R;
+            toSucceedAndSatisfy<T>(test: (value: ResultValueType<T>) => boolean|void): R;
         }
     }
 }

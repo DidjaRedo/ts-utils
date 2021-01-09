@@ -24,6 +24,7 @@
 export type Result<T> = Success<T> | Failure<T>;
 export type SuccessContinuation<T, TN> = (value: T) => Result<TN>;
 export type FailureContinuation<T> = (message: string) => Result<T>;
+export type ResultValueType<T> = T extends Result<infer TV> ? TV : never;
 
 export interface IResultLogger {
     error(message: string): void;
@@ -209,6 +210,7 @@ export class DetailedFailure<T, TD> extends Failure<T> {
 }
 
 export type DetailedResult<T, TD> = DetailedSuccess<T, TD>|DetailedFailure<T, TD>;
+export type ResultDetailType<T> = T extends DetailedResult<unknown, infer TD> ? TD : never;
 
 export function succeedWithDetail<T, TD>(value: T, detail?: TD): DetailedSuccess<T, TD> {
     return new DetailedSuccess<T, TD>(value, detail);
