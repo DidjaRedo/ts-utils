@@ -80,15 +80,17 @@ export interface Converter<T, TC=undefined> {
     withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC>;
 }
 
+type InnerConvertedToType<TCONV> =
+    TCONV extends Converter<infer TTO>
+        ? (TTO extends Array<infer TTOELEM> ? InnerConvertedToType<TTOELEM>[] : TTO)
+        : (TCONV extends Array<infer TELEM> ? InnerConvertedToType<TELEM>[] : TCONV);
+
 /**
  * Infers the type that will be returned by an intstantiated converter.  Works
  * for complex as well as simple types.
  * @example ConvertedToType<typeof Converters.mapOf(Converters.stringArray)> is Map<string, string[]>
  */
-export type ConvertedToType<TCONV> =
-    TCONV extends Converter<infer TTO>
-        ? (TTO extends Array<infer TTOELEM> ? ConvertedToType<TTOELEM>[] : TTO)
-        : (TCONV extends Array<infer TELEM> ? ConvertedToType<TELEM>[] : TCONV);
+export type ConvertedToType<TCONV> = TCONV extends Converter<infer TTO> ? InnerConvertedToType<TTO> : never;
 
 /**
  * Simple templated converter wrapper to simplify typed conversion from unknown.
