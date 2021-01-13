@@ -21,7 +21,7 @@
  */
 import '../helpers/jest';
 import * as Converters from '../../src/converters';
-import { ExtendedArray } from '../../src';
+import { ConvertedToType, ExtendedArray } from '../../src';
 
 describe('Converters module', () => {
     describe('string converter', () => {
@@ -439,6 +439,39 @@ describe('Converters module', () => {
             const bad = { min: max, max: min };
             expect(converter.convert(bad)).toFailWith(/inverted/i);
         });
+    });
+
+    describe('type inference from converter with ConvertedToType', () => {
+        // This doesn't actually test anything per se, but you can hover
+        // over the various local variables for intellisense to show
+        // that typescript is correctly inferring types.
+        // Note that it seems to be losing 'undefined' for optional
+        // fields
+        type TestEnum = 'tv1' | 'tv2' | 'tv3';
+        const s: ConvertedToType<typeof Converters.string> = 'hello';
+        const narc = Converters.arrayOf(Converters.number);
+        const narr: ConvertedToType<typeof narc> = [1, 2, 3];
+        const objc = Converters.object({
+            str: Converters.string,
+            numbers: Converters.arrayOf(Converters.number),
+            enum: Converters.enumeratedValue<TestEnum>(['tv1', 'tv2', 'tv3']),
+            child: Converters.object({
+                bool: Converters.optionalBoolean,
+                map: Converters.mapOf(Converters.arrayOf(Converters.string)),
+            }),
+        });
+        const objt: ConvertedToType<typeof objc>|undefined = {
+            str: 'string',
+            numbers: [1, 2, 3],
+            enum: 'tv3',
+            child: {
+                bool: true,
+                map: new Map<string, string[]>(),
+            },
+        };
+        expect(s).toBeDefined();
+        expect(narr).toBeDefined();
+        expect(objt).toBeDefined();
     });
 
     describe('recordOf converter', () => {
