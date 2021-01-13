@@ -81,6 +81,16 @@ export interface Converter<T, TC=undefined> {
 }
 
 /**
+ * Infers the type that will be returned by an intstantiated converter.  Works
+ * for complex as well as simple types.
+ * @example ConvertedToType<typeof Converters.mapOf(Converters.stringArray)> is Map<string, string[]>
+ */
+export type ConvertedToType<TCONV> =
+    TCONV extends Converter<infer TTO>
+        ? (TTO extends Array<infer TTOELEM> ? ConvertedToType<TTOELEM>[] : TTO)
+        : (TCONV extends Array<infer TELEM> ? ConvertedToType<TELEM>[] : TCONV);
+
+/**
  * Simple templated converter wrapper to simplify typed conversion from unknown.
  */
 export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
