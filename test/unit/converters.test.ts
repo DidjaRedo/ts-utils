@@ -449,6 +449,8 @@ describe('Converters module', () => {
         // fields
         type TestEnum = 'tv1' | 'tv2' | 'tv3';
         const s: ConvertedToType<typeof Converters.string> = 'hello';
+        // n correctly fails because 'number' doesn't extend Converter.
+        // const n: ConvertedToType<number> = 10;
         const narc = Converters.arrayOf(Converters.number);
         const narr: ConvertedToType<typeof narc> = [1, 2, 3];
         const objc = Converters.object({
