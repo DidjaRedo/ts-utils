@@ -68,7 +68,7 @@ describe('Utils module', () => {
         test('converts undefined to Success(undefined)', () => {
             expect(optionalRecordToMap(undefined, (_k, v) => succeed(v))).toSucceedWith(undefined);
         });
-    })
+    });
 
     describe('mapToRecord function', () => {
         test('converts a valid map to a matching record', () => {
@@ -102,5 +102,5 @@ describe('Utils module', () => {
         test('converts undefined to Success(undefined)', () => {
             expect(optionalMapToRecord(undefined, (_k, v) => succeed(v))).toSucceedWith(undefined);
         });
-    })
+    });
 });
