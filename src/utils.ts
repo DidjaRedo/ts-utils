@@ -33,6 +33,7 @@ type KeyedThingFactory<TS, TD> = (key: string, thing: TS) => Result<TD>;
  * Applies a factory method to convert a Record<string, TS> into a Map<string, TD>
  * @param src The Record object to be converted
  * @param factory The factory method used to convert elements
+ * @returns Success with the resulting map, or Failure if an error occurs
  */
 export function recordToMap<TS, TD>(src: Record<string, TS>, factory: KeyedThingFactory<TS, TD>): Result<Map<string, TD>> {
     const map = new Map<string, TD>();
@@ -48,6 +49,17 @@ export function recordToMap<TS, TD>(src: Record<string, TS>, factory: KeyedThing
         }
     }
     return succeed(map);
+}
+
+/**
+ * Applies a factory method to convert an optional Record<string, TS> into a Map<string, TD>
+ * @param src The Record object to be converted or undefined
+ * @param factory The factory method used to convert elements
+ * @returns Success with the resulting map if conversion succeeds, or success with undefined if src is undefined. Returns Failure with
+ * a message if an error occurs.
+ */
+export function optionalRecordToMap<TS, TD>(src: Record<string, TS>|undefined, factory: KeyedThingFactory<TS, TD>): Result<Map<string, TD>|undefined> {
+    return (src === undefined) ? succeed(undefined) : recordToMap(src, factory);
 }
 
 /**
@@ -69,4 +81,15 @@ export function mapToRecord<TS, TD>(src: Map<string, TS>, factory: KeyedThingFac
         }
     }
     return succeed(record);
+}
+
+/**
+ * Applies a factory method to convert an optional Map<string, TS> into a Record<string, TD>
+ * @param src The Map object to be converted or undefined
+ * @param factory The factory method used to convert elements
+ * @returns Success with the resulting record if conversion succeeds, or success with undefined if src is undefined. Returns Failure with
+ * a message if an error occurs.
+ */
+export function optionalMapToRecord<TS, TD>(src: Map<string, TS>|undefined, factory: KeyedThingFactory<TS, TD>): Result<Record<string, TD>|undefined> {
+    return (src === undefined) ? succeed(undefined) : mapToRecord(src, factory);
 }

@@ -23,7 +23,7 @@ import 'jest-extended';
 import '../helpers/jest';
 
 import { Result, fail, succeed } from '../../src';
-import { mapToRecord, recordToMap } from '../../src/utils';
+import { mapToRecord, optionalMapToRecord, optionalRecordToMap, recordToMap } from '../../src/utils';
 
 describe('Utils module', () => {
     const record: Record<string, string> = {
@@ -60,6 +60,16 @@ describe('Utils module', () => {
         });
     });
 
+    describe('optionalRecordToMap function', () => {
+        test('converts a valid Record to a matching Map', () => {
+            expect(optionalRecordToMap(record, (_k, v) => succeed(v))).toSucceedWith(map);
+        });
+
+        test('converts undefined to Success(undefined)', () => {
+            expect(optionalRecordToMap(undefined, (_k, v) => succeed(v))).toSucceedWith(undefined);
+        });
+    })
+
     describe('mapToRecord function', () => {
         test('converts a valid map to a matching record', () => {
             expect(mapToRecord(map, (_k, v) => succeed(v))).toSucceedWith(record);
@@ -83,4 +93,14 @@ describe('Utils module', () => {
             expect(mapToRecord(map, factory)).toFailWith('second: oops');
         });
     });
+
+    describe('optionalMapToRecord function', () => {
+        test('converts a valid Map to a matching Record', () => {
+            expect(optionalMapToRecord(map, (_k, v) => succeed(v))).toSucceedWith(record);
+        });
+
+        test('converts undefined to Success(undefined)', () => {
+            expect(optionalMapToRecord(undefined, (_k, v) => succeed(v))).toSucceedWith(undefined);
+        });
+    })
 });
