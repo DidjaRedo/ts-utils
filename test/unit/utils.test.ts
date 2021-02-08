@@ -23,7 +23,7 @@ import 'jest-extended';
 import '../helpers/jest';
 
 import { Result, fail, succeed } from '../../src';
-import { mapToRecord, optionalMapToRecord, optionalRecordToMap, recordToMap } from '../../src/utils';
+import { mapToRecord, optionalMapToPossiblyEmptyRecord, optionalMapToRecord, optionalRecordToMap, optionalRecordToPossiblyEmptyMap, recordToMap } from '../../src/utils';
 
 describe('Utils module', () => {
     const record: Record<string, string> = {
@@ -70,6 +70,20 @@ describe('Utils module', () => {
         });
     });
 
+    describe('optionalRecordToPossiblyEmptyMap function', () => {
+        test('converts a valid Record to a matching Map', () => {
+            expect(optionalRecordToPossiblyEmptyMap(record, (_k, v) => succeed(v))).toSucceedWith(map);
+        });
+
+        test('converts undefined to an empty map', () => {
+            expect(optionalRecordToPossiblyEmptyMap<string, string>(undefined, (_k, v) => succeed(v)))
+                .toSucceedAndSatisfy((map: Map<string, string>) => {
+                    expect(map).toBeDefined();
+                    expect(map.size).toBe(0);
+                });
+        });
+    });
+
     describe('mapToRecord function', () => {
         test('converts a valid map to a matching record', () => {
             expect(mapToRecord(map, (_k, v) => succeed(v))).toSucceedWith(record);
@@ -101,6 +115,16 @@ describe('Utils module', () => {
 
         test('converts undefined to Success(undefined)', () => {
             expect(optionalMapToRecord(undefined, (_k, v) => succeed(v))).toSucceedWith(undefined);
+        });
+    });
+
+    describe('optionalMapToPossiblyEmptyRecord function', () => {
+        test('converts a valid Map to a matching Record', () => {
+            expect(optionalMapToPossiblyEmptyRecord(map, (_k, v) => succeed(v))).toSucceedWith(record);
+        });
+
+        test('converts undefined to empty record', () => {
+            expect(optionalMapToPossiblyEmptyRecord(undefined, (_k, v) => succeed(v))).toSucceedWith({});
         });
     });
 });
