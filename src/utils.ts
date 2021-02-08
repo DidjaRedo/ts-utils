@@ -52,7 +52,7 @@ export function recordToMap<TS, TD, TK extends string = string>(src: Record<TK, 
 }
 
 /**
- * Applies a factory method to convert an optional Record<TK, TS> into a Map<TK, TD>
+ * Applies a factory method to convert an optional Record<TK, TS> into a Map<TK, TD> or undefined
  * @param src The Record object to be converted or undefined
  * @param factory The factory method used to convert elements
  * @returns Success with the resulting map if conversion succeeds, or success with undefined if src is undefined. Returns Failure with
@@ -63,12 +63,23 @@ export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Rec
 }
 
 /**
+ * Applies a factory method to convert an optional Record<TK, TS> into a Map<TK, TD>
+ * @param src The Record object to be converted or undefined
+ * @param factory The factory method used to convert elements
+ * @returns Success with the resulting map (empty if src is undefined) if conversion succeeds. Returns Failure with
+ * a message if an error occurs.
+ */
+export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = string>(src: Record<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>> {
+    return (src === undefined) ? succeed(new Map<TK, TD>()) : recordToMap(src, factory);
+}
+
+/**
  * Applies a factory method to convert a Map<TK, TS> into a Record<TK, TD>
  * @param src The Map object to be converted
  * @param factory The factory method used to convert elements
  */
 export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
-    const record: Record<TK, TD> = {} as unknown as Record<TK, TD>;
+    const record: Record<TK, TD> = {} as Record<TK, TD>;
     for (const kvp of src) {
         if (kvp[1] !== undefined) {
             const itemResult = factory(kvp[0], kvp[1]);
@@ -84,7 +95,7 @@ export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>
 }
 
 /**
- * Applies a factory method to convert an optional Map<string, TS> into a Record<string, TD>
+ * Applies a factory method to convert an optional Map<string, TS> into a Record<string, TD> or undefined
  * @param src The Map object to be converted or undefined
  * @param factory The factory method used to convert elements
  * @returns Success with the resulting record if conversion succeeds, or success with undefined if src is undefined. Returns Failure with
@@ -92,4 +103,15 @@ export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>
  */
 export function optionalMapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>|undefined> {
     return (src === undefined) ? succeed(undefined) : mapToRecord(src, factory);
+}
+
+/**
+ * Applies a factory method to convert an optional Map<string, TS> into a Record<string, TD>
+ * @param src The Map object to be converted or undefined
+ * @param factory The factory method used to convert elements
+ * @returns Success with the resulting record (empty if src is undefined) if conversion succeeds. Returns Failure with
+ * a message if an error occurs.
+ */
+export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
+    return (src === undefined) ? succeed({} as Record<TK, TD>) : mapToRecord(src, factory);
 }
