@@ -261,15 +261,53 @@ export const stringArray = arrayOf(string);
 export const numberArray = arrayOf(number);
 
 /**
+ * Options for 'recordOf' and 'mapOf' converters
+ */
+export interface KeyedConverterOptions<T extends string = string, TC=undefined> {
+    onError?: 'fail'|'ignore';
+    keyConverter?: Converter<T, TC>;
+}
+
+/**
+ * A helper wrapper to convert the string-keyed properties of an object to a Record of T.
+ * Conversion fails if any element cannot be converted.  If onError is 'ignore' failing
+ * elements are silently ignored.
+ * @param converter Converter used to convert each item in the record
+ */
+export function recordOf<T, TC=undefined, TK extends string=string>(converter: Converter<T, TC>): Converter<Record<TK, T>, TC>;
+
+/**
  * A helper wrapper to convert the string-keyed properties of an object to a Record of T.
  * If onError is 'fail' (default),  then the entire conversion fails if any element
  * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
  * @param converter Converter used to convert each item in the record
- * @param ignoreErrors Specifies treatment of unconvertable elements
+ * @param onError Specifies treatment of unconvertable elements
  */
-export function recordOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 'fail'|'ignore' = 'fail'): Converter<Record<string, T>, TC> {
-    return new BaseConverter((from: unknown, _self: Converter<Record<string, T>, TC>, context?: TC) => {
-        if ((typeof from !== 'object') || Array.isArray(from)) {
+export function recordOf<T, TC=undefined, TK extends string=string>(
+    converter: Converter<T, TC>,
+    onError: 'fail'|'ignore'
+): Converter<Record<TK, T>, TC>;
+
+/**
+ * A helper wrapper to convert the string-keyed properties of an object to a Record of T.
+ * If options specify a key converter it will be applied to each key.
+ * If onError is 'fail' (default),  then the entire conversion fails if any key or element
+ * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
+ * @param converter Converter used to convert each item in the record
+ * @param options Optional @see KeyedConverterOptions
+ */
+export function recordOf<T, TC=undefined, TK extends string=string>(
+    converter: Converter<T, TC>,
+    options: KeyedConverterOptions<TK, TC>
+): Converter<Record<TK, T>, TC>;
+
+export function recordOf<T, TC=undefined, TK extends string=string>(
+    converter: Converter<T, TC>,
+    option: 'fail'|'ignore'|KeyedConverterOptions<TK, TC> = 'fail'
+): Converter<Record<TK, T>, TC> {
+    const options: KeyedConverterOptions<TK, TC> = (typeof option === 'string') ? { onError: option } : { onError: 'fail', ...option };
+    return new BaseConverter((from: unknown, _self: Converter<Record<TK, T>, TC>, context?: TC) => {
+        if ((typeof from !== 'object') || (from === null) || Array.isArray(from)) {
             return fail(`Not a string-keyed object: ${JSON.stringify(from)}`);
         }
 
@@ -278,17 +316,21 @@ export function recordOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 
 
         for (const key in from) {
             if (isKeyOf(key, from)) {
-                const result = converter.convert(from[key] as unknown, context);
-                if (result.isSuccess()) {
-                    record[key] = result.value;
-                }
-                else {
-                    errors.push(result.message);
-                }
+                const writeKeyResult = options.keyConverter?.convert(key, context) ?? succeed(key);
+
+                writeKeyResult.onSuccess((writeKey) => {
+                    return converter.convert(from[key] as unknown, context).onSuccess((value) => {
+                        record[writeKey] = value;
+                        return succeed(true);
+                    });
+                }).onFailure((message) => {
+                    errors.push(message);
+                    return fail(message);
+                });
             }
         }
 
-        return (errors.length === 0) || (onError === 'ignore')
+        return (errors.length === 0) || (options.onError === 'ignore')
             ? succeed(record)
             : fail(errors.join('\n'));
     });
@@ -296,33 +338,66 @@ export function recordOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 
 
 /**
  * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
+ * Conversion fails if any element cannot be converted.
+ * @param converter Converter used to convert each item in the map
+ */
+export function mapOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Map<TK, T>, TC>;
+
+/**
+ * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
  * If onError is 'fail' (default),  then the entire conversion fails if any element
  * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
- * @param converter Converter used to convert each item in the record
- * @param ignoreErrors Specifies treatment of unconvertable elements
+ * @param converter Converter used to convert each item in the map
+ * @param onError Specifies treatment of unconvertable elements
  */
-export function mapOf<T, TC=undefined>(converter: Converter<T, TC>, onError: 'fail'|'ignore' = 'fail'): Converter<Map<string, T>, TC> {
-    return new BaseConverter((from: unknown, _self: Converter<Map<string, T>, TC>, context?: TC) => {
-        if ((typeof from !== 'object') || Array.isArray(from)) {
+export function mapOf<T, TC = undefined, TK extends string = string>(
+    converter: Converter<T, TC>,
+    onError: 'fail' | 'ignore'
+): Converter<Map<TK, T>, TC>;
+
+/**
+ * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
+ * If options specify a key converter it will be applied to each key.
+ * If onError is 'fail' (default),  then the entire conversion fails if any key or element
+ * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
+ * @param converter Converter used to convert each item in the map
+ * @param options Optional @see KeyedConverterOptions
+ */
+export function mapOf<T, TC = undefined, TK extends string = string>(
+    converter: Converter<T, TC>,
+    options: KeyedConverterOptions<TK, TC>
+): Converter<Map<TK, T>, TC>;
+
+export function mapOf<T, TC = undefined, TK extends string = string>(
+    converter: Converter<T, TC>,
+    option: 'fail' | 'ignore' | KeyedConverterOptions<TK, TC> = 'fail'
+): Converter<Map<TK, T>, TC> {
+    const options = (typeof option === 'string') ? { onError: option } : { onError: 'fail', ...option };
+    return new BaseConverter((from: unknown, _self: Converter<Map<TK, T>, TC>, context?: TC) => {
+        if ((typeof from !== 'object') || (from === null) || Array.isArray(from)) {
             return fail(`Not a string-keyed object: ${JSON.stringify(from)}`);
         }
 
-        const map = new Map<string, T>();
+        const map = new Map<TK, T>();
         const errors: string[] = [];
 
         for (const key in from) {
             if (isKeyOf(key, from)) {
-                const result = converter.convert(from[key] as unknown, context);
-                if (result.isSuccess()) {
-                    map.set(key, result.value);
-                }
-                else {
-                    errors.push(result.message);
-                }
+                const writeKeyResult = options.keyConverter?.convert(key, context) ?? succeed(key);
+
+                writeKeyResult.onSuccess((writeKey) => {
+                    return converter.convert(from[key] as unknown, context).onSuccess((value) => {
+                        map.set(writeKey, value);
+                        return succeed(true);
+                    });
+                }).onFailure((message) => {
+                    errors.push(message);
+                    return fail(message);
+                });
             }
         }
 
-        return (errors.length === 0) || (onError === 'ignore')
+        return (errors.length === 0) || (options.onError === 'ignore')
             ? succeed(map)
             : fail(errors.join('\n'));
     });
