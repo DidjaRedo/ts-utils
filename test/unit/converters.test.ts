@@ -323,7 +323,7 @@ describe('Converters module', () => {
         test('ignores undefined values returned by a converter', () => {
             const validArray = ['s1', 's2', 's3'];
             const badArray = [100, ...validArray, 10];
-            expect(Converters.arrayOf(Converters.string.optional()).convert(badArray)).toSucceedWith(validArray);
+            expect(Converters.arrayOf(Converters.string.optional('ignoreErrors')).convert(badArray)).toSucceedWith(validArray);
         });
         test('fails when converting a non-array', () => {
             expect(Converters.arrayOf(Converters.string).convert(123)).toFailWith(/not an array/i);
@@ -369,7 +369,7 @@ describe('Converters module', () => {
         test('ignores undefined values returned by a converter', () => {
             const validArray = ['s1', 's2', 's3'];
             const badArray = [100, ...validArray, 10];
-            expect(Converters.extendedArrayOf('strings', Converters.string.optional()).convert(badArray))
+            expect(Converters.extendedArrayOf('strings', Converters.string.optional('ignoreErrors')).convert(badArray))
                 .toSucceedAndSatisfy((got: ExtendedArray<string>) => {
                     expect(got.all()).toEqual(validArray);
                 });
@@ -571,7 +571,7 @@ describe('Converters module', () => {
             };
             const badObject = { badField: 100, ...validObject };
             expect(
-                Converters.recordOf(Converters.string.optional()).convert(badObject)
+                Converters.recordOf(Converters.string.optional('ignoreErrors')).convert(badObject)
             ).toSucceedWith(validObject);
         });
 
@@ -773,7 +773,7 @@ describe('Converters module', () => {
             ]);
             const badObject = { badField: 100, ...validObject };
             expect(
-                Converters.mapOf(Converters.string.optional()).convert(badObject)
+                Converters.mapOf(Converters.string.optional('ignoreErrors')).convert(badObject)
             ).toSucceedWith(expected);
         });
 
@@ -1040,11 +1040,19 @@ describe('Converters module', () => {
             numField: number;
             boolField: boolean;
             numbers?: number[];
+            explicitlyOptionalString?: string;
         }
         const allFields: (keyof Want)[] = [
             'stringField', 'optionalStringField', 'enumField', 'numField', 'boolField', 'numbers',
         ];
         const optionalFields: (keyof Want)[] = ['optionalStringField', 'numbers'];
+
+        const required: Want = {
+            stringField: 'string',
+            enumField: 'enum1',
+            numField: 10,
+            boolField: true,
+        };
 
         const wantConverters: Converters.FieldConverters<Want> = {
             stringField: Converters.string,
@@ -1053,6 +1061,7 @@ describe('Converters module', () => {
             numField: Converters.number,
             boolField: Converters.boolean,
             numbers: Converters.arrayOf(Converters.number),
+            explicitlyOptionalString: Converters.optionalString,
         };
 
         [
@@ -1078,45 +1087,25 @@ describe('Converters module', () => {
             describe(t.description, () => {
                 const converter = (t.add ? t.converter.addPartial(t.add) : t.converter);
                 test('converts a valid object with missing optional fields', () => {
-                    const src = {
-                        stringField: 'string1',
-                        enumField: 'enum1',
-                        numField: -1,
-                        boolField: true,
-                    };
-
-                    const expected: Want = {
-                        stringField: 'string1',
-                        enumField: 'enum1',
-                        numField: -1,
-                        boolField: true,
-                    };
-
-                    expect(converter.convert(src))
-                        .toSucceedWith(expected);
+                    expect(converter.convert(required)).toSucceedWith(required);
                 });
 
                 test('converts a valid object with optional fields present', () => {
                     const src = {
-                        stringField: 'string1',
+                        ...required,
                         optionalStringField: 'optional string',
-                        enumField: 'enum2',
-                        numField: -1,
-                        boolField: true,
                         numbers: [-1, 0, 1, '2'],
+                        explicitlyOptionalString: 'present',
                     };
 
                     const expected: Want = {
-                        stringField: 'string1',
+                        ...required,
                         optionalStringField: 'optional string',
-                        enumField: 'enum2',
-                        numField: -1,
-                        boolField: true,
                         numbers: [-1, 0, 1, 2],
+                        explicitlyOptionalString: 'present',
                     };
 
-                    expect(converter.convert(src))
-                        .toSucceedWith(expected);
+                    expect(converter.convert(src)).toSucceedWith(expected);
                 });
 
                 test('fails if any non-optional fields are missing', () => {
@@ -1137,6 +1126,23 @@ describe('Converters module', () => {
                     };
                     expect(converter.convert(src))
                         .toFailWith(/not a number/i);
+                });
+
+                test('fails if any optional fields are mistyped', () => {
+                    expect(converter.convert({
+                        ...required,
+                        optionalStringField: 10,
+                    })).toFailWith(/not a string/i);
+
+                    expect(converter.convert({
+                        ...required,
+                        numbers: 10,
+                    })).toFailWith(/not an array/i);
+
+                    expect(converter.convert({
+                        ...required,
+                        explicitlyOptionalString: 10,
+                    })).toFailWith(/not a string/i);
                 });
 
                 describe('with partial specified', () => {
@@ -1207,6 +1213,11 @@ describe('Converters module', () => {
 
                     expect(strictConverter.convert(t.src)).toFailWith(/unexpected property/);
                 });
+
+                test(`fails for ${t.description} using strictObject`, () => {
+                    const strictConverter = Converters.strictObject<Want>(converters);
+                    expect(strictConverter.convert(t.src)).toFailWith(/unexpected property/);
+                });
             });
         });
 
@@ -1228,6 +1239,45 @@ describe('Converters module', () => {
                 tests.forEach((t) => {
                     expect(converter.convert(t)).toFailWith(/not an object/);
                 });
+            });
+        });
+    });
+
+    describe('strictObject converter', () => {
+        const fields = {
+            prop1: Converters.string,
+            prop2: Converters.string,
+        };
+
+        test('fails if required porperties are missing', () => {
+            const converter = Converters.strictObject(fields);
+            expect(converter.convert({
+                prop1: 'hello',
+            })).toFailWith(/not found/i);
+        });
+
+        test('fails if extra properties are present', () => {
+            const converter = Converters.strictObject(fields);
+            expect(converter.convert({
+                prop1: 'hello',
+                prop2: 'how are you?',
+                prop3: 'goodbye',
+            })).toFailWith(/unexpected property/i);
+        });
+
+        test('succeeds if missing properties are optional', () => {
+            let converter = Converters.strictObject(fields, ['prop2']);
+            expect(converter.convert({
+                prop1: 'hello',
+            })).toSucceedWith({
+                prop1: 'hello',
+            });
+
+            converter = Converters.strictObject(fields, { optionalFields: ['prop2'] });
+            expect(converter.convert({
+                prop1: 'hello',
+            })).toSucceedWith({
+                prop1: 'hello',
             });
         });
     });
@@ -1294,10 +1344,10 @@ describe('Converters module', () => {
 
         const converter = Converters.transform<Want>({
             stringField: Converters.field('string1', Converters.string),
-            optionalStringField: Converters.field('string2', Converters.string).optional(),
+            optionalStringField: Converters.optionalField('string2', Converters.string),
             numField: Converters.field('num1', Converters.number),
             boolField: Converters.field('b1', Converters.boolean),
-            numbers: Converters.field('nums', Converters.arrayOf(Converters.number)).optional(),
+            numbers: Converters.optionalField('nums', Converters.arrayOf(Converters.number)),
         });
 
         test('converts a valid object with empty optional fields', () => {
@@ -1313,8 +1363,7 @@ describe('Converters module', () => {
                 boolField: true,
             };
 
-            expect(converter.convert(src))
-                .toSucceedWith(expected);
+            expect(converter.convert(src)).toSucceedWith(expected);
         });
 
         test('converts a valid object with optional fields present', () => {
@@ -1360,7 +1409,7 @@ describe('Converters module', () => {
                 .toFailWith(/not a number/i);
         });
 
-        test('ignores mistyped optional fields', () => {
+        test('fails for mistyped optional fields', () => {
             const src = {
                 string1: 'string1',
                 string2: true,
@@ -1368,20 +1417,13 @@ describe('Converters module', () => {
                 b1: true,
             };
 
-            const expected: Want = {
-                stringField: 'string1',
-                numField: -1,
-                boolField: true,
-            };
-
-            expect(converter.convert(src))
-                .toSucceedWith(expected);
+            expect(converter.convert(src)).toFailWith(/not a string/i);
         });
 
         test('silently ignores fields without a converter', () => {
             const partialConverter = Converters.transform<Want>({
                 stringField: Converters.field('string1', Converters.string),
-                optionalStringField: Converters.field('string2', Converters.string).optional(),
+                optionalStringField: Converters.optionalField('string2', Converters.string),
                 numField: Converters.field('num1', Converters.number),
                 boolField: Converters.field('b1', Converters.boolean),
                 numbers: undefined,

@@ -93,6 +93,10 @@ describe('BaseConverter class', () => {
                     expect(optionalString.convert(v)).toFailWith(/not a string/i);
                 });
             });
+
+            test('reports converter is explicitly optional', () => {
+                expect(optionalString.isOptional).toBe(true);
+            });
         });
 
         describe('with ignoreErrors', () => {
@@ -111,9 +115,9 @@ describe('BaseConverter class', () => {
         });
 
         describe('with default conversion', () => {
-            test('ignores errors', () => {
+            test('fails', () => {
                 const optionalString = stringConverter.optional();
-                expect(optionalString.convert(true)).toSucceed();
+                expect(optionalString.convert(true)).toFailWith(/not a string/i);
             });
         });
 
