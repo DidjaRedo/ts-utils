@@ -496,7 +496,7 @@ export function optionalField<T, TC=undefined>(name: string, converter: Converte
             return succeed(undefined);
         }
         return fail(`Cannot convert field "${name}" from non-object ${JSON.stringify(from)}`);
-    });
+    }, undefined, { isOptional: true });
 }
 
 /**
@@ -552,7 +552,7 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
             const errors: string[] = [];
             for (const key in fields) {
                 if (fields[key]) {
-                    const isOptional = this.options.optionalFields?.includes(key) ?? false;
+                    const isOptional = (fields[key].isOptional || this.options.optionalFields?.includes(key)) ?? false;
                     const result = isOptional
                         ? optionalField(key, fields[key]).convert(from, context)
                         : field(key, fields[key]).convert(from, context);
@@ -615,6 +615,32 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
  */
 export function object<T>(fields: FieldConverters<T>, opt?: (keyof T)[]|ObjectConverterOptions<T>): ObjectConverter<T> {
     return new ObjectConverter(fields, opt as ObjectConverterOptions<T>);
+}
+
+/**
+ * Helper to convert an object without changing shape. The source parameter is an object with
+ * key names that correspond to the target object and the appropriate corresponding converter
+ * as the property value. If all of the requested fields exist and can be converted, returns a
+ * new object with the converted values under the original key names.  If any fields do not exist
+ * or cannot be converted, the entire conversion fails.
+ *
+ * Fields that succeed but convert to undefined are omitted from the result object but do not
+ * fail the conversion.
+ *
+ * The conversion fails if any unexpected fields are encountered.
+ *
+ * @param fields An object containing defining the shape and converters to be applied.
+ * @param opt - An @see ObjectConverterOptions<T> containing options for the object converter, or
+ * an array of (keyof T) containing optional keys.
+ */
+export function strictObject<T>(
+    fields: FieldConverters<T>,
+    opt?: (keyof T)[]|ObjectConverterOptions<T>,
+): ObjectConverter<T> {
+    const options: ObjectConverterOptions<T> = (opt && Array.isArray(opt))
+        ? { strict: true, optionalFields: opt }
+        : { ...(opt ?? {}), strict: true };
+    return new ObjectConverter(fields, options);
 }
 
 export type DiscriminatedObjectConverters<T, TD extends string = string, TC=unknown> = Record<TD, Converter<T, TC>>;

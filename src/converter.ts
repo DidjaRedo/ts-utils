@@ -23,8 +23,20 @@ import { Result, fail, succeed } from './result';
 
 type OnError = 'failOnError' | 'ignoreErrors';
 
-export interface Converter<T, TC=undefined> {
+/**
+ * Converter traits.
+ */
+export interface ConverterTraits {
+    readonly isOptional: boolean;
+}
+
+export interface Converter<T, TC=undefined> extends ConverterTraits {
     /**
+     * Indicates whether this element is explicitly optional
+     */
+     readonly isOptional: boolean;
+
+     /**
      * Converts from unknown to <T>
      * @param from The unknown to be converted
      * @param context An optional context applied to the conversion
@@ -97,11 +109,17 @@ export type ConvertedToType<TCONV> = TCONV extends Converter<infer TTO> ? InnerC
  */
 export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     protected readonly _defaultContext?: TC;
+    protected _isOptional = false;
     private readonly _converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>;
 
-    public constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>, defaultContext?: TC) {
+    public constructor(
+        converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>,
+        defaultContext?: TC,
+        traits?: ConverterTraits,
+    ) {
         this._converter = converter;
         this._defaultContext = defaultContext;
+        this._isOptional = (traits?.isOptional === true);
     }
 
     /**
@@ -137,16 +155,23 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * is 'failOnError', the converter accepts 'undefined' or a
      * convertible value, but reports an error if it encounters
      * a value that cannot be converted.  If 'onError' is 'ignoreErrors'
-     * (default) then values that cannot be converted result in a
+     * then values that cannot be converted result in a
      * successful return of 'undefined'.
      *
      * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
      * */
     public optional(onError?: OnError): Converter<T|undefined, TC> {
         return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
-            onError = onError ?? 'ignoreErrors';
+            onError = onError ?? 'failOnError';
             return this.convertOptional(from, this._context(context), onError);
-        });
+        })._with(this._traits({ isOptional: true }));
+    }
+
+    /**
+     * Reports whether this value is explicitly optional
+     */
+    public get isOptional(): boolean {
+        return this._isOptional;
     }
 
     /**
@@ -154,13 +179,13 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * @param mapper A function which maps from the converted type to some other type.
      */
     public map<T2>(mapper: (from: T) => Result<T2>): Converter<T2, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
+        return new BaseConverter<T2, TC>((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
             const innerResult = this._converter(from, this, this._context(context));
             if (innerResult.isSuccess()) {
                 return mapper(innerResult.value);
             }
             return fail(innerResult.message);
-        });
+        })._with(this._traits());
     }
 
     /**
@@ -168,13 +193,14 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * @param mapConverter The converter to be applied to the converted value
      */
     public mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
+        return new BaseConverter<T2, TC>((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
             const innerResult = this._converter(from, this, this._context(context));
             if (innerResult.isSuccess()) {
                 return mapConverter.convert(innerResult.value);
             }
             return fail(innerResult.message);
-        });
+        // eslint-disable-next-line no-return-assign
+        })._with(this._traits());
     }
 
     /**
@@ -186,7 +212,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * @param constraint Constraint evaluation function
      */
     public withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC> {
-        return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
+        return new BaseConverter<T, TC>((from: unknown, _self: Converter<T, TC>, context?: TC) => {
             const result = this._converter(from, this, this._context(context));
             if (result.isSuccess()) {
                 const constraintResult = constraint(result.value);
@@ -196,10 +222,22 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
                 return constraintResult;
             }
             return result;
-        });
+        })._with(this._traits());
     }
 
     protected _context(supplied?: TC): TC|undefined {
         return supplied ?? this._defaultContext;
+    }
+
+    protected _traits(traits?: Partial<ConverterTraits>): ConverterTraits {
+        return {
+            isOptional: this.isOptional,
+            ...(traits ?? {}),
+        };
+    }
+
+    protected _with(traits: Partial<ConverterTraits>): this {
+        this._isOptional = (traits.isOptional === true);
+        return this;
     }
 }
