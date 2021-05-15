@@ -21,8 +21,9 @@
  */
 
 import { Result, fail, succeed } from '../result';
-import { ValidatorBase, ValidatorFunc, ValidatorOptions } from './baseValidator';
+import { ValidatorBase, ValidatorFunc } from './validatorBase';
 
+import { ValidatorOptions } from './validator';
 import { ValidatorTraits } from './traits';
 
 export interface StringValidatorConstructorParams<T, TC> {

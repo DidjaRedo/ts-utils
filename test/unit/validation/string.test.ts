@@ -21,10 +21,10 @@
  */
 
 import '../../helpers/jest';
-import { Result, fail, succeed } from '../../../src';
+import { Result, fail } from '../../../src';
 import { StringValidator, StringValidatorConstructorParams } from '../../../src/validation/string';
 
-import { ValidatorOptions } from '../../../src/validation/baseValidator';
+import { ValidatorOptions } from '../../../src/validation/';
 import { Validators } from '../../../src/validation';
 
 

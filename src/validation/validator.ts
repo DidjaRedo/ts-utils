@@ -25,6 +25,11 @@ import { ConstraintTrait, ValidatorTraits } from './traits';
 import { Brand } from '../brand';
 import { Result } from '../result';
 
+export interface ValidatorOptions<TC> {
+    verifyInPlace?: boolean;
+    defaultContext?: TC;
+}
+
 export type Constraint<T> = (val: T) => boolean | Result<boolean>;
 
 /**

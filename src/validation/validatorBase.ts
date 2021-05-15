@@ -20,16 +20,11 @@
  * SOFTWARE.
  */
 
-import { Constraint, Validator } from './validator';
+import { Constraint, Validator, ValidatorOptions } from './validator';
 import { ConstraintTrait, ValidatorTraits } from './traits';
 import { Result, fail, succeed } from '../result';
 
 import { Brand } from '../brand';
-
-export interface ValidatorOptions<TC> {
-    verifyInPlace?: boolean;
-    defaultContext?: TC;
-}
 
 export type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => Result<T>;
 
