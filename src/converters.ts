@@ -635,7 +635,7 @@ export function object<T>(fields: FieldConverters<T>, opt?: (keyof T)[]|ObjectCo
  */
 export function strictObject<T>(
     fields: FieldConverters<T>,
-    opt?: (keyof T)[]|ObjectConverterOptions<T>,
+    opt?: (keyof T)[]|Omit<ObjectConverterOptions<T>, 'strict'>,
 ): ObjectConverter<T> {
     const options: ObjectConverterOptions<T> = (opt && Array.isArray(opt))
         ? { strict: true, optionalFields: opt }
