@@ -36,6 +36,53 @@ describe('Converters module', () => {
                 expect(Converters.string.convert(v)).toFailWith(/not a string/i);
             });
         });
+
+        describe('matching method', () => {
+            const shouldMatch = 'found';
+            const shouldNotMatch = 'no match';
+
+            const tests: [string, unknown][] = [
+                [
+                    'literal string',
+                    shouldMatch,
+                ],
+                [
+                    'array of strings',
+                    ['blah', shouldMatch, 'blah'],
+                ],
+                [
+                    'set of strings',
+                    new Set(['blah', shouldMatch]),
+                ],
+                [
+                    'regular expression',
+                    /FOUND/i,
+                ],
+            ];
+            test.each(tests)(
+                'should match string using %p',
+                (_message, matcher) => {
+                    const converter = Converters.string.matching(matcher as string);
+                    expect(converter.convert(shouldMatch)).toSucceedWith(shouldMatch);
+                });
+
+            test.each(tests)(
+                'should not match string using %p',
+                (_message: string, matcher) => {
+                    const converter = Converters.string.matching(matcher as string);
+                    expect(converter.convert(shouldNotMatch)).toFailWith(/no match/i);
+                });
+
+            test.each(tests)(
+                'should use custom error if supplied for non-matching %p',
+                (_message: string, matcher) => {
+                    const converter = Converters.string.matching(
+                        matcher as string,
+                        { message: 'WTH' }
+                    );
+                    expect(converter.convert(shouldNotMatch)).toFailWith(/wth/i);
+                });
+        });
     });
 
     describe('templateString converter', () => {
@@ -152,7 +199,7 @@ describe('Converters module', () => {
         });
     });
 
-    describe('value converter', () => {
+    describe('literal converter', () => {
         test('converts identical values', () => {
             [
                 'this',
@@ -160,7 +207,7 @@ describe('Converters module', () => {
                 true,
                 [1, 2, 3],
             ].forEach((t) => {
-                expect(Converters.value(t).convert(t)).toSucceedWith(t);
+                expect(Converters.literal(t).convert(t)).toSucceedWith(t);
             });
         });
 
@@ -172,7 +219,7 @@ describe('Converters module', () => {
                 { from: true, to: 'true' },
                 { from: [1, 2, 3], to: [1, 2, 3] },
             ].forEach((t) => {
-                expect(Converters.value(t.to).convert(t.from)).toFailWith(/does not match/i);
+                expect(Converters.literal(t.to).convert(t.from)).toFailWith(/does not match/i);
             });
         });
     });
