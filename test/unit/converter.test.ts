@@ -23,6 +23,7 @@ import '../helpers/jest';
 import {
     BaseConverter,
     Converter,
+    Converters,
     Result,
     fail,
     succeed,
@@ -264,6 +265,31 @@ describe('BaseConverter class', () => {
         test('passes the default context to the base converter if none is supplied', () => {
             const constrained = contextConverter.withConstraint((s) => s.includes('expected'));
             expect(constrained.convert('{{value}} is expected')).toSucceedWith('DEFAULT VALUE is expected');
+        });
+    });
+
+    describe('withBrand method', () => {
+        test('brands string types', () => {
+            const str1Converter = Converters.string.withBrand('STRING1');
+            const str2Converter = Converters.string.withBrand('STRING2');
+            const str1 = str1Converter.convert('test').getValueOrThrow();
+            const str2 = str2Converter.convert('test').getValueOrThrow();
+            // Uncomment the following to get a type error and see branded types in action
+            // expect(str1 === str2).toBe(true);
+
+            // but this still works because they're just strings after all
+            expect(str1).toEqual(str2);
+        });
+
+        test('records the brand in the converter', () => {
+            const str1Converter = Converters.string.withBrand('STRING1');
+            expect(str1Converter.brand).toBe('STRING1');
+        });
+
+        test('rejects a second brand', () => {
+            expect(() => {
+                Converters.string.withBrand('ONE').withBrand('B');
+            }).toThrowError(/cannot replace existing brand/i);
         });
     });
 });

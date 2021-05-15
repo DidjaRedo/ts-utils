@@ -28,13 +28,25 @@ type OnError = 'failOnError' | 'ignoreErrors';
  */
 export interface ConverterTraits {
     readonly isOptional: boolean;
+    readonly brand?: string;
 }
+
+/**
+ * Helper type to brand a simple type to prevent inappropriate use
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type Brand<T, B> = T & { __brand: B };
 
 export interface Converter<T, TC=undefined> extends ConverterTraits {
     /**
      * Indicates whether this element is explicitly optional
      */
      readonly isOptional: boolean;
+
+     /**
+      * Returns the brand for a branded type
+      */
+     readonly brand?: string;
 
      /**
      * Converts from unknown to <T>
@@ -90,19 +102,30 @@ export interface Converter<T, TC=undefined> extends ConverterTraits {
      * @param constraint Constraint evaluation function
      */
     withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC>;
+
+    /**
+     * Adds a brand to the type to prevent mismatched usage of simple types
+     */
+    withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC>;
 }
 
-type InnerConvertedToType<TCONV> =
+type InnerInferredType<TCONV> =
     TCONV extends Converter<infer TTO>
-        ? (TTO extends Array<infer TTOELEM> ? InnerConvertedToType<TTOELEM>[] : TTO)
-        : (TCONV extends Array<infer TELEM> ? InnerConvertedToType<TELEM>[] : TCONV);
+        ? (TTO extends Array<infer TTOELEM> ? InnerInferredType<TTOELEM>[] : TTO)
+        : (TCONV extends Array<infer TELEM> ? InnerInferredType<TELEM>[] : TCONV);
 
 /**
  * Infers the type that will be returned by an intstantiated converter.  Works
  * for complex as well as simple types.
- * @example ConvertedToType<typeof Converters.mapOf(Converters.stringArray)> is Map<string, string[]>
+ * @example Infer<typeof Converters.mapOf(Converters.stringArray)> is Map<string, string[]>
  */
-export type ConvertedToType<TCONV> = TCONV extends Converter<infer TTO> ? InnerConvertedToType<TTO> : never;
+export type Infer<TCONV> = TCONV extends Converter<infer TTO> ? InnerInferredType<TTO> : never;
+
+/**
+ * Deprecated name for Infer<T> retained for compatibility
+ * @deprecated use @see Infer instead
+ */
+export type ConvertedToType<TCONV> = Infer<TCONV>;
 
 /**
  * Simple templated converter wrapper to simplify typed conversion from unknown.
@@ -110,6 +133,8 @@ export type ConvertedToType<TCONV> = TCONV extends Converter<infer TTO> ? InnerC
 export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     protected readonly _defaultContext?: TC;
     protected _isOptional = false;
+    protected _brand?: string;
+
     private readonly _converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>;
 
     public constructor(
@@ -120,6 +145,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
         this._converter = converter;
         this._defaultContext = defaultContext;
         this._isOptional = (traits?.isOptional === true);
+        this._brand = (traits?.brand);
     }
 
     /**
@@ -175,6 +201,13 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
+     * Reports the brand of a branded type.
+     */
+    public get brand(): string|undefined {
+        return this._brand;
+    }
+
+    /**
      * Applies a (possibly) mapping conversion to the converted value.
      * @param mapper A function which maps from the converted type to some other type.
      */
@@ -225,6 +258,21 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
         })._with(this._traits());
     }
 
+    /**
+     * Adds a brand to the type to prevent mismatched usage of simple types
+     */
+    public withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC> {
+        if (this._brand) {
+            throw new Error(`Cannot replace existing brand "${this._brand}" with "${brand}".`);
+        }
+
+        return new BaseConverter<Brand<T, B>, TC>((from: unknown, _self: Converter<T, TC>, context?: TC) => {
+            return this._converter(from, this, this._context(context)).onSuccess((v) => {
+                return succeed(v as Brand<T, B>);
+            });
+        })._with(this._traits({ brand }));
+    }
+
     protected _context(supplied?: TC): TC|undefined {
         return supplied ?? this._defaultContext;
     }
@@ -232,12 +280,14 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     protected _traits(traits?: Partial<ConverterTraits>): ConverterTraits {
         return {
             isOptional: this.isOptional,
+            brand: this.brand,
             ...(traits ?? {}),
         };
     }
 
     protected _with(traits: Partial<ConverterTraits>): this {
         this._isOptional = (traits.isOptional === true);
+        this._brand = (traits.brand);
         return this;
     }
 }

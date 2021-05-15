@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { BaseConverter, Converter } from './converter';
+import { BaseConverter, Converter, ConverterTraits } from './converter';
 import { RangeOf, RangeOfProperties } from './rangeOf';
 import { Result, captureResult, fail, succeed } from './result';
 
@@ -32,27 +32,149 @@ import { isKeyOf } from './utils';
 type OnError = 'failOnError' | 'ignoreErrors';
 
 /**
+ * Options for @see StringConverter maching method
+ */
+export interface StringMatchOptions {
+    /**
+     * An optional message to be displayed if a non-matching string
+     * is encountered.
+     */
+    message?: string;
+}
+
+/**
+ * The @see StringConverter class extends @see BaseConverter to provide string-specific helper
+ * functions.
+ */
+export class StringConverter<T extends string = string, TC = unknown> extends BaseConverter<T, TC> {
+    /**
+     * Construct a new @see StringConverter
+     * @param defaultContext Optional context used by the conversion
+     * @param traits Optional traits to be applied to the conversion
+     * @param converter Optional converter to be used for the conversion
+     */
+    public constructor(
+        defaultContext?: TC,
+        traits?: ConverterTraits,
+        converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T> = StringConverter._convert,
+    ) {
+        super(converter, defaultContext, traits);
+    }
+
+    protected static _convert<T extends string>(from: unknown): Result<T> {
+        return typeof from === 'string'
+            ? succeed(from as T)
+            : fail(`Not a string: ${JSON.stringify(from)}`);
+    }
+
+    protected static _wrap<T extends string, TC>(
+        wrapped: StringConverter<T, TC>,
+        converter: (from: T) => Result<T>,
+        traits?: ConverterTraits
+    ): StringConverter<T, TC> {
+        return new StringConverter<T, TC>(undefined, undefined, (from: unknown) => {
+            return wrapped.convert(from).onSuccess(converter);
+        })._with(wrapped._traits(traits));
+    }
+
+    /**
+     * Returns a @see StringConverter which constrains the result to match a supplied
+     * string.
+     * @param match The string to be matched
+     * @param options Optional @see StringMatchOptions for this conversion
+     * @returns @see Success with a matching string or @see Failure with an informative
+     * error if the string does not match.
+     */
+    public matching(match: string, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+
+    /**
+     * Returns a @see StringConverter which constrains the result to match one of a supplied
+     * array of strings.
+     * @param match The array to be searched
+     * @param options Optional @see StringMatchOptions for this conversion
+     * @returns @see Success with a matching string or @see Failure with an informative
+     * error if the string does not match.
+     */
+    public matching(match: string[], options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+
+    /**
+     * Returns a @see StringConverter which constrains the result to match one of a supplied
+     * Set of strings.
+     * @param match The Set to be tested
+     * @param options Optional @see StringMatchOptions for this conversion
+     * @returns @see Success with a matching string or @see Failure with an informative
+     * error if the string does not match.
+     */
+    public matching(match: Set<T>, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+
+    /**
+     * Returns a @see StringConverter which constrains the result to match a supplied regular
+     * expression.
+     * @param match The @see RegExp to be tested
+     * @param options Optional @see StringMatchOptions for this conversion
+     * @returns @see Success with a matching string or @see Failure with an informative
+     * error if the string does not match.
+     */
+    public matching(match: RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+    public matching(match: string | string[] | Set<T> | RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC> {
+        const message = options?.message;
+        if (typeof match === 'string') {
+            return StringConverter._wrap<T, TC>(this, (from: T) => {
+                return (match === from)
+                    ? succeed(from as T)
+                    : fail(message
+                        ? `"${from}": ${message}`
+                        : `"${from}": does not match "${match}"`);
+            });
+        }
+        else if (match instanceof RegExp) {
+            return StringConverter._wrap<T, TC>(this, (from: T) => {
+                return (match.test(from))
+                    ? succeed(from as T)
+                    : fail(message
+                        ? `"${from}": ${message}`
+                        : `"${from}": does not match "${match}"`);
+            });
+        }
+        else if (match instanceof Set) {
+            return StringConverter._wrap<T, TC>(this, (from: T) => {
+                return (match.has(from))
+                    ? succeed(from as T)
+                    : fail(message
+                        ? `"${from}": ${message}`
+                        : `"${from}": not found in set`);
+            });
+        }
+        else {
+            return StringConverter._wrap<T, TC>(this, (from: T) => {
+                return (match.includes(from))
+                    ? succeed(from as T)
+                    : fail(message
+                        ? `"${from}": ${message}`
+                        : `"${from}": not found in [${match.join(',')}]`);
+            });
+        }
+    }
+}
+
+/**
  * A converter to convert unknown to string. Values of type
  * string succeed.  Anything else fails.
  */
-export const string = new BaseConverter<string>((from: unknown) => {
-    return typeof from === 'string'
-        ? succeed(from as string)
-        : fail(`Not a string: ${JSON.stringify(from)}`);
-});
+export const string = new StringConverter();
 
 /**
  * Helper function to create a converter which converts unknown to string, applying
  * template conversions supplied at construction time or at runtime as context.
  * @param defaultContext optional default context to use for template values
  */
-export function templateString(defaultContext?: unknown): Converter<string, unknown> {
-    return new BaseConverter<string, unknown>((from: unknown, _self: Converter<string, unknown>, context?: unknown) => {
+export function templateString(defaultContext?: unknown): StringConverter<string, unknown> {
+    return new StringConverter<string, unknown>(defaultContext, undefined, (from: unknown, _self: Converter<string, unknown>, context?: unknown) => {
         if (typeof from !== 'string') {
             return fail(`Not a string: ${JSON.stringify(from)}`);
         }
         return captureResult(() => Mustache.render(from, context));
-    }, defaultContext);
+    });
 }
 
 /**
@@ -73,11 +195,18 @@ export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
  * comparison succeeds, fails otherwise.
  * @param value The value to be compared
  */
-export function value<T>(value: T): Converter<T, unknown> {
+export function literal<T>(value: T): Converter<T, unknown> {
     return new BaseConverter<T, unknown>((from: unknown, _self: Converter<T, unknown>, _context?: unknown): Result<T> => {
         return (from === value) ? succeed(value) : fail(`${JSON.stringify(from)}: does not match ${JSON.stringify(value)}`);
     });
 }
+
+/**
+ * Deprecated alias for @see literal
+ * @param value The value to be compared
+ * @deprecated use literal instead
+ */
+export const value = literal;
 
 /**
  * A converter to convert unknown to a number.  Numbers and strings
@@ -592,11 +721,11 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
     public partial(options: ObjectConverterOptions<T>): ObjectConverter<Partial<T>, TC>;
     public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>, TC>;
     public partial(opt?: ObjectConverterOptions<T>|(keyof T)[]): ObjectConverter<Partial<T>, TC> {
-        return new ObjectConverter<Partial<T>, TC>(this.fields as FieldConverters<Partial<T>, TC>, opt as ObjectConverterOptions<Partial<T>>);
+        return new ObjectConverter<Partial<T>, TC>(this.fields as FieldConverters<Partial<T>, TC>, opt as ObjectConverterOptions<Partial<T>>)._with(this._traits());
     }
 
     public addPartial(addOptionalFields: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
-        return this.partial([...this.options.optionalFields ?? [], ...addOptionalFields]);
+        return this.partial([...this.options.optionalFields ?? [], ...addOptionalFields])._with(this._traits());
     }
 }
 
@@ -635,7 +764,7 @@ export function object<T>(fields: FieldConverters<T>, opt?: (keyof T)[]|ObjectCo
  */
 export function strictObject<T>(
     fields: FieldConverters<T>,
-    opt?: (keyof T)[]|ObjectConverterOptions<T>,
+    opt?: (keyof T)[]|Omit<ObjectConverterOptions<T>, 'strict'>,
 ): ObjectConverter<T> {
     const options: ObjectConverterOptions<T> = (opt && Array.isArray(opt))
         ? { strict: true, optionalFields: opt }

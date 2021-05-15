@@ -21,7 +21,7 @@
  */
 import '../helpers/jest';
 import * as Converters from '../../src/converters';
-import { ConvertedToType, ExtendedArray, succeed } from '../../src';
+import { ExtendedArray, Infer, succeed } from '../../src';
 
 describe('Converters module', () => {
     describe('string converter', () => {
@@ -35,6 +35,53 @@ describe('Converters module', () => {
             [1, true, {}, (): string => 'hello', ['true']].forEach((v) => {
                 expect(Converters.string.convert(v)).toFailWith(/not a string/i);
             });
+        });
+
+        describe('matching method', () => {
+            const shouldMatch = 'found';
+            const shouldNotMatch = 'no match';
+
+            const tests: [string, unknown][] = [
+                [
+                    'literal string',
+                    shouldMatch,
+                ],
+                [
+                    'array of strings',
+                    ['blah', shouldMatch, 'blah'],
+                ],
+                [
+                    'set of strings',
+                    new Set(['blah', shouldMatch]),
+                ],
+                [
+                    'regular expression',
+                    /FOUND/i,
+                ],
+            ];
+            test.each(tests)(
+                'should match string using %p',
+                (_message, matcher) => {
+                    const converter = Converters.string.matching(matcher as string);
+                    expect(converter.convert(shouldMatch)).toSucceedWith(shouldMatch);
+                });
+
+            test.each(tests)(
+                'should not match string using %p',
+                (_message: string, matcher) => {
+                    const converter = Converters.string.matching(matcher as string);
+                    expect(converter.convert(shouldNotMatch)).toFailWith(/no match/i);
+                });
+
+            test.each(tests)(
+                'should use custom error if supplied for non-matching %p',
+                (_message: string, matcher) => {
+                    const converter = Converters.string.matching(
+                        matcher as string,
+                        { message: 'WTH' }
+                    );
+                    expect(converter.convert(shouldNotMatch)).toFailWith(/wth/i);
+                });
         });
     });
 
@@ -152,7 +199,7 @@ describe('Converters module', () => {
         });
     });
 
-    describe('value converter', () => {
+    describe('literal converter', () => {
         test('converts identical values', () => {
             [
                 'this',
@@ -160,7 +207,7 @@ describe('Converters module', () => {
                 true,
                 [1, 2, 3],
             ].forEach((t) => {
-                expect(Converters.value(t).convert(t)).toSucceedWith(t);
+                expect(Converters.literal(t).convert(t)).toSucceedWith(t);
             });
         });
 
@@ -172,7 +219,7 @@ describe('Converters module', () => {
                 { from: true, to: 'true' },
                 { from: [1, 2, 3], to: [1, 2, 3] },
             ].forEach((t) => {
-                expect(Converters.value(t.to).convert(t.from)).toFailWith(/does not match/i);
+                expect(Converters.literal(t.to).convert(t.from)).toFailWith(/does not match/i);
             });
         });
     });
@@ -441,18 +488,18 @@ describe('Converters module', () => {
         });
     });
 
-    describe('type inference from converter with ConvertedToType', () => {
+    describe('type inference from converter with Infer', () => {
         // This doesn't actually test anything per se, but you can hover
         // over the various local variables for intellisense to show
         // that typescript is correctly inferring types.
         // Note that it seems to be losing 'undefined' for optional
         // fields
         type TestEnum = 'tv1' | 'tv2' | 'tv3';
-        const s: ConvertedToType<typeof Converters.string> = 'hello';
+        const s: Infer<typeof Converters.string> = 'hello';
         // n correctly fails because 'number' doesn't extend Converter.
-        // const n: ConvertedToType<number> = 10;
+        // const n: Infer<number> = 10;
         const narc = Converters.arrayOf(Converters.number);
-        const narr: ConvertedToType<typeof narc> = [1, 2, 3];
+        const narr: Infer<typeof narc> = [1, 2, 3];
         const objc = Converters.object({
             str: Converters.string,
             numbers: Converters.arrayOf(Converters.number),
@@ -462,7 +509,7 @@ describe('Converters module', () => {
                 map: Converters.mapOf(Converters.arrayOf(Converters.string)),
             }),
         });
-        const objt: ConvertedToType<typeof objc>|undefined = {
+        const objt: Infer<typeof objc>|undefined = {
             str: 'string',
             numbers: [1, 2, 3],
             enum: 'tv3',
