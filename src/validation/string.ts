@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Erik Fortune
+ * Copyright (c) 2021 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,12 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './brand';
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import { Result, fail, succeed } from '../result';
+import { ValidatorBase, ValidatorFunc, ValidatorOptions } from './baseValidator';
+
+import { ValidatorTraits } from './traits';
+
+export interface StringValidatorConstructorParams<T, TC> {
+    options?: ValidatorOptions<TC>,
+    traits?: Partial<ValidatorTraits>,
+    validator?: ValidatorFunc<T, TC>
+}
+
+export class StringValidator<T extends string = string, TC = unknown> extends ValidatorBase<T, TC> {
+    public constructor(params?: StringValidatorConstructorParams<T, TC>) {
+        super(
+            params?.validator ?? StringValidator.validateString,
+            params?.options,
+            params?.traits,
+        );
+    }
+
+    public static validateString<T extends string>(from: unknown): Result<T> {
+        if (typeof from === 'string') {
+            return succeed(from as T);
+        }
+        return fail(`"${from}": not a string`);
+    }
+}
