@@ -53,7 +53,7 @@ export class FieldValidator<T, TC=undefined> extends ValidatorBase<T, TC> {
             if (isKeyOf(this.fieldName, from)) {
                 if ((!optional) || (from[this.fieldName] !== undefined)) {
                     const result = this.fieldValidator.validate(from[this.fieldName], context).onFailure((message: string) => {
-                        return fail(`${name}: ${message}`);
+                        return fail(`${this.fieldName}: ${message}`);
                     });
 
                     return result.isSuccess() ? true : result;
@@ -62,7 +62,7 @@ export class FieldValidator<T, TC=undefined> extends ValidatorBase<T, TC> {
 
             return optional
                 ? true
-                : fail(`Field ${this.fieldName} not found in "${JSON.stringify(from)}`);
+                : fail(`"${this.fieldName}": Field not found in "${JSON.stringify(from)}`);
         }
         return fail(`Cannot validate field '${this.fieldName}' from non-object "${JSON.stringify(from)}"`);
     }

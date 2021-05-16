@@ -25,7 +25,6 @@ import { Validator, ValidatorOptions } from './validator';
 import { ValidatorBase, ValidatorBaseConstructorParams } from './validatorBase';
 
 import { FieldValidator } from './field';
-import { isKeyOf } from '../utils';
 
 /**
  * Per-property validators for each of the properties in type T
@@ -62,6 +61,7 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
     public readonly fields: FieldValidators<T>;
     public readonly options: ObjectValidatorOptions<T, TC>;
     protected readonly _innerValidators: FieldValidators<T>;
+    protected readonly _allowedFields?: Set<keyof T>;
 
     /**
      * Constructs a new @see ObjectValidator<T> using options supplied in an
@@ -75,6 +75,9 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         this.fields = params.fields;
         this.options = params.options ?? {};
         this._innerValidators = ObjectValidator._resolveValidators(this.fields, this.options);
+        this._allowedFields = (this.options.strict === true)
+            ? new Set(Object.keys(this.fields) as (keyof T)[])
+            : undefined;
     }
 
     protected static _resolveValidators<T, TC>(
@@ -109,6 +112,10 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
     }
 
     protected _validate(from: unknown, context?: TC): boolean | Failure<T> {
+        if ((typeof from !== 'object') || (from === null) || Array.isArray(from)) {
+            return fail('source is not an object');
+        }
+
         // eslint bug thinks key is used before defined
         // eslint-disable-next-line no-use-before-define
         const converted = {} as { [key in keyof T]: T[key] };
@@ -125,17 +132,9 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
             }
         }
 
-        if (this.options.strict === true) {
-            if ((typeof from === 'object') && (!Array.isArray(from))) {
-                for (const key in from) {
-                    if (from.hasOwnProperty(key) && (!isKeyOf(key, this.fields) || (this.fields[key] === undefined))) {
-                        errors.push(`${key}: unexpected property in source object`);
-                    }
-                }
-            }
-            else {
-                errors.push('source is not an object');
-            }
+        if (this._allowedFields) {
+            const invalid = Object.keys(from).filter((k) => !this._allowedFields?.has(k as keyof T));
+            invalid.forEach((key) => errors.push((`${key}: unexpected field in source object.`)));
         }
         return (errors.length === 0) ? true : fail(errors.join('\n'));
     }

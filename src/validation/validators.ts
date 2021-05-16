@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+import { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams } from './object';
+
 import { GenericValidator } from './genericValidator';
 import { NumberValidator } from './number';
 import { StringValidator } from './string';
@@ -33,3 +35,10 @@ export const boolean = new GenericValidator({
             ? true
             : fail(`Not a boolean: "${JSON.stringify(from)}"`),
 });
+
+export function object<T, TC>(
+    fields: FieldValidators<T, TC>,
+    params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>,
+): ObjectValidator<T, TC> {
+    return new ObjectValidator({ fields, ...(params ?? {}) });
+}
