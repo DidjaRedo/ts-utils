@@ -29,7 +29,7 @@ import { fail } from '../result';
 
 export const string = new StringValidator();
 export const number = new NumberValidator();
-export const boolean = new GenericValidator({
+export const boolean = new GenericValidator<boolean>({
     validator: (from: unknown) =>
         typeof from === 'boolean'
             ? true

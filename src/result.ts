@@ -42,6 +42,7 @@ export interface IResult<T> {
 }
 
 export class Success<T> implements IResult<T> {
+    public readonly success = true;
     private readonly _value: T;
 
     constructor(value: T) {
@@ -86,6 +87,7 @@ export class Success<T> implements IResult<T> {
 }
 
 export class Failure<T> implements IResult<T> {
+    public readonly success = false;
     private readonly _message: string;
 
     constructor(message: string) {

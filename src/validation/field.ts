@@ -56,7 +56,7 @@ export class FieldValidator<T, TC=undefined> extends ValidatorBase<T, TC> {
                         return fail(`${this.fieldName}: ${message}`);
                     });
 
-                    return result.isSuccess() ? true : result;
+                    return result.success ? true : result;
                 }
             }
 

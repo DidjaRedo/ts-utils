@@ -123,7 +123,7 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         for (const key in this._innerValidators) {
             if (this._innerValidators[key]) {
                 const result = this._innerValidators[key].validate(from, context);
-                if (result.isSuccess() && (result.value !== undefined)) {
+                if (result.success && (result.value !== undefined)) {
                     converted[key] = result.value;
                 }
                 else if (result.isFailure()) {
