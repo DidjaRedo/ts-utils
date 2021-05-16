@@ -22,75 +22,77 @@
 
 import '../../helpers/jest';
 import { Failure, fail } from '../../../src';
-import { StringValidator, StringValidatorConstructorParams } from '../../../src/validation/string';
+import { NumberValidator, NumberValidatorConstructorParams } from '../../../src/validation/number';
 
-import { ValidatorOptions } from '../../../src/validation/';
+import { ValidatorOptions } from '../../../src/validation';
 import { Validators } from '../../../src/validation';
 
-class TestStringValidator<T extends string = string, TC = unknown> extends StringValidator<T, TC> {
+class TestNumberValidator<T extends number = number, TC = unknown> extends NumberValidator<T, TC> {
     public get options(): ValidatorOptions<TC> {
         return this._options;
     }
 
-    constructor(params?: StringValidatorConstructorParams<T, TC>) {
+    constructor(params?: NumberValidatorConstructorParams<T, TC>) {
         super(params);
     }
 
-    public static testValidate<T extends string = string>(from: unknown): boolean | Failure<T> {
-        if (from === 'custom') {
+    public static testValidate<T extends number = number>(from: unknown): boolean | Failure<T> {
+        if (from === 42) {
             return fail('custom error message goes here');
         }
-        return StringValidator.validateString(from);
+        return NumberValidator.validateNumber(from);
     }
 }
 
-describe('StringValidator class', () => {
+describe('NumberValidator class', () => {
     describe('constructor', () => {
-        test('constructs a StringValidator with no params', () => {
-            expect(() => new StringValidator()).not.toThrow();
+        test('constructs a NumberValidator with no params', () => {
+            expect(() => new NumberValidator()).not.toThrow();
         });
 
         test('uses options supplied via the constructor', () => {
-            const trueContext = new TestStringValidator({ options: { defaultContext: true } });
-            const falseContext = new TestStringValidator({ options: { defaultContext: false } });
+            const trueContext = new TestNumberValidator({ options: { defaultContext: true } });
+            const falseContext = new TestNumberValidator({ options: { defaultContext: false } });
             expect(trueContext.options.defaultContext).toBe(true);
             expect(falseContext.options.defaultContext).toBe(false);
         });
 
         test('uses traits supplied via the constructor', () => {
-            const optional = new StringValidator({ traits: { isOptional: true } });
-            const notOptional = new StringValidator({ traits: { isOptional: false } });
+            const optional = new NumberValidator({ traits: { isOptional: true } });
+            const notOptional = new NumberValidator({ traits: { isOptional: false } });
             expect(optional.isOptional).toBe(true);
             expect(notOptional.isOptional).toBe(false);
         });
 
         test('uses validator passed via the constructor', () => {
-            const custom = new StringValidator({ validator: TestStringValidator.testValidate });
-            expect(custom.validate('custom')).toFailWith('custom error message goes here');
+            const custom = new NumberValidator({ validator: TestNumberValidator.testValidate });
+            expect(custom.validate(42)).toFailWith('custom error message goes here');
         });
     });
 
     describe('validation', () => {
-        test('validates valid strings', () => {
+        test('validates valid numbers', () => {
             [
-                '',
-                'this is a string',
+                -1,
+                0,
+                1,
+                22 / 7,
             ].forEach((t) => {
-                expect(Validators.string.validate(t)).toSucceedWith(t);
+                expect(Validators.number.validate(t)).toSucceedWith(t);
             });
         });
 
-        test('fails for invalid strings', () => {
+        test('fails for non-numbers', () => {
             [
                 null,
                 undefined,
                 () => 'hello',
-                10,
+                '10',
                 { str: 'hello' },
                 new Date(),
                 ['hello'],
             ].forEach((t) => {
-                expect(Validators.string.validate(t)).toFailWith(/not a string/i);
+                expect(Validators.number.validate(t)).toFailWith(/not a number/i);
             });
         });
     });

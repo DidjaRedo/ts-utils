@@ -26,7 +26,6 @@ import { Failure, Result } from '../result';
 import { Brand } from '../brand';
 
 export interface ValidatorOptions<TC> {
-    verifyInPlace?: boolean;
     defaultContext?: TC;
 }
 

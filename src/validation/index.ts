@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-export * as Base from './validatorBase';
+export * as Base from './genericValidator';
 export * as Classes from './classes';
 export * from './traits';
 export * from './validator';

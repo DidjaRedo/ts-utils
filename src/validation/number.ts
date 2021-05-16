@@ -20,16 +20,23 @@
  * SOFTWARE.
  */
 
-import { GenericValidator } from './genericValidator';
-import { NumberValidator } from './number';
-import { StringValidator } from './string';
-import { fail } from '../result';
+import { Failure, fail } from '../result';
+import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
-export const string = new StringValidator();
-export const number = new NumberValidator();
-export const boolean = new GenericValidator({
-    validator: (from: unknown) =>
-        typeof from === 'boolean'
-            ? true
-            : fail(`Not a boolean: "${JSON.stringify(from)}"`),
-});
+export type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
+
+export class NumberValidator<T extends number = number, TC = unknown> extends GenericValidator<T, TC> {
+    public constructor(params?: NumberValidatorConstructorParams<T, TC>) {
+        super({
+            validator: NumberValidator.validateNumber,
+            ...(params ?? {}),
+        });
+    }
+
+    public static validateNumber<T extends number>(from: unknown): boolean | Failure<T> {
+        if (typeof from === 'number') {
+            return true;
+        }
+        return fail<T>(`"${from}": not a number`);
+    }
+}

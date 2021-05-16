@@ -23,20 +23,18 @@
 
 import '../../helpers/jest';
 
+import { ConstraintTrait, ValidatorOptions } from '../../../src/validation';
 import { Failure, fail } from '../../../src';
-import { ValidatorBase, ValidatorBaseConstructorParams } from '../../../src/validation/validatorBase';
+import { GenericValidator, GenericValidatorConstructorParams } from '../../../src/validation/genericValidator';
 
-import { ConstraintTrait, ValidatorOptions } from '../../../src/validation/';
-
-
-class TestValidatorBase<T, TC = unknown> extends ValidatorBase<T, TC> {
+class TestGenericValidator<T, TC = unknown> extends GenericValidator<T, TC> {
     public get options(): ValidatorOptions<TC> {
         return this._options;
     }
 
-    constructor(params: ValidatorBaseConstructorParams<T, TC>) {
+    constructor(params: GenericValidatorConstructorParams<T, TC>) {
         super({
-            validator: TestValidatorBase.testValidateString,
+            validator: TestGenericValidator.testValidateString,
             ...params,
         });
     }
@@ -56,14 +54,14 @@ class TestValidatorBase<T, TC = unknown> extends ValidatorBase<T, TC> {
     }
 }
 
-describe('ValidatorBase class', () => {
+describe('GenericValidator class', () => {
     describe('constructor', () => {
-        test('constructs a ValidatorBase if only a validator function is supplied', () => {
-            expect(() => new ValidatorBase({ validator: TestValidatorBase.testValidateString })).not.toThrow();
+        test('constructs a GenericValidator if only a validator function is supplied', () => {
+            expect(() => new GenericValidator({ validator: TestGenericValidator.testValidateString })).not.toThrow();
         });
 
-        test('constructs a ValidatorBase with no traits by default', () => {
-            const tv = new ValidatorBase({ validator: TestValidatorBase.testValidateString });
+        test('constructs a GenericValidator with no traits by default', () => {
+            const tv = new GenericValidator({ validator: TestGenericValidator.testValidateString });
             expect(tv.traits).toEqual({
                 isOptional: false,
                 constraints: [],
@@ -74,32 +72,32 @@ describe('ValidatorBase class', () => {
         });
 
         test('throws if no validator function is supplied', () => {
-            expect(() => new ValidatorBase({})).toThrow(/no validator function/i);
+            expect(() => new GenericValidator({})).toThrow(/no validator function/i);
         });
 
         test('uses options supplied via the constructor', () => {
-            const verify = new TestValidatorBase({ options: { verifyInPlace: true } });
-            const noVerify = new TestValidatorBase({ options: { verifyInPlace: false } });
-            expect(verify.options.verifyInPlace).toBe(true);
-            expect(noVerify.options.verifyInPlace).toBe(false);
+            const trueContext = new TestGenericValidator({ options: { defaultContext: true } });
+            const falseContext = new TestGenericValidator({ options: { defaultContext: false } });
+            expect(trueContext.options.defaultContext).toBe(true);
+            expect(falseContext.options.defaultContext).toBe(false);
         });
 
         test('uses traits supplied via the constructor', () => {
-            const optional = new TestValidatorBase({ traits: { isOptional: true } });
-            const notOptional = new TestValidatorBase({ traits: { isOptional: false } });
+            const optional = new TestGenericValidator({ traits: { isOptional: true } });
+            const notOptional = new TestGenericValidator({ traits: { isOptional: false } });
             expect(optional.isOptional).toBe(true);
             expect(notOptional.isOptional).toBe(false);
         });
 
         test('uses validator passed via the constructor', () => {
-            const custom = new TestValidatorBase({});
+            const custom = new TestGenericValidator({});
             expect(custom.validate('custom')).toFailWith('custom error message goes here');
         });
     });
 
     describe('validate and guard methods', () => {
-        const testString = new TestValidatorBase({ validator: TestValidatorBase.testValidateString });
-        const testNumber = new TestValidatorBase({ validator: TestValidatorBase.testValidateNumber });
+        const testString = new TestGenericValidator({ validator: TestGenericValidator.testValidateString });
+        const testNumber = new TestGenericValidator({ validator: TestGenericValidator.testValidateNumber });
 
         test('validates valid values', () => {
             [
@@ -150,10 +148,10 @@ describe('ValidatorBase class', () => {
             const explicitContext: TestContext = { context: 'explicit' };
 
             const tvv = jest.fn(() => true);
-            const tv = new TestValidatorBase({ validator: tvv });
+            const tv = new TestGenericValidator({ validator: tvv });
 
             const tvctxv = jest.fn(() => true);
-            const tvctx = new TestValidatorBase({ validator: tvctxv, options: { defaultContext } });
+            const tvctx = new TestGenericValidator({ validator: tvctxv, options: { defaultContext } });
 
             beforeEach(() => {
                 tvv.mockClear();
@@ -203,7 +201,7 @@ describe('ValidatorBase class', () => {
     });
 
     describe('validateOptional method', () => {
-        const testNumber = new TestValidatorBase({ validator: TestValidatorBase.testValidateNumber });
+        const testNumber = new TestGenericValidator({ validator: TestGenericValidator.testValidateNumber });
         test('validates valid values or undefined', () => {
             [
                 1,
@@ -222,7 +220,7 @@ describe('ValidatorBase class', () => {
     });
 
     describe('optional method', () => {
-        const tv = new TestValidatorBase({});
+        const tv = new TestGenericValidator({});
         const ov = tv.optional();
 
         test('constructs an explicitly optional validator', () => {
@@ -245,7 +243,7 @@ describe('ValidatorBase class', () => {
     });
 
     describe('withConstraint method', () => {
-        const tv = new TestValidatorBase({});
+        const tv = new TestGenericValidator({});
         const cv = tv.withConstraint((s) => s !== 'added');
         const cvc = tv.withConstraint((s) => (s === 'added') ? fail('BAD BAD BAD') : true);
 
@@ -278,7 +276,7 @@ describe('ValidatorBase class', () => {
     });
 
     describe('withBrand method', () => {
-        const tv = new TestValidatorBase({});
+        const tv = new TestGenericValidator({});
         const bv = tv.withBrand('BRAND');
 
         test('constructs a validator with a brand trait', () => {
@@ -291,7 +289,7 @@ describe('ValidatorBase class', () => {
         });
 
         test('produces branded values', () => {
-            const tv = new TestValidatorBase({});
+            const tv = new TestGenericValidator({});
             const bv1 = tv.withBrand('BRAND1');
             const bv2 = tv.withBrand('BRAND2');
 

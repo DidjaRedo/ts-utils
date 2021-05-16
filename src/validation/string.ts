@@ -21,11 +21,11 @@
  */
 
 import { Failure, fail } from '../result';
-import { ValidatorBase, ValidatorBaseConstructorParams } from './validatorBase';
+import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
-export type StringValidatorConstructorParams<T extends string = string, TC = unknown> = ValidatorBaseConstructorParams<T, TC>;
+export type StringValidatorConstructorParams<T extends string = string, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
 
-export class StringValidator<T extends string = string, TC = unknown> extends ValidatorBase<T, TC> {
+export class StringValidator<T extends string = string, TC = unknown> extends GenericValidator<T, TC> {
     public constructor(params?: StringValidatorConstructorParams<T, TC>) {
         super({
             validator: StringValidator.validateString,

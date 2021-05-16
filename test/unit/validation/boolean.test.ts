@@ -20,16 +20,34 @@
  * SOFTWARE.
  */
 
-import { GenericValidator } from './genericValidator';
-import { NumberValidator } from './number';
-import { StringValidator } from './string';
-import { fail } from '../result';
+import '../../helpers/jest';
+import { Validators } from '../../../src/validation';
 
-export const string = new StringValidator();
-export const number = new NumberValidator();
-export const boolean = new GenericValidator({
-    validator: (from: unknown) =>
-        typeof from === 'boolean'
-            ? true
-            : fail(`Not a boolean: "${JSON.stringify(from)}"`),
+describe('boolean validator', () => {
+    describe('validation', () => {
+        test('validates valid boolean values', () => {
+            [
+                true,
+                false,
+            ].forEach((t) => {
+                expect(Validators.boolean.validate(t)).toSucceedWith(t);
+            });
+        });
+
+        test('fails for non-boolean', () => {
+            [
+                null,
+                undefined,
+                () => 'hello',
+                '10',
+                'true',
+                'false',
+                { str: 'hello' },
+                new Date(),
+                ['hello'],
+            ].forEach((t) => {
+                expect(Validators.boolean.validate(t)).toFailWith(/not a boolean/i);
+            });
+        });
+    });
 });
