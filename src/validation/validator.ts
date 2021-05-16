@@ -21,16 +21,16 @@
  */
 
 import { ConstraintTrait, ValidatorTraits } from './traits';
+import { Failure, Result } from '../result';
 
 import { Brand } from '../brand';
-import { Result } from '../result';
 
 export interface ValidatorOptions<TC> {
     verifyInPlace?: boolean;
     defaultContext?: TC;
 }
 
-export type Constraint<T> = (val: T) => boolean | Result<boolean>;
+export type Constraint<T> = (val: T) => boolean | Failure<T>;
 
 /**
  * In-place validation that a supplied unknown matches a requested

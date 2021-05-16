@@ -21,12 +21,11 @@
  */
 
 import '../../helpers/jest';
-import { Result, fail } from '../../../src';
+import { Failure, fail } from '../../../src';
 import { StringValidator, StringValidatorConstructorParams } from '../../../src/validation/string';
 
 import { ValidatorOptions } from '../../../src/validation/';
 import { Validators } from '../../../src/validation';
-
 
 class TestStringValidator<T extends string = string, TC = unknown> extends StringValidator<T, TC> {
     public get options(): ValidatorOptions<TC> {
@@ -37,7 +36,7 @@ class TestStringValidator<T extends string = string, TC = unknown> extends Strin
         super(params);
     }
 
-    public static testValidate<T extends string = string>(from: unknown): Result<T> {
+    public static testValidate<T extends string = string>(from: unknown): boolean | Failure<T> {
         if (from === 'custom') {
             return fail('custom error message goes here');
         }

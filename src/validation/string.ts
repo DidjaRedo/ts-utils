@@ -20,31 +20,23 @@
  * SOFTWARE.
  */
 
-import { Result, fail, succeed } from '../result';
-import { ValidatorBase, ValidatorFunc } from './validatorBase';
+import { Failure, fail } from '../result';
+import { ValidatorBase, ValidatorBaseConstructorParams } from './validatorBase';
 
-import { ValidatorOptions } from './validator';
-import { ValidatorTraits } from './traits';
-
-export interface StringValidatorConstructorParams<T, TC> {
-    options?: ValidatorOptions<TC>,
-    traits?: Partial<ValidatorTraits>,
-    validator?: ValidatorFunc<T, TC>
-}
+export type StringValidatorConstructorParams<T extends string = string, TC = unknown> = ValidatorBaseConstructorParams<T, TC>;
 
 export class StringValidator<T extends string = string, TC = unknown> extends ValidatorBase<T, TC> {
     public constructor(params?: StringValidatorConstructorParams<T, TC>) {
-        super(
-            params?.validator ?? StringValidator.validateString,
-            params?.options,
-            params?.traits,
-        );
+        super({
+            validator: StringValidator.validateString,
+            ...(params ?? {}),
+        });
     }
 
-    public static validateString<T extends string>(from: unknown): Result<T> {
+    public static validateString<T extends string>(from: unknown): boolean | Failure<T> {
         if (typeof from === 'string') {
-            return succeed(from as T);
+            return true;
         }
-        return fail(`"${from}": not a string`);
+        return fail<T>(`"${from}": not a string`);
     }
 }

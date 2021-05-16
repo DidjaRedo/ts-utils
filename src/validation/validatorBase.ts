@@ -22,11 +22,17 @@
 
 import { Constraint, Validator, ValidatorOptions } from './validator';
 import { ConstraintTrait, ValidatorTraits } from './traits';
-import { Result, fail, succeed } from '../result';
+import { Failure, Result, fail, succeed } from '../result';
 
 import { Brand } from '../brand';
 
-export type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => Result<T>;
+export type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => boolean | Failure<T>;
+
+export interface ValidatorBaseConstructorParams<T, TC> {
+    options?: ValidatorOptions<TC>,
+    traits?: Partial<ValidatorTraits>,
+    validator?: ValidatorFunc<T, TC>
+}
 
 /**
  * In-place validation that a supplied unknown matches a requested
@@ -38,14 +44,13 @@ export class ValidatorBase<T, TC = undefined> implements Validator<T, TC> {
     protected readonly _validator: ValidatorFunc<T, TC>;
     protected readonly _options: ValidatorOptions<TC>;
 
-    public constructor(
-        validator: ValidatorFunc<T, TC>,
-        options?: ValidatorOptions<TC>,
-        traits?: Partial<ValidatorTraits>,
-    ) {
-        this._validator = validator;
-        this._options = options ?? {};
-        this.traits = new ValidatorTraits(traits);
+    public constructor(params: Partial<ValidatorBaseConstructorParams<T, TC>>) {
+        if (!params.validator) {
+            throw new Error('No validator function supplied');
+        }
+        this._validator = params.validator;
+        this._options = params.options ?? {};
+        this.traits = new ValidatorTraits(params.traits);
     }
 
     /**
@@ -69,12 +74,11 @@ export class ValidatorBase<T, TC = undefined> implements Validator<T, TC> {
      * @param context optional context used for validation
      */
     public validate(from: unknown, context?: TC): Result<T> {
-        return this._validator(from, context ?? this._options?.defaultContext).onSuccess((v) => {
-            if ((this._options.verifyInPlace === true) && (v !== from)) {
-                return fail(`Validator mutated value "${JSON.stringify(v)}"`);
-            }
-            return succeed(v);
-        });
+        const result = this._validator(from, this._context(context));
+        if (typeof result === 'boolean') {
+            return result ? succeed(from as T) : fail<T>('Invalid value');
+        }
+        return result;
     }
 
     /**
@@ -93,18 +97,20 @@ export class ValidatorBase<T, TC = undefined> implements Validator<T, TC> {
      * @param context Optional context for the test
      */
     public guard(from: unknown, context?: TC): from is T {
-        return this.validate(from, context).isSuccess();
+        return (this._validator(from, this._context(context)) === true);
     }
 
     /**
      * Creates an in-place validator for an optional value.
      */
     public optional(): Validator<T | undefined, TC> {
-        return new ValidatorBase((from: unknown, context?: TC) => {
-            return this.validateOptional(from, context ?? this._options?.defaultContext);
-        },
-        undefined,
-        { isOptional: true });
+        return new ValidatorBase({
+            validator: (from: unknown, context?: TC) => {
+                return (from === undefined)
+                    || this._validator(from, this._context(context));
+            },
+            traits: { isOptional: true },
+        });
     }
 
     /**
@@ -114,21 +120,21 @@ export class ValidatorBase<T, TC = undefined> implements Validator<T, TC> {
      */
     public withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC> {
         trait = trait ?? { type: 'function' };
-        return new ValidatorBase((from: unknown, context?: TC) => {
-            return this._validator(from, context ?? this._options?.defaultContext).onSuccess((v) => {
-                const constraintResult = constraint(v);
-                if (typeof constraintResult === 'boolean') {
-                    return constraintResult
-                        ? succeed(v)
-                        : fail(`Value ${JSON.stringify(v)} does not meet constraint.`);
+        return new ValidatorBase({
+            validator: (from: unknown, context?: TC): boolean | Failure<T> => {
+                if (this._validator(from, this._context(context)) === true) {
+                    const constraintResult = constraint(from as T);
+                    if (typeof constraintResult === 'boolean') {
+                        return constraintResult
+                            ? true
+                            : fail(`Value ${JSON.stringify(from)} does not meet constraint.`);
+                    }
+                    return constraintResult;
                 }
-                return constraintResult.isSuccess()
-                    ? succeed(v)
-                    : fail(constraintResult.message);
-            });
-        },
-        undefined,
-        { constraints: [trait] });
+                return false;
+            },
+            traits: { constraints: [trait] },
+        });
     }
 
     /**
@@ -141,12 +147,15 @@ export class ValidatorBase<T, TC = undefined> implements Validator<T, TC> {
             throw new Error(`Cannot replace existing brand "${this.brand}" with "${brand}".`);
         }
 
-        return new ValidatorBase<Brand<T, B>, TC>((from: unknown, context?: TC) => {
-            return this._validator(from, context ?? this._options.defaultContext).onSuccess((v) => {
-                return succeed(v as Brand<T, B>);
-            });
-        },
-        undefined,
-        { brand });
+        return new ValidatorBase<Brand<T, B>, TC>({
+            validator: (from: unknown, context?: TC) => {
+                return this._validator(from, this._context(context)) as boolean | Failure<Brand<T, B>>;
+            },
+            traits: { brand },
+        });
+    }
+
+    protected _context(explicitContext?: TC): TC | undefined {
+        return explicitContext ?? this._options.defaultContext;
     }
 }
