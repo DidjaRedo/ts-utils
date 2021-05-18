@@ -231,6 +231,13 @@ describe('BaseConverter class', () => {
                     expect(constrained.convert(v)).toFailWith(/not a number/i);
                 });
             });
+
+            test('uses a description if supplied', () => {
+                const withMessage = numberConverter.withConstraint((n) => n >= 0 && n <= 100, {
+                    description: 'out of range',
+                });
+                expect(withMessage.convert(200)).toFailWith('"200": out of range');
+            });
         });
 
         describe('with a Result constraint', () => {
@@ -254,6 +261,13 @@ describe('BaseConverter class', () => {
                 ['hello', {}, true].forEach((v) => {
                     expect(constrained.convert(v)).toFailWith(/not a number/i);
                 });
+            });
+
+            test('propagates error instead of default description', () => {
+                const withMessage = numberConverter.withConstraint(
+                    (n) => (n >= 0 && n <= 100) ? succeed(n) : fail('out of range'),
+                    { description: 'DEFAULT DESCRIPTION' });
+                expect(withMessage.convert(200)).toFailWith('out of range');
             });
         });
 
