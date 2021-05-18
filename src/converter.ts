@@ -32,8 +32,6 @@ export interface ConverterTraits {
     readonly brand?: string;
 }
 
-<<<<<<< HEAD
-=======
 /**
  * Options for @see Converter @see withConstraint
  */
@@ -45,13 +43,6 @@ export interface ConstraintOptions {
     readonly description: string;
 }
 
-/**
- * Helper type to brand a simple type to prevent inappropriate use
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export type Brand<T, B> = T & { __brand: B };
-
->>>>>>> master
 export interface Converter<T, TC=undefined> extends ConverterTraits {
     /**
      * Indicates whether this element is explicitly optional
