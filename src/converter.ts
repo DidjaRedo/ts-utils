@@ -32,6 +32,26 @@ export interface ConverterTraits {
     readonly brand?: string;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * Options for @see Converter @see withConstraint
+ */
+export interface ConstraintOptions {
+    /**
+     * Optional description for error messages when constraint
+     * function returns false.
+     */
+    readonly description: string;
+}
+
+/**
+ * Helper type to brand a simple type to prevent inappropriate use
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type Brand<T, B> = T & { __brand: B };
+
+>>>>>>> master
 export interface Converter<T, TC=undefined> extends ConverterTraits {
     /**
      * Indicates whether this element is explicitly optional
@@ -95,8 +115,12 @@ export interface Converter<T, TC=undefined> extends ConverterTraits {
      * or Failure<T>.
      *
      * @param constraint Constraint evaluation function
+     * @param options Options for constraint evaluation
      */
-    withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC>;
+    withConstraint(
+        constraint: (val: T) => boolean|Result<T>,
+        options?: ConstraintOptions,
+    ): Converter<T, TC>;
 
     /**
      * Adds a brand to the type to prevent mismatched usage of simple types
@@ -239,13 +263,20 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      *
      * @param constraint Constraint evaluation function
      */
-    public withConstraint(constraint: (val: T) => boolean|Result<T>): Converter<T, TC> {
+    public withConstraint(
+        constraint: (val: T) => boolean|Result<T>,
+        options?: ConstraintOptions,
+    ): Converter<T, TC> {
         return new BaseConverter<T, TC>((from: unknown, _self: Converter<T, TC>, context?: TC) => {
             const result = this._converter(from, this, this._context(context));
             if (result.isSuccess()) {
                 const constraintResult = constraint(result.value);
                 if (typeof constraintResult === 'boolean') {
-                    return constraintResult ? result : fail(`Value ${JSON.stringify(result.value)} does not meet constraint.`);
+                    return constraintResult
+                        ? result
+                        : fail(
+                            `"${JSON.stringify(result.value)}": ${options?.description ?? 'does not meet constraint'}`
+                        );
                 }
                 return constraintResult;
             }
