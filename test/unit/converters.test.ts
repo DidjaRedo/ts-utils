@@ -134,6 +134,29 @@ describe('Converters module', () => {
         });
     });
 
+    describe('mapped enumerated values converter', () => {
+        const mapping: [boolean|undefined, unknown[]][] = [
+            [true, [true, 'true', 't', 'y', 'yes', 1]],
+            [false, [false, 'false', 'f', 'n', 'no', 0]],
+            [undefined, ['maybe', 'm', undefined, null, NaN]],
+        ];
+        const converter = Converters.mappedEnumeratedValue<boolean|undefined>(mapping);
+
+        test('succeeds with valid enumerated values', () => {
+            for (const valueMap of mapping) {
+                for (const value of valueMap[1]) {
+                    expect(converter.convert(value)).toSucceedWith(valueMap[0]);
+                }
+            }
+        });
+
+        test('fails with invalid mapped enumerated values', () => {
+            ['could be', 'definitely', 11].forEach((v) => {
+                expect(converter.convert(v)).toFailWith(/cannot map/i);
+            });
+        });
+    });
+
     describe('number converter', () => {
         test('converts valid numbers and numeric strings', () => {
             [-1, 0, 10, '100', '0', '-10'].forEach((v) => {
