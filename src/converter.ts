@@ -116,7 +116,7 @@ export interface Converter<T, TC=undefined> extends ConverterTraits {
      * converter function.  Fails if 'from' is not an array.
      * @param mapConverter The map
      */
-     mapConvertItems<TI>(mapConverter: Converter<TI>): Converter<TI[], TC>;
+     mapConvertItems<TI>(mapConverter: Converter<TI, unknown>): Converter<TI[], TC>;
 
      /**
       * Applies a type guard to the conversion result.
@@ -302,7 +302,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
      * converter function.  Fails if 'from' is not an array.
      * @param mapConverter The map
      */
-    public mapConvertItems<TI>(mapConverter: Converter<TI>): Converter<TI[], TC> {
+    public mapConvertItems<TI>(mapConverter: Converter<TI, unknown>): Converter<TI[], TC> {
         return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
             return this._converter(from, this, this._context(context)).onSuccess((items) => {
                 if (Array.isArray(items)) {
