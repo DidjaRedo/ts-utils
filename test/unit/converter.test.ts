@@ -28,6 +28,7 @@ import {
     fail,
     succeed,
 } from '../../src';
+import { stringArray } from '../../src/converters';
 
 interface TestContext {
     value: string;
@@ -207,6 +208,99 @@ describe('BaseConverter class', () => {
             const cc = contextConverter.mapConvert(tc);
             expect(cc.convert('{{value}} is expected')).toSucceedWith({
                 got: 'DEFAULT VALUE is expected',
+            });
+        });
+    });
+
+    describe('mapItems', () => {
+        function mapNumber(from: unknown): Result<number> {
+            const n = Number(from);
+            return Number.isNaN(n) ? fail('not a number') : succeed(n);
+        }
+
+        const converter: Converter<number[]> = stringArray.mapItems(mapNumber);
+
+        test('it succeeds for an array with all valid elements', () => {
+            expect(converter.convert(['10', '20'])).toSucceedWith([10, 20]);
+        });
+
+        test('it fails for an array with invalid elements', () => {
+            expect(converter.convert(['10', '{}'])).toFailWith(/not a number/i);
+        });
+
+        test('it fails for a non-array', () => {
+            expect(stringConverter.mapItems(mapNumber).convert('10')).toFailWith(/not an array/i);
+        });
+    });
+
+    describe('mapConvertItems', () => {
+        const converter: Converter<number[]> = stringArray.mapConvertItems(numberConverter);
+
+        test('succeeds for an array with all valid elements', () => {
+            expect(converter.convert(['10', '20'])).toSucceedWith([10, 20]);
+        });
+
+        test('fails for an array with invalid elements', () => {
+            expect(converter.convert(['10', '{}'])).toFailWith(/not a number/i);
+        });
+
+        test('fails for a non-array', () => {
+            expect(stringConverter.mapConvertItems(numberConverter).convert('10')).toFailWith(/not an array/i);
+        });
+    });
+
+    describe('with type guards', () => {
+        type Thing = 'thing1' | 'thing2';
+        function isThing(from: unknown): from is Thing {
+            return (from === 'thing1' || from === 'thing2');
+        }
+
+        describe('withTypeGuard method', () => {
+            test('succeeds for a value that passes the guard', () => {
+                const converter: Converter<Thing> = stringConverter.withTypeGuard(isThing);
+                expect(converter.convert('thing1')).toSucceedWith('thing1');
+            });
+
+            test('fails for a value that fails the guard', () => {
+                const converter: Converter<Thing> = stringConverter.withTypeGuard(isThing);
+                expect(converter.convert('thing3')).toFailWith(/invalid type/i);
+            });
+
+            test('fails with a custom message for a value that fails the guard', () => {
+                const converter: Converter<Thing> = stringConverter.withTypeGuard(isThing, 'not a known thing');
+                expect(converter.convert('thing3')).toFailWith(/not a known thing/i);
+            });
+
+            test('fails with the standard message for a value that fails initial conversion', () => {
+                const converter: Converter<Thing> = stringConverter.withTypeGuard(isThing, 'not a known thing');
+                expect(converter.convert({})).toFailWith(/not a string/i);
+            });
+        });
+
+        describe('withItemTypeGuard method', () => {
+            test('succeeds for an array of values that pass the guard', () => {
+                const converter: Converter<Thing[]> = stringArray.withItemTypeGuard(isThing);
+                expect(converter.convert(['thing1', 'thing2'])).toSucceedWith(['thing1', 'thing2']);
+            });
+
+            test('fails for a value that fails the guard', () => {
+                const converter: Converter<Thing[]> = stringArray.withItemTypeGuard(isThing);
+                expect(converter.convert(['thing3'])).toFailWith(/invalid type/i);
+            });
+
+            test('fails with a custom message for a value that fails the guard', () => {
+                const converter: Converter<Thing[]> = stringArray.withItemTypeGuard(isThing, 'not a known thing');
+                expect(converter.convert(['thing3'])).toFailWith(/not a known thing/i);
+            });
+
+            test('fails with the standard message for a value that fails initial conversion', () => {
+                const converter: Converter<Thing[]> = stringArray.withItemTypeGuard(isThing, 'not a known thing');
+                expect(converter.convert([{}])).toFailWith(/not a string/i);
+            });
+
+            test('fails if the converted value is not an array', () => {
+                const converter = stringConverter.withItemTypeGuard(isThing, 'not a known thing');
+                expect(converter.convert('thing1')).toFailWith(/not an array/i);
             });
         });
     });
