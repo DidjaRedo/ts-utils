@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { Result, fail, succeed } from './result';
+import { Result, fail, mapResults, succeed } from './result';
 
 type OnError = 'failOnError' | 'ignoreErrors';
 
@@ -103,6 +103,36 @@ export interface Converter<T, TC=undefined> extends ConverterTraits {
      * @param mapConverter The converter to be applied to the converted value
      */
     mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC>;
+
+    /**
+     * Maps the individual items of the resulting value with the supplied
+     * map function.  Fails if 'from' is not an array.
+     * @param mapper The map function
+     */
+    mapItems<TI>(mapper: (from: unknown) => Result<TI>): Converter<TI[], TC>;
+
+    /**
+     * Maps the individual items of the resulting value with the supplied
+     * converter function.  Fails if 'from' is not an array.
+     * @param mapConverter The map
+     */
+     mapConvertItems<TI>(mapConverter: Converter<TI>): Converter<TI[], TC>;
+
+     /**
+      * Applies a type guard to the conversion result.
+      * @param guard The type guard function to apply
+      * @param message Optional message to be reported on failure
+      */
+    withTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI, TC>;
+
+     /**
+      * Applies a type guard to each member of the conversion result. Fails
+      * if the conversion result is not an array or if any member fails the
+      * type guard.
+      * @param guard The type guard function to apply to each element
+      * @param message Optional message to be reported on failure
+      */
+      withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI[], TC>;
 
     /**
      * Creates a converter with an optional constraint.  If the base converter
@@ -249,6 +279,73 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
             return fail(innerResult.message);
         // eslint-disable-next-line no-return-assign
         })._with(this._traits());
+    }
+
+    /**
+     * Maps the individual items of the resulting value with the supplied
+     * map function.  Fails if 'from' is not an array.
+     * @param mapper The map function
+     */
+    public mapItems<TI>(mapper: (from: unknown) => Result<TI>): Converter<TI[], TC> {
+        return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
+            return this._converter(from, this, this._context(context)).onSuccess((items) => {
+                if (Array.isArray(items)) {
+                    return mapResults(items.map((i) => mapper(i)));
+                }
+                return fail('Cannot map items - not an array');
+            });
+        });
+    }
+
+    /**
+     * Maps the individual items of the resulting value with the supplied
+     * converter function.  Fails if 'from' is not an array.
+     * @param mapConverter The map
+     */
+    public mapConvertItems<TI>(mapConverter: Converter<TI>): Converter<TI[], TC> {
+        return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
+            return this._converter(from, this, this._context(context)).onSuccess((items) => {
+                if (Array.isArray(items)) {
+                    return mapResults(items.map((i) => mapConverter.convert(i)));
+                }
+                return fail('Cannot map items - not an array');
+            });
+        });
+    }
+
+    /**
+     * Applies a type guard to the conversion result.
+     * @param guard The type guard function to apply
+     * @param message Optional message to be reported on failure
+     */
+    public withTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI, TC> {
+        return new BaseConverter<TI, TC>((from: unknown, _self: Converter<TI, TC>, context?: TC) => {
+            return this._converter(from, this, this._context(context)).onSuccess((inner) => {
+                message = message ?? 'invalid type';
+                return guard(inner) ? succeed(inner) : fail(`${message}: ${JSON.stringify(from)}`);
+            });
+        });
+    }
+
+    /**
+     * Applies a type guard to each member of the conversion result. Fails
+     * if the conversion result is not an array or if any member fails the
+     * type guard.
+     * @param guard The type guard function to apply to each element
+     * @param message Optional message to be reported on failure
+     */
+    public withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI[], TC> {
+        return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
+            return this._converter(from, this, this._context(context)).onSuccess((items) => {
+                if (Array.isArray(items)) {
+                    return mapResults(items.map((i) => {
+                        message = message ?? 'invalid type';
+                        return guard(i) ? succeed(i) : fail(`${message}: ${JSON.stringify(from)}`);
+                    }));
+                }
+                return fail('Cannot guard item type - not an array');
+            });
+        });
     }
 
     /**
