@@ -197,16 +197,17 @@ export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
  * @param map An array of tuples describing the mapping. The first element of each tuple is the result
  * value, the second is the set of values that map to the result.  Tuples are evaluated in the order
  * supplied and are not checked for duplicates.
+ * @param message an optional error message
  * @returns The mapped value
  */
-export function mappedEnumeratedValue<T>(map: [T, unknown[]][]): Converter<T, undefined> {
+export function mappedEnumeratedValue<T>(map: [T, unknown[]][], message?: string): Converter<T, undefined> {
     return new BaseConverter((from: unknown, _self: Converter<T, undefined>, _context?: unknown) => {
         for (const item of map) {
             if (item[1].includes(from)) {
                 return succeed(item[0]);
             }
         }
-        return fail(`Cannot map '${JSON.stringify(from)}' to a supported value`);
+        return fail(message ? `${JSON.stringify(from)}: ${message}` : `Cannot map '${JSON.stringify(from)}' to a supported value`);
     });
 }
 
