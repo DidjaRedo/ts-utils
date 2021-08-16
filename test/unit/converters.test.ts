@@ -155,6 +155,13 @@ describe('Converters module', () => {
                 expect(converter.convert(v)).toFailWith(/cannot map/i);
             });
         });
+
+        test('fails with a custom message if supplied', () => {
+            const converter2 = Converters.mappedEnumeratedValue<boolean|undefined>(mapping, 'bad value');
+            ['could be', 'definitely', 11].forEach((v) => {
+                expect(converter2.convert(v)).toFailWith(/bad value/i);
+            });
+        });
     });
 
     describe('number converter', () => {
