@@ -191,6 +191,26 @@ export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
 }
 
 /**
+ * Converts unknown to one of a set of supplied enumerated values, mapping any of multiple supplied
+ * values to the enumeration. Enables mapping of multiple input values to a consistent internal
+ * representation (so e.g. 'y', 'yes', 'true' and true can all map to boolean true)
+ * @param map An array of tuples describing the mapping. The first element of each tuple is the result
+ * value, the second is the set of values that map to the result.  Tuples are evaluated in the order
+ * supplied and are not checked for duplicates.
+ * @returns The mapped value
+ */
+export function mappedEnumeratedValue<T>(map: [T, unknown[]][]): Converter<T, undefined> {
+    return new BaseConverter((from: unknown, _self: Converter<T, undefined>, _context?: unknown) => {
+        for (const item of map) {
+            if (item[1].includes(from)) {
+                return succeed(item[0]);
+            }
+        }
+        return fail(`Cannot map '${JSON.stringify(from)}' to a supported value`);
+    });
+}
+
+/**
  * A converter to convert unknown to some value. Succeeds with the supplied value if an identity
  * comparison succeeds, fails otherwise.
  * @param value The value to be compared
