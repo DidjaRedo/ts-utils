@@ -554,6 +554,23 @@ export function mapOf<T, TC = undefined, TK extends string = string>(
 }
 
 /**
+ * Gets a converter which validates that a supplied value is of a type validated by
+ * a supplied validator and returns it.
+ * @param validator A validator function to determine if the converted value is valid
+ * @param description A description of the validate type for use in error messages
+ * @returns If validator returns true, suceeds with from coerced to T.  Fails with an error
+ * message otherwise.
+ */
+export function validateWith<T, TC=undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T, TC>, _context?: TC) => {
+        if (validator(from)) {
+            return succeed(from);
+        }
+        return fail(`${JSON.stringify(from)}: invalid ${description ?? 'value'}`);
+    });
+}
+
+/**
  * A helper function to extract and convert an element from an array. Succeeds and returns
  * the converted value if the element exists in the supplied parameter and can be converted.
  * Fails otherwise.
