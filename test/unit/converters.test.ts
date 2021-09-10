@@ -938,6 +938,24 @@ describe('Converters module', () => {
         });
     });
 
+    describe('validateWith converter', () => {
+        const isString = (from: unknown): from is string => typeof from === 'string';
+        test('succeeds with a validated value', () => {
+            const converter = Converters.validateWith(isString);
+            expect(converter.convert('foo')).toSucceedWith('foo');
+        });
+
+        test('fails with an invalid value using default description', () => {
+            const converter = Converters.validateWith(isString);
+            expect(converter.convert(10)).toFailWith('10: invalid value');
+        });
+
+        test('fails with an invalid value using supplied description', () => {
+            const converter = Converters.validateWith(isString, 'string');
+            expect(converter.convert(10)).toFailWith('10: invalid string');
+        });
+    });
+
     describe('element converter', () => {
         const good = ['test', 10];
 
