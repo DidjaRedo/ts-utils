@@ -134,6 +134,36 @@ describe('Converters module', () => {
         });
     });
 
+    describe('mapped enumerated values converter', () => {
+        const mapping: [boolean|undefined, unknown[]][] = [
+            [true, [true, 'true', 't', 'y', 'yes', 1]],
+            [false, [false, 'false', 'f', 'n', 'no', 0]],
+            [undefined, ['maybe', 'm', undefined, null, NaN]],
+        ];
+        const converter = Converters.mappedEnumeratedValue<boolean|undefined>(mapping);
+
+        test('succeeds with valid enumerated values', () => {
+            for (const valueMap of mapping) {
+                for (const value of valueMap[1]) {
+                    expect(converter.convert(value)).toSucceedWith(valueMap[0]);
+                }
+            }
+        });
+
+        test('fails with invalid mapped enumerated values', () => {
+            ['could be', 'definitely', 11].forEach((v) => {
+                expect(converter.convert(v)).toFailWith(/cannot map/i);
+            });
+        });
+
+        test('fails with a custom message if supplied', () => {
+            const converter2 = Converters.mappedEnumeratedValue<boolean|undefined>(mapping, 'bad value');
+            ['could be', 'definitely', 11].forEach((v) => {
+                expect(converter2.convert(v)).toFailWith(/bad value/i);
+            });
+        });
+    });
+
     describe('number converter', () => {
         test('converts valid numbers and numeric strings', () => {
             [-1, 0, 10, '100', '0', '-10'].forEach((v) => {
@@ -905,6 +935,24 @@ describe('Converters module', () => {
                     expect(converter.convert(srcObject)).toSucceedWith(expected);
                 });
             });
+        });
+    });
+
+    describe('validateWith converter', () => {
+        const isString = (from: unknown): from is string => typeof from === 'string';
+        test('succeeds with a validated value', () => {
+            const converter = Converters.validateWith(isString);
+            expect(converter.convert('foo')).toSucceedWith('foo');
+        });
+
+        test('fails with an invalid value using default description', () => {
+            const converter = Converters.validateWith(isString);
+            expect(converter.convert(10)).toFailWith('10: invalid value');
+        });
+
+        test('fails with an invalid value using supplied description', () => {
+            const converter = Converters.validateWith(isString, 'string');
+            expect(converter.convert(10)).toFailWith('10: invalid string');
         });
     });
 

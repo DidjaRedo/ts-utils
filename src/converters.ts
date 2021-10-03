@@ -191,6 +191,27 @@ export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
 }
 
 /**
+ * Converts unknown to one of a set of supplied enumerated values, mapping any of multiple supplied
+ * values to the enumeration. Enables mapping of multiple input values to a consistent internal
+ * representation (so e.g. 'y', 'yes', 'true' and true can all map to boolean true)
+ * @param map An array of tuples describing the mapping. The first element of each tuple is the result
+ * value, the second is the set of values that map to the result.  Tuples are evaluated in the order
+ * supplied and are not checked for duplicates.
+ * @param message an optional error message
+ * @returns The mapped value
+ */
+export function mappedEnumeratedValue<T>(map: [T, unknown[]][], message?: string): Converter<T, undefined> {
+    return new BaseConverter((from: unknown, _self: Converter<T, undefined>, _context?: unknown) => {
+        for (const item of map) {
+            if (item[1].includes(from)) {
+                return succeed(item[0]);
+            }
+        }
+        return fail(message ? `${JSON.stringify(from)}: ${message}` : `Cannot map '${JSON.stringify(from)}' to a supported value`);
+    });
+}
+
+/**
  * A converter to convert unknown to some value. Succeeds with the supplied value if an identity
  * comparison succeeds, fails otherwise.
  * @param value The value to be compared
@@ -529,6 +550,23 @@ export function mapOf<T, TC = undefined, TK extends string = string>(
         return (errors.length === 0) || (options.onError === 'ignore')
             ? succeed(map)
             : fail(errors.join('\n'));
+    });
+}
+
+/**
+ * Gets a converter which validates that a supplied value is of a type validated by
+ * a supplied validator and returns it.
+ * @param validator A validator function to determine if the converted value is valid
+ * @param description A description of the validate type for use in error messages
+ * @returns If validator returns true, suceeds with from coerced to T.  Fails with an error
+ * message otherwise.
+ */
+export function validateWith<T, TC=undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self: Converter<T, TC>, _context?: TC) => {
+        if (validator(from)) {
+            return succeed(from);
+        }
+        return fail(`${JSON.stringify(from)}: invalid ${description ?? 'value'}`);
     });
 }
 
