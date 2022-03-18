@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 import { Result, fail, mapResults, succeed } from './result';
+import { Brand } from './brand';
 
 type OnError = 'failOnError' | 'ignoreErrors';
 
@@ -41,12 +42,6 @@ export interface ConstraintOptions {
      */
     readonly description: string;
 }
-
-/**
- * Helper type to brand a simple type to prevent inappropriate use
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export type Brand<T, B> = T & { __brand: B };
 
 export interface Converter<T, TC=undefined> extends ConverterTraits {
     /**

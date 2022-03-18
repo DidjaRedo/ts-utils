@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Erik Fortune
+ * Copyright (c) 2021 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,13 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './brand';
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Hash from './hash';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import '../../helpers/jest';
+import { Validators } from '../../../src/validation';
+
+describe('boolean validator', () => {
+    describe('validation', () => {
+        test('validates valid boolean values', () => {
+            [
+                true,
+                false,
+            ].forEach((t) => {
+                expect(Validators.boolean.validate(t)).toSucceedWith(t);
+            });
+        });
+
+        test('fails for non-boolean', () => {
+            [
+                null,
+                undefined,
+                () => 'hello',
+                '10',
+                'true',
+                'false',
+                { str: 'hello' },
+                new Date(),
+                ['hello'],
+            ].forEach((t) => {
+                expect(Validators.boolean.validate(t)).toFailWith(/not a boolean/i);
+            });
+        });
+    });
+});

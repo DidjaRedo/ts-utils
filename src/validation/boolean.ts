@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Erik Fortune
+ * Copyright (c) 2021 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,13 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './brand';
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Hash from './hash';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import { Failure, Result, fail, succeed } from '../result';
+import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
+
+export type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorConstructorParams<boolean, TC>;
+
+export class BooleanValidator<TC = unknown> extends GenericValidator<boolean, TC> {
+    public constructor(params?: BooleanValidatorConstructorParams<TC>) {
+        super({
+            validator: BooleanValidator.validateBoolean,
+            ...(params ?? {}),
+        });
+    }
+
+    public static validateBoolean(from: unknown): boolean | Failure<boolean> {
+        if (typeof from === 'boolean') {
+            return true;
+        }
+        return fail(`"${from}": not a boolean`);
+    }
+
+    public validate(from: unknown, _context?: TC): Result<boolean> {
+        return (typeof from === 'boolean') ? succeed(from) : fail(`"${from}": not a boolean`);
+    }
+}

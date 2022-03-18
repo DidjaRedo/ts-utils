@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Erik Fortune
+ * Copyright (c) 2021 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,13 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './brand';
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Hash from './hash';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams } from './object';
+
+import { GenericValidator } from './genericValidator';
+import { NumberValidator } from './number';
+import { StringValidator } from './string';
+import { fail } from '../result';
+
+export const string = new StringValidator();
+export const number = new NumberValidator();
+export const boolean = new GenericValidator<boolean>({
+    validator: (from: unknown) =>
+        typeof from === 'boolean'
+            ? true
+            : fail(`Not a boolean: "${JSON.stringify(from)}"`),
+});
+
+export function object<T, TC>(
+    fields: FieldValidators<T, TC>,
+    params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>,
+): ObjectValidator<T, TC> {
+    return new ObjectValidator({ fields, ...(params ?? {}) });
+}

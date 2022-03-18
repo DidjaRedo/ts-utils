@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Erik Fortune
+ * Copyright (c) 2021 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,13 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export * from './brand';
-export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
-export * from './extendedArray';
-export * from './formatter';
-export * as Hash from './hash';
-export * from './rangeOf';
-export * from './result';
-export * from './utils';
+
+import { Failure, fail } from '../result';
+import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
+
+export type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
+
+export class NumberValidator<T extends number = number, TC = unknown> extends GenericValidator<T, TC> {
+    public constructor(params?: NumberValidatorConstructorParams<T, TC>) {
+        super({
+            validator: NumberValidator.validateNumber,
+            ...(params ?? {}),
+        });
+    }
+
+    public static validateNumber<T extends number>(from: unknown): boolean | Failure<T> {
+        if (typeof from === 'number') {
+            return true;
+        }
+        return fail<T>(`"${from}": not a number`);
+    }
+}
