@@ -87,6 +87,7 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         const resolved: Partial<FieldValidators<T, TC>> = {};
         for (const key in fields) {
             if (fields[key]) {
+                // istanbul ignore next
                 const optional = fields[key].isOptional || options?.optionalFields?.includes(key);
                 resolved[key] = new FieldValidator(key, fields[key], { optional });
             }
@@ -94,12 +95,14 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         return resolved as FieldValidators<T, TC>;
     }
 
-    public partial(options: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC> {
+    public partial(options?: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC> {
+        // istanbul ignore next
+        options = options ?? {};
         return new ObjectValidator<Partial<T>, TC>({
             fields: this.fields as FieldValidators<Partial<T>, TC>,
             options: {
                 ...this.options,
-                ...(options ?? {}),
+                ...options,
             },
             traits: this.traits,
         });
@@ -107,7 +110,7 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
 
     public addPartial(addOptionalFields: (keyof T)[]): ObjectValidator<Partial<T>, TC> {
         return this.partial({
-            optionalFields: [...this.options.optionalFields ?? [], ...addOptionalFields],
+            optionalFields: [...(this.options.optionalFields ?? []), ...addOptionalFields],
         });
     }
 
@@ -133,7 +136,7 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         }
 
         if (this._allowedFields) {
-            const invalid = Object.keys(from).filter((k) => !this._allowedFields?.has(k as keyof T));
+            const invalid = Object.keys(from).filter((k) => !this._allowedFields!.has(k as keyof T));
             invalid.forEach((key) => errors.push((`${key}: unexpected field in source object.`)));
         }
         return (errors.length === 0) ? true : fail(errors.join('\n'));

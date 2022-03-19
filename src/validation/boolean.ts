@@ -20,16 +20,18 @@
  * SOFTWARE.
  */
 
-import { Failure, Result, fail, succeed } from '../result';
+import { Failure, fail } from '../result';
 import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
 export type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorConstructorParams<boolean, TC>;
 
 export class BooleanValidator<TC = unknown> extends GenericValidator<boolean, TC> {
     public constructor(params?: BooleanValidatorConstructorParams<TC>) {
+        // istanbul ignore next
+        params = params ?? {};
         super({
             validator: BooleanValidator.validateBoolean,
-            ...(params ?? {}),
+            ...params,
         });
     }
 
@@ -38,9 +40,5 @@ export class BooleanValidator<TC = unknown> extends GenericValidator<boolean, TC
             return true;
         }
         return fail(`"${from}": not a boolean`);
-    }
-
-    public validate(from: unknown, _context?: TC): Result<boolean> {
-        return (typeof from === 'boolean') ? succeed(from) : fail(`"${from}": not a boolean`);
     }
 }

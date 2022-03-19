@@ -58,6 +58,13 @@ describe('ObjectValidator class', () => {
             n: Validators.number,
             b: Validators.boolean,
         });
+        const optionalNumber = Validators.object({
+            s: Validators.string,
+            n: Validators.number,
+            b: Validators.boolean,
+        }, {
+            options: { optionalFields: ['n'] },
+        });
 
         test.each([
             [
@@ -80,6 +87,16 @@ describe('ObjectValidator class', () => {
                 optionalString,
                 { n: 10, b: true },
             ],
+            [
+                'partial with added optional fields missing',
+                allRequired.addPartial(['b']),
+                { s: 'hello', n: 10 },
+            ],
+            [
+                'addPartial with base optional fields missing',
+                optionalNumber.addPartial(['s']),
+                { b: false },
+            ],
         ])('succeeds with %p', (_msg, validator, from) => {
             expect(validator.validate(from)).toSucceedWith(from);
         });
@@ -89,6 +106,12 @@ describe('ObjectValidator class', () => {
                 'extra fields present with strict',
                 strictAllRequired,
                 { s: 'hello', n: 10, b: true, extra: 'extra' },
+                /unexpected field/i,
+            ],
+            [
+                'extra fields present with strict after addPartial',
+                strictAllRequired.addPartial(['n']),
+                { s: 'hello', b: true, extra: 'extra' },
                 /unexpected field/i,
             ],
             [
@@ -102,6 +125,12 @@ describe('ObjectValidator class', () => {
                 allRequired,
                 { s: 'hello', n: true },
                 /not a number/i,
+            ],
+            [
+                'non-object',
+                optionalString,
+                true,
+                /not an object/i,
             ],
         ])('fails with %p', (_msg, validator, from, expected) => {
             expect(validator.validate(from)).toFailWith(expected);

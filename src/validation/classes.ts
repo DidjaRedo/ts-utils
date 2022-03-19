@@ -20,4 +20,6 @@
  * SOFTWARE.
  */
 
+/* istanbul ignore file */
+
 export { StringValidator } from './string';
