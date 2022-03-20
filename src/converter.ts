@@ -26,6 +26,7 @@ type OnError = 'failOnError' | 'ignoreErrors';
 
 /**
  * Converter traits.
+ * @public
  */
 export interface ConverterTraits {
     readonly isOptional: boolean;
@@ -33,7 +34,8 @@ export interface ConverterTraits {
 }
 
 /**
- * Options for @see Converter @see withConstraint
+ * Options for {@link Converter.withConstraint}.
+ * @public
  */
 export interface ConstraintOptions {
     /**
@@ -43,100 +45,145 @@ export interface ConstraintOptions {
     readonly description: string;
 }
 
+/**
+ * Generic converter to convert unknown to a templated type `<T>`, using
+ * intrinsic rules or as modified by an optional conversion context
+ * of optional templated type `<TC>` (default `undefined`).
+ * @public
+ */
 export interface Converter<T, TC=undefined> extends ConverterTraits {
     /**
-     * Indicates whether this element is explicitly optional
+     * Indicates whether this element is explicitly optional.
      */
      readonly isOptional: boolean;
 
      /**
-      * Returns the brand for a branded type
+      * Returns the brand for a branded type.
       */
      readonly brand?: string;
 
      /**
-     * Converts from unknown to <T>
-     * @param from The unknown to be converted
-     * @param context An optional context applied to the conversion
-     * @returns An @see Result with a value or an error message
+     * Converts from `unknown` to `<T>`.
+     * @param from - The `unknown` to be converted
+     * @param context - An optional conversion context of type `<TC>` to be used in
+     * the conversion.
+     * @returns A {@link Result} with a {@link Success} and a value on success or an
+     * {@link Failure} with a a message on failure.
      */
     convert(from: unknown, context?: TC): Result<T>;
 
     /**
-     * Converts from unknown to <T> or undefined, as appropriate.
-     * If 'onError' is 'failOnError', the converter succeeds for
-     * 'undefined' or any convertible value, but reports an error
-     * if it encounters a value that cannot be converted.  If 'onError'
-     * is 'ignoreErrors' (default) then values that cannot be converted
-     * result in a successful return of 'undefined'.
-     * @param from The unknown to be converted
-     * @param context Optional context for use by the converter
-     * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
+     * Converts from `unknown` to `<T>` or `undefined`, as appropriate.
+     *
+     * @remarks
+     * If `onError` is `failOnError`, the converter succeeds for
+     * `undefined` or any convertible value, but reports an error
+     * if it encounters a value that cannot be converted.
+     *
+     * If `onError` is `ignoreErrors` (default) then values that
+     * cannot be converted result in a successful return of `undefined`.
+     * @param from - The `unknown` to be converted
+     * @param context - An optional conversion context of type `<TC>` to be used in
+     * the conversion.
+     * @param onError - Specifies handling of values that cannot be converted (default `ignoreErrors`).
+     * @returns A {@link Result} with a {@link Success} and a value on success or an
+     * {@link Failure} with a a message on failure.
      */
     convertOptional(from: unknown, context?: TC, onError?: OnError): Result<T|undefined>;
 
     /**
-     * Creates a converter for an optional value. If 'onError'
-     * is 'failOnError', the converter accepts 'undefined' or a
-     * convertible value, but reports an error if it encounters
-     * a value that cannot be converted.  If 'onError' is 'ignoreErrors'
-     * (default) then values that cannot be converted result in a
-     * successful return of 'undefined'.
+     * Creates a {@link Converter} for an optional value.
      *
-     * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
+     * @remarks
+     * If `onError` is `failOnError`, the resulting converter will accept `undefined`
+     * or a convertible value, but report an error if it encounters a value that cannot be
+     * converted.
+     *
+     * If `onError` is `ignoreErrors` (default) then values that cannot be converted will
+     * result in a successful return of `undefined`.
+     *
+     * @param onError - Specifies handling of values that cannot be converted (default `ignoreErrors`).
+     * @returns A new {@link Converter} returning `<T|undefined>`.
      * */
     optional(onError?: OnError): Converter<T|undefined, TC>;
 
     /**
-     * Applies a (possibly) mapping conversion to the converted value.
-     * @param mapper A function which maps from the converted type to some other type.
+     * Creates a {@link Converter} which applies a (possibly) mapping conversion to
+     * the converted value of this {@link Converter}.
+     * @param mapper - A function which maps from the the result type `<T>` of this
+     * converter to a new result type `<T2>`.
+     * @returns A new {@link Converter} returning `<T2>`.
      */
     map<T2>(mapper: (from: T) => Result<T2>): Converter<T2, TC>;
 
     /**
-     * Applies an additional converter to the converted value.
-     * @param mapConverter The converter to be applied to the converted value
+     * Creates a {@link Converter} which applies an additional supplied
+     * converter to the result of this converter.
+     *
+     * @param mapConverter - The {@link Converter} to be applied to the
+     * converted result from this {@link Converter}.
+     * @returns A new {@link Converter} returning `<T2>`.
      */
     mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC>;
 
     /**
-     * Maps the individual items of the resulting value with the supplied
-     * map function.  Fails if 'from' is not an array.
-     * @param mapper The map function
+     * Creates a {@link Converter} which maps the individual items of a collection
+     * resulting from this {@link Converter} using the supplied map fuction.
+     *
+     * @remarks
+     * Fails if `from` is not an array.
+     *
+     * @param mapper - The map function to be applied to each element of the
+     * result of this {@link Converter}.
+     * @returns A new {@link Converter} returning `<TI[]>`.
      */
     mapItems<TI>(mapper: (from: unknown) => Result<TI>): Converter<TI[], TC>;
 
     /**
-     * Maps the individual items of the resulting value with the supplied
-     * converter function.  Fails if 'from' is not an array.
-     * @param mapConverter The map
+     * Creates a {@link Converter} which maps the individual items of a collection
+     * resulting from this {@link Converter} using the supplied {@link Converter}.
+     *
+     * @remarks
+     * Fails if `from` is not an array.
+     *
+     * @param mapConverter - The {@link Converter} to be applied to each element of the
+     * result of this {@link Converter}.
+     * @returns A new {@link Converter} returning `<TI[]>`.
      */
      mapConvertItems<TI>(mapConverter: Converter<TI, unknown>): Converter<TI[], TC>;
 
      /**
-      * Applies a type guard to the conversion result.
-      * @param guard The type guard function to apply
-      * @param message Optional message to be reported on failure
+      * Creates a {@link Converter} which applies a supplied type guard to the conversion
+      * result.
+      * @param guard - The type guard function to apply.
+      * @param message - Optional message to be reported if the type guard fails.
+      * @returns A new {@link Converter} returning `<TI>`.
       */
     withTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI, TC>;
 
      /**
-      * Applies a type guard to each member of the conversion result. Fails
-      * if the conversion result is not an array or if any member fails the
+      * Creates a {@link Converter} which applies a supplied type guard to each member of
+      * the conversion result from this converter.
+      *
+      * @remarks
+      * Fails if the conversion result is not an array or if any member fails the
       * type guard.
-      * @param guard The type guard function to apply to each element
-      * @param message Optional message to be reported on failure
+      * @param guard - The type guard function to apply to each element.
+      * @param message - Optional message to be reported if the type guard fails.
+      * @returns A new {@link Converter} returning `<TI>`.
       */
       withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI[], TC>;
 
     /**
-     * Creates a converter with an optional constraint.  If the base converter
-     * succeeds, calls a supplied constraint evaluation function with the
-     * value and fails the conversion if the function returns either false
-     * or Failure<T>.
+     * Creates a {@link Converter} which applies an optional constraint to the result
+     * of this conversion.  If this {@link Converter} (the base converter) succeeds, the new
+     * converter calls a supplied constraint evaluation function with the conversion, which
+     * fails the entire conversion if the constraint function returns either `false` or
+     * {@link Failure | Failure<T>}.
      *
-     * @param constraint Constraint evaluation function
-     * @param options Options for constraint evaluation
+     * @param constraint - Constraint evaluation function.
+     * @param options - {@link ConstraintOptions | Options} for constraint evaluation.
+     * @returns A new {@link Converter} returning `<T>`.
      */
     withConstraint(
         constraint: (val: T) => boolean|Result<T>,
@@ -144,11 +191,17 @@ export interface Converter<T, TC=undefined> extends ConverterTraits {
     ): Converter<T, TC>;
 
     /**
-     * Adds a brand to the type to prevent mismatched usage of simple types
+     * returns a converter which adds a brand to the type to prevent mismatched usage
+     * of simple types.
+     * @param brand - The brand to be applied to the result value.
+     * @returns A {@link Converter} returning `Brand<T, B>`.
      */
     withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC>;
 }
 
+/**
+ * internal
+ */
 type InnerInferredType<TCONV> =
     TCONV extends Converter<infer TTO>
         ? (TTO extends Array<infer TTOELEM> ? InnerInferredType<TTOELEM>[] : TTO)
@@ -157,26 +210,45 @@ type InnerInferredType<TCONV> =
 /**
  * Infers the type that will be returned by an intstantiated converter.  Works
  * for complex as well as simple types.
- * @example Infer<typeof Converters.mapOf(Converters.stringArray)> is Map<string, string[]>
+ * @example `Infer<typeof Converters.mapOf(Converters.stringArray)>` is `Map<string, string[]>`
+ * @beta
  */
 export type Infer<TCONV> = TCONV extends Converter<infer TTO> ? InnerInferredType<TTO> : never;
 
 /**
  * Deprecated name for Infer<T> retained for compatibility
  * @deprecated use @see Infer instead
+ * @internal
  */
 export type ConvertedToType<TCONV> = Infer<TCONV>;
 
 /**
- * Simple templated converter wrapper to simplify typed conversion from unknown.
+ * Base templated wrapper to simplify creation of new {@link Converter}s.
+ * @public
  */
 export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
+    /**
+     * @internal
+     */
     protected readonly _defaultContext?: TC;
+    /**
+     * @internal
+     */
     protected _isOptional = false;
+    /**
+     * @internal
+     */
     protected _brand?: string;
 
     private readonly _converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>;
 
+    /**
+     * Constructs a new {@link Converter} which uses the supplied function to perform the conversion.
+     * @param converter - The conversion function to be applied.
+     * @param defaultContext - Optional conversion context to be used by default.
+     * @param traits - Optional {@link ConverterTraits | traits} to be assigned to the resulting
+     * converter.
+     */
     public constructor(
         converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>,
         defaultContext?: TC,
@@ -189,23 +261,28 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Converts from unknown to <T>
-     * @param from The unknown to be converted
-     * @returns An @see Result with a value or an error message
+     * {@inheritdoc Converter.isOptional}
+     */
+    public get isOptional(): boolean {
+        return this._isOptional;
+    }
+
+    /**
+     * {@inheritdoc Converter.brand}
+     */
+    public get brand(): string|undefined {
+        return this._brand;
+    }
+
+    /**
+     * {@inheritdoc Converter.convert}
      */
     public convert(from: unknown, context?: TC): Result<T> {
         return this._converter(from, this, context ?? this._defaultContext);
     }
 
     /**
-     * Converts from unknown to <T> or undefined, as appropriate.
-     * If 'onError' is 'failOnError', the converter succeeds for
-     * 'undefined' or any convertible value, but reports an error
-     * if it encounters a value that cannot be converted.  If 'onError'
-     * is 'ignoreErrors' (default) then values that cannot be converted
-     * result in a successful return of 'undefined'.
-     * @param from The unknown to be converted
-     * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
+     * {@inheritdoc Converter.convertOptional}
      */
     public convertOptional(from: unknown, context?: TC, onError?: OnError): Result<T|undefined> {
         const result = this._converter(from, this, this._context(context));
@@ -217,15 +294,8 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Creates a converter for an optional value. If 'onError'
-     * is 'failOnError', the converter accepts 'undefined' or a
-     * convertible value, but reports an error if it encounters
-     * a value that cannot be converted.  If 'onError' is 'ignoreErrors'
-     * then values that cannot be converted result in a
-     * successful return of 'undefined'.
-     *
-     * @param onError Specifies handling of values that cannot be converted, default 'ignoreErrors'
-     * */
+     * {@inheritdoc Converter.optional}
+     */
     public optional(onError?: OnError): Converter<T|undefined, TC> {
         return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
             onError = onError ?? 'failOnError';
@@ -234,22 +304,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Reports whether this value is explicitly optional
-     */
-    public get isOptional(): boolean {
-        return this._isOptional;
-    }
-
-    /**
-     * Reports the brand of a branded type.
-     */
-    public get brand(): string|undefined {
-        return this._brand;
-    }
-
-    /**
-     * Applies a (possibly) mapping conversion to the converted value.
-     * @param mapper A function which maps from the converted type to some other type.
+     * {@inheritdoc Converter.map}
      */
     public map<T2>(mapper: (from: T) => Result<T2>): Converter<T2, TC> {
         return new BaseConverter<T2, TC>((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
@@ -262,8 +317,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Applies an additional converter to the converted value.
-     * @param mapConverter The converter to be applied to the converted value
+     * {@inheritdoc Converter.mapConvert}
      */
     public mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC> {
         return new BaseConverter<T2, TC>((from: unknown, _self: Converter<T2, TC>, context?: TC) => {
@@ -277,9 +331,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Maps the individual items of the resulting value with the supplied
-     * map function.  Fails if 'from' is not an array.
-     * @param mapper The map function
+     * {@inheritdoc Converter.mapItems}
      */
     public mapItems<TI>(mapper: (from: unknown) => Result<TI>): Converter<TI[], TC> {
         return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
@@ -293,9 +345,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Maps the individual items of the resulting value with the supplied
-     * converter function.  Fails if 'from' is not an array.
-     * @param mapConverter The map
+     * {@inheritdoc Converter.mapConvertItems}
      */
     public mapConvertItems<TI>(mapConverter: Converter<TI, unknown>): Converter<TI[], TC> {
         return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
@@ -309,9 +359,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Applies a type guard to the conversion result.
-     * @param guard The type guard function to apply
-     * @param message Optional message to be reported on failure
+     * {@inheritdoc Converter.withTypeGuard}
      */
     public withTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI, TC> {
         return new BaseConverter<TI, TC>((from: unknown, _self: Converter<TI, TC>, context?: TC) => {
@@ -323,11 +371,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Applies a type guard to each member of the conversion result. Fails
-     * if the conversion result is not an array or if any member fails the
-     * type guard.
-     * @param guard The type guard function to apply to each element
-     * @param message Optional message to be reported on failure
+     * {@inheritdoc Converter.withItemTypeGuard}
      */
     public withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI[], TC> {
         return new BaseConverter<TI[], TC>((from: unknown, _self: Converter<TI[], TC>, context?: TC) => {
@@ -344,12 +388,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Creates a converter with an optional constraint.  If the base converter
-     * succeeds, calls a supplied constraint evaluation function with the
-     * value and fails the conversion if the function returns either false
-     * or Failure<T>.
-     *
-     * @param constraint Constraint evaluation function
+     * {@inheritdoc Converter.withConstaint}
      */
     public withConstraint(
         constraint: (val: T) => boolean|Result<T>,
@@ -373,7 +412,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * Adds a brand to the type to prevent mismatched usage of simple types
+     * {@inheritdoc Converter.withBrand}
      */
     public withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC> {
         if (this._brand) {
@@ -387,10 +426,16 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
         })._with(this._traits({ brand }));
     }
 
+    /**
+     * @internal
+     */
     protected _context(supplied?: TC): TC|undefined {
         return supplied ?? this._defaultContext;
     }
 
+    /**
+     * @internal
+     */
     protected _traits(traits?: Partial<ConverterTraits>): ConverterTraits {
         return {
             isOptional: this.isOptional,
@@ -399,6 +444,9 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
         };
     }
 
+    /**
+     * @internal
+     */
     protected _with(traits: Partial<ConverterTraits>): this {
         this._isOptional = (traits.isOptional === true);
         this._brand = (traits.brand);

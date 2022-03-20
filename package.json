@@ -4,6 +4,7 @@
   "description": "Assorted Typescript Utilities",
   "main": "dist/index.js",
   "scripts": {
+    "api-extractor": "api-extractor run --local --verbose -c ./config/api-extractor.json",
     "prepublishOnly": "echo 'Do not publish from this folder'; exit 1",
     "build": "rimraf dist && tsc && ./prep.sh",
     "clean": "rimraf dist",
@@ -29,6 +30,8 @@
   },
   "homepage": "https://github.com/DidjaRedo/ts-utils#readme",
   "devDependencies": {
+    "@microsoft/api-documenter": "^7.16.0",
+    "@microsoft/api-extractor": "^7.19.5",
     "@types/jest": "^27.0.2",
     "@types/luxon": "^2.0.4",
     "@types/mustache": "^4.1.2",

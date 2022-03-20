@@ -62,3 +62,6 @@ dist/
 
 # next.js build output
 .next
+
+# generated artifacts
+temp/
