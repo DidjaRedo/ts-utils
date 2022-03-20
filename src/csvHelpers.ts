@@ -25,6 +25,12 @@ import * as path from 'path';
 import { Result, captureResult } from './result';
 import sync from 'csv-parse/lib/sync';
 
+/**
+ * Reads a CSV file from a supplied path.
+ * @param srcPath - Source path from which the file is read.
+ * @returns The contents of the file.
+ * @beta
+ */
 export function readCsvFileSync(srcPath: string): Result<unknown> {
     return captureResult(() => {
         const fullPath = path.resolve(srcPath);
