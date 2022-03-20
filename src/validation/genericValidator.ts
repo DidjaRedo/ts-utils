@@ -26,8 +26,18 @@ import { Failure, Result, fail, succeed } from '../result';
 
 import { Brand } from '../brand';
 
+/**
+ * Type for a validation function, which validates that a supplied `unknown`
+ * value is a valid value of type `<T>`, possibly as influenced by
+ * an optionally-supplied validation context of type `<TC>`.
+ * @public
+ */
 export type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => boolean | Failure<T>;
 
+/**
+ * Options used to initialize a {@link Validation.GenericValidator | GenericValidator}.
+ * @public
+ */
 export interface GenericValidatorConstructorParams<T, TC> {
     options?: ValidatorOptions<TC>,
     traits?: Partial<ValidatorTraits>,
@@ -35,15 +45,29 @@ export interface GenericValidatorConstructorParams<T, TC> {
 }
 
 /**
- * In-place validation that a supplied unknown matches a requested
- * schema.
+ * Generic base implementation for an in-place {@link Validation.Validator | Validator}.
+ * @public
  */
 export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
+    /**
+     * {@inheritdoc Validation.Validator.traits}
+     */
     public readonly traits: ValidatorTraits;
 
+    /**
+     * @internal
+     */
     protected readonly _validator: ValidatorFunc<T, TC>;
+    /**
+     * @internal
+     */
     protected readonly _options: ValidatorOptions<TC>;
 
+    /**
+     * Constructs a new {@link Validation.GenericValidator | GenericValidator<T>}.
+     * @param params - The {@link Validation.GenericValidatorConstructorParams | constructor params}
+     * used to configure validation.
+     */
     public constructor(params: Partial<GenericValidatorConstructorParams<T, TC>>) {
         if (!params.validator) {
             throw new Error('No validator function supplied');
@@ -54,24 +78,21 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
     }
 
     /**
-     * Indicates whether this element is explicitly optional
+     * {@inheritdoc Validation.Validator.isOptional}
      */
     public get isOptional(): boolean {
         return this.traits.isOptional;
     }
 
     /**
-     * Returns the brand for a branded type
+     * {@inheritdoc Validation.Validator.brand}
      */
     public get brand(): string | undefined {
         return this.traits.brand;
     }
 
     /**
-     * Tests to see if a supplied unknown value matches this
-     * validation.
-     * @param from The unknown to be tested
-     * @param context optional context used for validation
+     * {@inheritdoc Validation.Validator.validate}
      */
     public validate(from: unknown, context?: TC): Result<T> {
         const result = this._validator(from, this._context(context));
@@ -82,26 +103,21 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
     }
 
     /**
-     * Tests to see if a supplied unknown value matches this
-     * validation.  Accepts undefined.
-     * @param from The unknown to be tested
-     * @param context optional context used for validation
+     * {@inheritdoc Validation.Validator.validateOptional}
      */
     public validateOptional(from: unknown, context?: TC): Result<T | undefined> {
         return (from === undefined) ? succeed(undefined) : this.validate(from, context);
     }
 
     /**
-     * Non-throwing type guard
-     * @param from The value to be tested
-     * @param context Optional context for the test
+     * {@inheritdoc Validation.Validator.guard}
      */
     public guard(from: unknown, context?: TC): from is T {
         return (this._validator(from, this._context(context)) === true);
     }
 
     /**
-     * Creates an in-place validator for an optional value.
+     * {@inheritdoc Validation.Validator.optional}
      */
     public optional(): Validator<T | undefined, TC> {
         return new GenericValidator({
@@ -114,9 +130,7 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
     }
 
     /**
-     * Creates a validator which applies additional constraints.
-     * @param constraint the constraint to be applied
-     * @param trait optional trait to be applied to this constraint
+     * {@inheritdoc Validation.Validator.withConstraint}
      */
     public withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC> {
         trait = trait ?? { type: 'function' };
@@ -138,9 +152,7 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
     }
 
     /**
-     * Creates a validator which produces a branded result on successful
-     * conversion.
-     * @param brand The brand to be applied
+     * {@inheritdoc Validation.Validator.brand}
      */
     public withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC> {
         if (this.brand) {
@@ -155,6 +167,12 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
         });
     }
 
+    /**
+     * Gets a default or explicit context.
+     * @param explicitContext - Optional explicit context.
+     * @returns The appropriate context to use.
+     * @internal
+     */
     protected _context(explicitContext?: TC): TC | undefined {
         return explicitContext ?? this._options.defaultContext;
     }

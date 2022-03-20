@@ -49,7 +49,7 @@ export class StringValidator<T extends string = string, TC = unknown> extends Ge
     /**
      * Static method which validates that a supplied `unknown` value is a `string`.
      * @param from - The `unknown` value to be tested.
-     * @returns Returns `true` if `from` is a string, or {@link Failure} with an error
+     * @returns Returns `true` if `from` is a `string`, or {@link Failure} with an error
      * message if not.
      */
     public static validateString<T extends string>(from: unknown): boolean | Failure<T> {

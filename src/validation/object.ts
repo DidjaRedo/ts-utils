@@ -27,12 +27,14 @@ import { ValidatorBase, ValidatorBaseConstructorParams } from './validatorBase';
 import { FieldValidator } from './field';
 
 /**
- * Per-property validators for each of the properties in type T
+ * Per-property {@link Validation.Validator | validators} for each of the properties in `<T>`.
+ * @public
  */
 export type FieldValidators<T, TC=unknown> = { [key in keyof T]: Validator<T[key], TC> };
 
 /**
- * Options for an @see ObjectValidator.
+ * Options for an {@link Validation.ObjectValidator | ObjectValidator}.
+ * @public
  */
 export interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC> {
     /**
@@ -46,28 +48,58 @@ export interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC> {
     strict?: boolean;
 }
 
+/**
+ * Options for {@link Validation.ObjectValidator."constructor" | the ObjectValidator constructor}.
+ * @public
+ */
 export interface ObjectValidatorConstructorParams<T, TC> extends ValidatorBaseConstructorParams<T, TC> {
+    /**
+     * A {@link Validation.FieldValidators | FieldValidators} object specifying a
+     * {@link Validation.Validator | Validator} for each of the expected properties
+     * of a result object.
+     */
     fields: FieldValidators<T>,
+    /**
+     * Optional additional {@link Validation.Object.Validator.Options | ValidatorOptions} to
+     * configure validation.
+     */
     options?: ObjectValidatorOptions<T, TC>;
 }
 
 /**
- * In-place validation for an object of type T, given a @see FieldValidators<T>.
- * If all of the required fields exist and ar valid, returns a strongly typed reference
- * to the object.  If any required fields do not exist or are invalid, returns @see Failure
- * with an error description.  See @see ObjectValidatorOptions for other validatiorion options.
+ * In-place {@link Validation.Validator | Validator} for an object of type `<T>`.
+ * @remarks
+ * By default, succeeds if all of the required fields exist and are validate, and fails if
+ * any required fields do not exist or are invalid.  See @see ObjectValidatorOptions for
+ * other validation options.
+ * @public
  */
 export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
+    /**
+     * A {@link Validation.FieldValidators | FieldValidators} object specifying a
+     * {@link Validation.Validator | Validator} for each of the expected properties
+     */
     public readonly fields: FieldValidators<T>;
+    /**
+     * {@link Validation.ObjectValidatorOptions | Options} which apply to this
+     * validator.
+     */
     public readonly options: ObjectValidatorOptions<T, TC>;
+    /**
+     * @internal
+     */
     protected readonly _innerValidators: FieldValidators<T>;
+    /**
+     * @internal
+     */
     protected readonly _allowedFields?: Set<keyof T>;
 
     /**
-     * Constructs a new @see ObjectValidator<T> using options supplied in an
-     * optional @see ObjectValidatorOptions<T>.
-     * @param fields A @see FieldValidators<T> containing converters for each field
-     * @param options An optional @see ObjectValidatorOptions to configure the conversion
+     * Constructs a new {@link Validation.ObjectValidator | ObjectValidator<T>}.
+     * @param fields - A {@link Validation.FieldValidators | FieldValidators<T>} containing
+     * a {@link Validation.Validator | Validator} for each field.
+     * @param options - An optional {@link Validation.ObjectValidatorOptions} to configure
+     * validation.
      */
     public constructor(params: ObjectValidatorConstructorParams<T, TC>) {
         super(params);
@@ -80,6 +112,18 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
             : undefined;
     }
 
+    /**
+     * Creates the actual {@link Validation.FieldValidators | FieldValidators<T>} to be
+     * used by this converter by applying any options or traits defined in the options
+     * to the field converters passed to the constructor.
+     * @param fields - The base {@link Validation.FieldValidators | FieldValidators<T>} passed
+     * in to the constructor.
+     * @param options - The {@link Validation.ObjectValidatorOptions | object validator options}
+     * passed in to the constructor.
+     * @returns A new {@link Validation.FieldValidators | FieldValidators} with the fully-configured
+     * individual {@link Validation.Validator | field validators} to be applied.
+     * @internal
+     */
     protected static _resolveValidators<T, TC>(
         fields: FieldValidators<T, TC>,
         options?: ObjectValidatorOptions<T, TC>,
@@ -95,6 +139,15 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         return resolved as FieldValidators<T, TC>;
     }
 
+    /**
+     * Creates a new {@link Validation.ObjectValidator | ObjectValidator} derived from this one but with
+     * new optional properties as specified by a supplied
+     * {@link Validation.ObjectValidatorOptions | ObjectValidatorOptions<T>}.
+     * @param options - The {@link Validation.ObjectValidatorOptions | options} to be applied to the new
+     * {@link Validation.ObjectValidator | validator}.
+     * @returns A new {@link Validation.ObjectValidator | ObjectValidator} with the additional optional
+     * source properties.
+     */
     public partial(options?: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC> {
         // istanbul ignore next
         options = options ?? {};
@@ -108,12 +161,23 @@ export class ObjectValidator<T, TC=unknown> extends ValidatorBase<T, TC> {
         });
     }
 
+    /**
+     * Creates a new {@link Validation.ObjectValidator | ObjectValidator} derived from this one but with
+     * new optional properties as specified by a supplied array of `keyof T`.
+     * @param addOptionalProperties - The keys to be made optional.
+     * @returns A new {@link Validation.ObjectValidator | ObjectValidator} with the additional optional
+     * source properties.
+     */
     public addPartial(addOptionalFields: (keyof T)[]): ObjectValidator<Partial<T>, TC> {
         return this.partial({
             optionalFields: [...(this.options.optionalFields ?? []), ...addOptionalFields],
         });
     }
 
+    /**
+     * {@inheritdoc Validation.ValidatorBase._validate}
+     * @internal
+     */
     protected _validate(from: unknown, context?: TC): boolean | Failure<T> {
         if ((typeof from !== 'object') || (from === null) || Array.isArray(from)) {
             return fail('source is not an object');

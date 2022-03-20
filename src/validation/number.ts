@@ -23,9 +23,23 @@
 import { Failure, fail } from '../result';
 import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
+/**
+ * Parameters used to construct a {@link Validation.NumberValidator | NumberValidator}.
+ * @public
+ */
 export type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
 
+
+/**
+ * An in-place {@link Validation.Validator | Validator} for `number` values.
+ * @public
+ */
 export class NumberValidator<T extends number = number, TC = unknown> extends GenericValidator<T, TC> {
+    /**
+     * Constructs a new {@link Validation.NumberValidator | NumberValidator}.
+     * @param params - Optional {@link Validation.NumberValidatorConstructorParams | init params} for the
+     * new {@link Validation.NumberValidator | NumberValidator}.
+     */
     public constructor(params?: NumberValidatorConstructorParams<T, TC>) {
         super({
             validator: NumberValidator.validateNumber,
@@ -33,6 +47,12 @@ export class NumberValidator<T extends number = number, TC = unknown> extends Ge
         });
     }
 
+    /**
+     * Static method which validates that a supplied `unknown` value is a `number`.
+     * @param from - The `unknown` value to be tested.
+     * @returns Returns `true` if `from` is a `number`, or {@link Failure} with an error
+     * message if not.
+     */
     public static validateNumber<T extends number>(from: unknown): boolean | Failure<T> {
         if (typeof from === 'number') {
             return true;

@@ -328,25 +328,51 @@ interface FunctionConstraintTrait {
 // @public
 class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
     constructor(params: Partial<GenericValidatorConstructorParams<T, TC>>);
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
     get brand(): string | undefined;
-    // (undocumented)
+    // @internal
     protected _context(explicitContext?: TC): TC | undefined;
-    guard(from: unknown, context?: TC): from is T;
-    get isOptional(): boolean;
-    optional(): Validator<T | undefined, TC>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
     // (undocumented)
+    guard(from: unknown, context?: TC): from is T;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
+    get isOptional(): boolean;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
+    optional(): Validator<T | undefined, TC>;
+    // @internal (undocumented)
     protected readonly _options: ValidatorOptions<TC>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
     // (undocumented)
     readonly traits: ValidatorTraits;
-    validate(from: unknown, context?: TC): Result<T>;
-    validateOptional(from: unknown, context?: TC): Result<T | undefined>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
     // (undocumented)
+    validate(from: unknown, context?: TC): Result<T>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
+    validateOptional(from: unknown, context?: TC): Result<T | undefined>;
+    // @internal (undocumented)
     protected readonly _validator: ValidatorFunc<T, TC>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
     withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
     withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
 }
 
-// @public (undocumented)
+// @public
 interface GenericValidatorConstructorParams<T, TC> {
     // (undocumented)
     options?: ValidatorOptions<TC>;
@@ -699,7 +725,7 @@ interface Validator<T, TC = undefined> {
     withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
 }
 
-// @public (undocumented)
+// @public
 type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => boolean | Failure<T>;
 
 // @public

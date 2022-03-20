@@ -946,7 +946,7 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
     }
 
     /**
-     * Creates a new {@link Converters.ObjectConverter | ObjectConverter} derived with this one but with
+     * Creates a new {@link Converters.ObjectConverter | ObjectConverter} derived from this one but with
      * new optional properties as specified by a supplied array of `keyof T`.
      * @param addOptionalProperties - The keys to be made optional.
      * @returns A new {@link Converters.ObjectConverter | ObjectConverter} with the additional optional source
