@@ -26,15 +26,41 @@ import { Validator, ValidatorOptions } from './validator';
 import { ValidatorBase } from './validatorBase';
 import { isKeyOf } from '../utils';
 
+/**
+ * Parameters used to construct a {@link Validation.FieldValidator | FieldValidator}.
+ * @public
+ */
 export interface FieldValidatorOptions<TC> extends ValidatorOptions<TC> {
     optional?: boolean;
 }
 
+/**
+ * An in-place {@link Validation.Validator | Validator} for properties
+ * an an object.
+ * @public
+ */
 export class FieldValidator<T, TC=undefined> extends ValidatorBase<T, TC> {
+    /**
+     * The name of the property that this validator should validate.
+     */
     public readonly fieldName: string;
+    /**
+     * The {@link Validation.Validator | Validator} to be applied against the named property.
+     */
     public readonly fieldValidator: Validator<T, TC>;
+    /**
+     * @internal
+     */
     protected readonly _fieldOptions: FieldValidatorOptions<TC>;
 
+    /**
+     * Constructs a new {@link Validation.FieldValidator | FieldValidator.}.
+     * @param fieldName - The name of the property that this validator should validate.
+     * @param fieldValidator - The {@link Validation.Validator | Validator} to be applied
+     * against the named property.
+     * @param options - Additional {@link Validation.FieldValidatorOptions | options} to be
+     * applied to this validation.
+     */
     public constructor(
         fieldName: string,
         fieldValidator: Validator<T, TC>,
@@ -47,6 +73,9 @@ export class FieldValidator<T, TC=undefined> extends ValidatorBase<T, TC> {
         this._fieldOptions = options ?? {};
     }
 
+    /**
+     * {@inheritdoc Validation.ValidatorBase._validate}
+     */
     protected _validate(from: unknown, context?: TC): boolean | Failure<T> {
         if (typeof from === 'object' && !Array.isArray(from) && from !== null) {
             const optional = this._fieldOptions.optional === true;
