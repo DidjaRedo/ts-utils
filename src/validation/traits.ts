@@ -20,31 +20,83 @@
  * SOFTWARE.
  */
 
+/**
+ * A {@link Validation.ConstraintTrait | ConstraintTrait} indicating that
+ * a {@link Validation.Constraint | Constraint<T>} function provides an
+ * additional constraint implementation.
+ * @public
+ */
 export interface FunctionConstraintTrait {
     type: 'function';
 }
 
+/**
+ * Union of all supported constraint traits.
+ * @public
+ */
 export type ConstraintTrait = FunctionConstraintTrait;
 
+/**
+ * Interface describing the supported validator traits.
+ * @public
+ */
 export interface ValidatorTraitValues {
+    /**
+     * Indicates whether the validator accepts `undefined` as
+     * a valid value.
+     */
     readonly isOptional: boolean;
+
+    /**
+     * If present, indicates that the result will be branded
+     * with the corresponding brand.
+     */
     readonly brand?: string;
+
+    /**
+     * Zero or more additional {@link Validation.ConstraintTrait | ConstraintTrait}s
+     * describing additional constraints applied by this {@link Validation.Validator | Validator}.
+     */
     readonly constraints: ConstraintTrait[];
 }
 
+/**
+ * Default {@link Validation.ValidatorTraitValues | validation traits}.
+ * @public
+ */
 export const defaultValidatorTraits: ValidatorTraitValues = {
     isOptional: false,
     constraints: [],
 };
 
 /**
- * Validator traits
+ * Generic implementation of {@link Validation.ValidatorTraitValues | ValidatorTraitValues}.
+ * @public
  */
 export class ValidatorTraits implements ValidatorTraitValues {
+    /**
+     * {@inheritdoc Validation.ValidatorTraitValues.isOptional}
+     */
     public readonly isOptional: boolean;
+
+    /**
+     * {@inheritdoc Validation.ValidatorTraitValues.brand}
+     */
     public readonly brand?: string;
+
+    /**
+     * {@inheritdoc Validation.ValidatorTraitValues.constraints}
+     */
     public readonly constraints: ConstraintTrait[];
 
+    /**
+     * Constructs a new {@link Validation.ValidatorTraits | ValidatorTraits} optionally
+     * initialized with the supplied base and initial values.
+     * @remarks
+     * Initial values take priority over base values, which fall back to the global default values.
+     * @param init - Partial initial values to be set in the resulting {@link Validation.Validator | Validator}.
+     * @param base - Base values to be used when no initial values are present.
+     */
     public constructor(
         init?: Partial<ValidatorTraitValues>,
         base?: ValidatorTraitValues,

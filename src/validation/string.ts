@@ -23,9 +23,22 @@
 import { Failure, fail } from '../result';
 import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
+/**
+ * Parameters used to construct a {@link Validation.StringValidator | StringValidator}.
+ * @public
+ */
 export type StringValidatorConstructorParams<T extends string = string, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
 
+/**
+ * An in-place {@link Validation.Validator | Validator} for `string` values.
+ * @public
+ */
 export class StringValidator<T extends string = string, TC = unknown> extends GenericValidator<T, TC> {
+    /**
+     * Constructs a new {@link Validation.StringValidator | StringValidator}.
+     * @param params - Optional {@link Validation.StringValidatorConstructorParams | init params} for the
+     * new {@link Validation.StringValidator | StringValidator}.
+     */
     public constructor(params?: StringValidatorConstructorParams<T, TC>) {
         super({
             validator: StringValidator.validateString,
@@ -33,6 +46,12 @@ export class StringValidator<T extends string = string, TC = unknown> extends Ge
         });
     }
 
+    /**
+     * Static method which validates that a supplied `unknown` value is a `string`.
+     * @param from - The `unknown` value to be tested.
+     * @returns Returns `true` if `from` is a string, or {@link Failure} with an error
+     * message if not.
+     */
     public static validateString<T extends string>(from: unknown): boolean | Failure<T> {
         if (typeof from === 'string') {
             return true;

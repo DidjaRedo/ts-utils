@@ -25,71 +25,91 @@ import { Failure, Result } from '../result';
 
 import { Brand } from '../brand';
 
+/**
+ * Options that apply to any {@link Validation.Validator | Validator}.
+ * @public
+ */
 export interface ValidatorOptions<TC> {
     defaultContext?: TC;
 }
 
+/**
+ * A {@link Validation.Constraint | Constraint<T>} function returns
+ * `true` if the supplied value meets the constraint. Can return
+ * {@link Failure} with an error message or simply return `false`
+ * for a default message.
+ * @public
+ */
 export type Constraint<T> = (val: T) => boolean | Failure<T>;
 
 /**
- * In-place validation that a supplied unknown matches a requested
- * schema.
+ * In-place validation that a supplied unknown matches some
+ * required characteristics (type, values, etc).
+ * @public
  */
 export interface Validator<T, TC=undefined> {
         /**
-         * Traits describing this validation
+         * {@link Validation.ValidatorTraits | Traits} describing this validation.
          */
         readonly traits: ValidatorTraits;
 
         /**
-         * Indicates whether this element is explicitly optional
+         * Indicates whether this element is explicitly optional.
          */
          readonly isOptional: boolean;
 
         /**
-         * Returns the brand for a branded type.
+         * The brand for a branded type.
          */
         readonly brand: string | undefined;
 
-         /**
-          * Tests to see if a supplied unknown value matches this
+        /**
+          * Tests to see if a supplied `unknown` value matches this
           * validation.
-          * @param from The unknown to be tested
-          * @param context optional context used for validation
+          * @param from - The `unknown` value to be tested.
+          * @param context - Optional validation context.
+          * @returns {@link Success} with the typed, validated value,
+          * or {@link Failure} with an error message if validation fails.
           */
          validate(from: unknown, context?: TC): Result<T>;
 
         /**
-          * Tests to see if a supplied unknown value matches this
-          * validation.  Accepts undefined.
-          * @param from The unknown to be tested
-          * @param context optional context used for validation
+          * Tests to see if a supplied `unknown` value matches this
+          * validation.  Accepts `undefined`.
+          * @param from - The `unknown` value to be tested.
+          * @param context - Optional validation context.
+          * @returns {@link Success} with the typed, validated value,
+          * or {@link Failure} with an error message if validation fails.
           */
         validateOptional(from: unknown, context?: TC): Result<T | undefined>;
 
         /**
          * Non-throwing type guard
-         * @param from The value to be tested
-         * @param context Optional context for the test
+         * @param from - The value to be tested.
+         * @param context - Optional validation context.
          */
         guard(from: unknown, context?: TC): from is T;
 
          /**
-          * Creates an in-place validator for an optional value.
+          * Creates an {@link Validation.Validator | in-place validator}
+          * which is derived from this one but which also matches `undefined`.
           */
          optional(): Validator<T|undefined, TC>;
 
          /**
-          * Creates a validator which applies additional constraints.
-          * @param constraint the constraint to be applied
-          * @param trait optional trait to be applied to this constraint
+          * Creates an {@link Validation.Validator | in-place validator}
+          * which is derived from this one but which applies additional constraints.
+          * @param constraint - the constraint to be applied
+          * @param trait - As optional {@link Validation.ConstraintTrait | ConstraintTrait}
+          * to be applied to the resulting {@link Validation.Validator | Validator}.
+          * @returns A new {@link Validation.Validator | Validator}.
           */
          withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
 
          /**
-          * Creates a validator which produces a branded result on successful
-          * conversion.
-          * @param brand The brand to be applied
+          * Creates a new {@link Validation.validator | in-place validator} which
+          * is derived from this one but which matches a branded result.
+          * @param brand - The brand to be applied.
           */
          withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
 }

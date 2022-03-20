@@ -12,6 +12,14 @@ export function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: 
 // @public
 function arrayOf<T, TC = undefined>(converter: Converter<T, TC>, onError?: OnError_2): Converter<T[], TC>;
 
+declare namespace Base {
+    export {
+        ValidatorFunc,
+        GenericValidatorConstructorParams,
+        GenericValidator
+    }
+}
+
 // @public
 export class BaseConverter<T, TC = undefined> implements Converter<T, TC> {
     constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>, defaultContext?: TC, traits?: ConverterTraits);
@@ -49,6 +57,11 @@ export class BaseConverter<T, TC = undefined> implements Converter<T, TC> {
 // @public
 const boolean: BaseConverter<boolean, undefined>;
 
+// Warning: (ae-forgotten-export) The symbol "BooleanValidator" needs to be exported by the entry point index.d.ts
+//
+// @public
+const boolean_2: BooleanValidator<unknown>;
+
 // @public
 export type Brand<T, B> = T & {
     __brand: B;
@@ -57,13 +70,25 @@ export type Brand<T, B> = T & {
 // @public
 export function captureResult<T>(func: () => T): Result<T>;
 
+declare namespace Classes {
+    export {
+        StringValidator
+    }
+}
+
 // @public
 function computeHash(parts: string[]): string;
+
+// @public
+type Constraint<T> = (val: T) => boolean | Failure<T>;
 
 // @public
 export interface ConstraintOptions {
     readonly description: string;
 }
+
+// @public
+type ConstraintTrait = FunctionConstraintTrait;
 
 // Warning: (ae-internal-missing-underscore) The name "ConvertedToType" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -153,6 +178,9 @@ export const DEFAULT_RANGEOF_FORMATS: {
     maxOnly: string;
     minMax: string;
 };
+
+// @public
+const defaultValidatorTraits: ValidatorTraitValues;
 
 // @public
 function delimitedString(delimiter: string, options?: 'filtered' | 'all'): Converter<string[], string>;
@@ -291,6 +319,43 @@ export type FormattersByExtendedTarget<TFT extends FormatTargets, T> = Record<TF
 // @beta
 export type FormattersByTarget<T> = FormattersByExtendedTarget<FormatTargets, T>;
 
+// @public
+interface FunctionConstraintTrait {
+    // (undocumented)
+    type: 'function';
+}
+
+// @public
+class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
+    constructor(params: Partial<GenericValidatorConstructorParams<T, TC>>);
+    get brand(): string | undefined;
+    // (undocumented)
+    protected _context(explicitContext?: TC): TC | undefined;
+    guard(from: unknown, context?: TC): from is T;
+    get isOptional(): boolean;
+    optional(): Validator<T | undefined, TC>;
+    // (undocumented)
+    protected readonly _options: ValidatorOptions<TC>;
+    // (undocumented)
+    readonly traits: ValidatorTraits;
+    validate(from: unknown, context?: TC): Result<T>;
+    validateOptional(from: unknown, context?: TC): Result<T | undefined>;
+    // (undocumented)
+    protected readonly _validator: ValidatorFunc<T, TC>;
+    withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
+    withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
+}
+
+// @public (undocumented)
+interface GenericValidatorConstructorParams<T, TC> {
+    // (undocumented)
+    options?: ValidatorOptions<TC>;
+    // (undocumented)
+    traits?: Partial<ValidatorTraits>;
+    // (undocumented)
+    validator?: ValidatorFunc<T, TC>;
+}
+
 declare namespace Hash {
     export {
         computeHash,
@@ -384,6 +449,11 @@ class Normalizer {
 // @public
 const number: BaseConverter<number, undefined>;
 
+// Warning: (ae-forgotten-export) The symbol "NumberValidator" needs to be exported by the entry point index.d.ts
+//
+// @public
+const number_2: NumberValidator<number, unknown>;
+
 // @public
 const numberArray: Converter<number[], undefined>;
 
@@ -392,6 +462,13 @@ function object<T>(properties: FieldConverters<T>, options?: ObjectConverterOpti
 
 // @public @deprecated
 function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
+
+// Warning: (ae-forgotten-export) The symbol "FieldValidators" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ObjectValidatorConstructorParams" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ObjectValidator" needs to be exported by the entry point index.d.ts
+//
+// @public
+function object_2<T, TC>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
 
 // @public
 class ObjectConverter<T, TC = unknown> extends BaseConverter<T, TC> {
@@ -527,6 +604,9 @@ type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 'strict'>
 const string: StringConverter<string, unknown>;
 
 // @public
+const string_2: StringValidator<string, unknown>;
+
+// @public
 const stringArray: Converter<string[], unknown>;
 
 // @public
@@ -545,6 +625,13 @@ class StringConverter<T extends string = string, TC = unknown> extends BaseConve
 // @public
 interface StringMatchOptions {
     message?: string;
+}
+
+// @public
+class StringValidator<T extends string = string, TC = unknown> extends GenericValidator<T, TC> {
+    // Warning: (ae-forgotten-export) The symbol "StringValidatorConstructorParams" needs to be exported by the entry point index.d.ts
+    constructor(params?: StringValidatorConstructorParams<T, TC>);
+    static validateString<T extends string>(from: unknown): boolean | Failure<T>;
 }
 
 // @public
@@ -581,6 +668,78 @@ function transform<T, TC = unknown>(properties: FieldConverters<T, TC>): Convert
 
 // @public
 function validateWith<T, TC = undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC>;
+
+declare namespace Validation {
+    export {
+        Base,
+        Classes,
+        Validators,
+        FunctionConstraintTrait,
+        ConstraintTrait,
+        ValidatorTraitValues,
+        defaultValidatorTraits,
+        ValidatorTraits,
+        ValidatorOptions,
+        Constraint,
+        Validator
+    }
+}
+export { Validation }
+
+// @public
+interface Validator<T, TC = undefined> {
+    readonly brand: string | undefined;
+    guard(from: unknown, context?: TC): from is T;
+    readonly isOptional: boolean;
+    optional(): Validator<T | undefined, TC>;
+    readonly traits: ValidatorTraits;
+    validate(from: unknown, context?: TC): Result<T>;
+    validateOptional(from: unknown, context?: TC): Result<T | undefined>;
+    withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
+    withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
+}
+
+// @public (undocumented)
+type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => boolean | Failure<T>;
+
+// @public
+interface ValidatorOptions<TC> {
+    // (undocumented)
+    defaultContext?: TC;
+}
+
+declare namespace Validators {
+    export {
+        object_2 as object,
+        string_2 as string,
+        number_2 as number,
+        boolean_2 as boolean
+    }
+}
+
+// @public
+class ValidatorTraits implements ValidatorTraitValues {
+    constructor(init?: Partial<ValidatorTraitValues>, base?: ValidatorTraitValues);
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
+    readonly brand?: string;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
+    readonly constraints: ConstraintTrait[];
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // (undocumented)
+    readonly isOptional: boolean;
+}
+
+// @public
+interface ValidatorTraitValues {
+    readonly brand?: string;
+    readonly constraints: ConstraintTrait[];
+    readonly isOptional: boolean;
+}
 
 // @internal @deprecated
 const value: typeof literal;

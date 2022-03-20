@@ -30,4 +30,5 @@ export * from './utils';
 import * as Converters from './converters';
 import * as Csv from './csvHelpers';
 import * as Hash from './hash';
-export { Converters, Csv, Hash };
+import * as Validation from './validation';
+export { Converters, Csv, Hash, Validation };
