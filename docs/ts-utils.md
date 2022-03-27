@@ -26,6 +26,8 @@
 |  [fail\_2(message)](./ts-utils.fail_2.md) | Returns [Failure&lt;T&gt;](./ts-utils.failure.md) with the supplied error message. |
 |  [failWithDetail(message, detail)](./ts-utils.failwithdetail.md) | Returns [DetailedFailure&lt;T, TD&gt;](./ts-utils.detailedfailure.md) with a supplied error message and detail. |
 |  [formatList(format, items, itemFormatter)](./ts-utils.formatlist.md) | <b><i>(BETA)</i></b> Formats a list of items using the supplied template and formatter, one result per output line. |
+|  [getTypeOfProperty(key, item)](./ts-utils.gettypeofproperty.md) | Gets the type of a property specified by key from an arbitrary object. |
+|  [getValueOfPropertyOrDefault(key, item, defaultValue)](./ts-utils.getvalueofpropertyordefault.md) | Gets the value of a property specified by key from an arbitrary object, or a default value if the property does not exist. |
 |  [isKeyOf(key, item)](./ts-utils.iskeyof.md) | Helper type-guard function to report whether a specified key is present in a supplied object. |
 |  [mapDetailedResults(results, ignore)](./ts-utils.mapdetailedresults.md) | Aggregates sucessful results from a collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, optionally ignoring certain error details. |
 |  [mapFailures(results)](./ts-utils.mapfailures.md) | Aggregates error messages from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
