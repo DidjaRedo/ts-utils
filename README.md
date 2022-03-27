@@ -21,6 +21,7 @@ Also includes a few other much less-developed odds-and-ends borrowed from one pr
 
 - [Summary](#summary)
 - [Installation](#installation)
+- [API Documentation](#api-documentation)
 - [Overview](#overview)
   - [The Result Pattern](#the-result-pattern)
   - [Converters](#converters)
@@ -39,6 +40,9 @@ With npm:
 ```sh
 npm install ts-utils
 ```
+
+## API Documentation
+Extracted API documentation is [here](./docs/ts-utils.md).
 
 ## Overview
 ### The Result Pattern

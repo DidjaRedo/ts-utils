@@ -32,7 +32,9 @@ import { isKeyOf } from './utils';
 type OnError = 'failOnError' | 'ignoreErrors';
 
 /**
- * Options for @see StringConverter maching method
+ * Options for {@link Converters.StringConverter | StringConverter}
+ * matching method
+ * @public
  */
 export interface StringMatchOptions {
     /**
@@ -43,15 +45,16 @@ export interface StringMatchOptions {
 }
 
 /**
- * The @see StringConverter class extends @see BaseConverter to provide string-specific helper
- * functions.
+ * The {@link Converters.StringConverter | StringConverter} class extends {@link BaseConverter}
+ * to provide string-specific helper methods.
+ * @public
  */
 export class StringConverter<T extends string = string, TC = unknown> extends BaseConverter<T, TC> {
     /**
-     * Construct a new @see StringConverter
-     * @param defaultContext Optional context used by the conversion
-     * @param traits Optional traits to be applied to the conversion
-     * @param converter Optional converter to be used for the conversion
+     * Construct a new {@link Converters.StringConverter | StringConverter}.
+     * @param defaultContext - Optional context used by the conversion.
+     * @param traits - Optional traits to be applied to the conversion.
+     * @param converter - Optional conversion function to be used for the conversion.
      */
     public constructor(
         defaultContext?: TC,
@@ -61,12 +64,18 @@ export class StringConverter<T extends string = string, TC = unknown> extends Ba
         super(converter, defaultContext, traits);
     }
 
+    /**
+     * @internal
+     */
     protected static _convert<T extends string>(from: unknown): Result<T> {
         return typeof from === 'string'
             ? succeed(from as T)
             : fail(`Not a string: ${JSON.stringify(from)}`);
     }
 
+    /**
+     * @internal
+     */
     protected static _wrap<T extends string, TC>(
         wrapped: StringConverter<T, TC>,
         converter: (from: T) => Result<T>,
@@ -78,44 +87,55 @@ export class StringConverter<T extends string = string, TC = unknown> extends Ba
     }
 
     /**
-     * Returns a @see StringConverter which constrains the result to match a supplied
-     * string.
-     * @param match The string to be matched
-     * @param options Optional @see StringMatchOptions for this conversion
-     * @returns @see Success with a matching string or @see Failure with an informative
+     * Returns a {@link Converters.StringConverter | StringConverter} which constrains the result to match
+     * a supplied string.
+     * @param match - The string to be matched
+     * @param options - Optional {@link Converters.StringMatchOptions} for this conversion.
+     * @returns {@link Success} with a matching string or {@link Failure} with an informative
      * error if the string does not match.
+     * {@label string}
      */
     public matching(match: string, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
 
     /**
-     * Returns a @see StringConverter which constrains the result to match one of a supplied
-     * array of strings.
-     * @param match The array to be searched
-     * @param options Optional @see StringMatchOptions for this conversion
-     * @returns @see Success with a matching string or @see Failure with an informative
+     * Returns a {@link Converters.StringConverter | StringConverter} which constrains the result to match
+     * one of a supplied array of strings.
+     * @param match - The array of allowed strings.
+     * @param options - Optional {@link Converters.StringMatchOptions} for this conversion.
+     * @returns {@link Success} with a matching string or {@link Failure} with an informative
      * error if the string does not match.
+     * {@label array}
      */
     public matching(match: string[], options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
 
     /**
-     * Returns a @see StringConverter which constrains the result to match one of a supplied
-     * Set of strings.
-     * @param match The Set to be tested
-     * @param options Optional @see StringMatchOptions for this conversion
-     * @returns @see Success with a matching string or @see Failure with an informative
+     * Returns a {@link Converters.StringConverter | StringConverter} which constrains the result to match
+     * one of a supplied `Set` of strings.
+     * @param match - The `Set` of allowed strings.
+     * @param options - Optional {@link Converters.StringMatchOptions} for this conversion.
+     * @returns {@link Success} with a matching string or {@link Failure} with an informative
      * error if the string does not match.
+     * {@label set}
      */
     public matching(match: Set<T>, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
 
     /**
-     * Returns a @see StringConverter which constrains the result to match a supplied regular
-     * expression.
-     * @param match The @see RegExp to be tested
-     * @param options Optional @see StringMatchOptions for this conversion
-     * @returns @see Success with a matching string or @see Failure with an informative
+     * Returns a {@link Converters.StringConverter | StringConverter} which constrains the result to match
+     * a supplied regular expression.
+     * @param match - The regular expression to be used as a constraint.
+     * @param options - Optional {@link Converters.StringMatchOptions} for this conversion
+     * @returns {@link Success} with a matching string or {@link Failure} with an informative
      * error if the string does not match.
+     * {@label regexp}
      */
     public matching(match: RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+    /**
+     * Concrete implementation of {@link Converters.StringConverter.(matching#string) | StringConverter.matching(string)},
+     * {@link Converters.StringConverter.(matching#array) | StringConverter.matching(string[])},
+     * {@link Converters.StringConverter.(matching#set) | StringConverter.matching(Set<string>)}, and
+     * {@link Converters.StringConverter.(matching#regexp) | StringConverter.matching(RegExp)}.
+     * @internal
+     */
     public matching(match: string | string[] | Set<T> | RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC> {
         const message = options?.message;
         if (typeof match === 'string') {
@@ -160,13 +180,19 @@ export class StringConverter<T extends string = string, TC = unknown> extends Ba
 /**
  * A converter to convert unknown to string. Values of type
  * string succeed.  Anything else fails.
+ * @public
  */
 export const string = new StringConverter();
 
 /**
- * Helper function to create a converter which converts unknown to string, applying
- * template conversions supplied at construction time or at runtime as context.
- * @param defaultContext optional default context to use for template values
+ * Helper function to create a {@link Converters.StringConverter | StringConverter} which converts
+ * `unknown` to `string`, applying template conversions supplied at construction time or at
+ * runtime as context.
+ * @remarks
+ * Template conversions are applied using `mustache` syntax.
+ * @param defaultContext - Optional default context to use for template values.
+ * @returns A new {@link Converter} returning `string`.
+ * @public
  */
 export function templateString(defaultContext?: unknown): StringConverter<string, unknown> {
     return new StringConverter<string, unknown>(defaultContext, undefined, (from: unknown, _self: Converter<string, unknown>, context?: unknown) => {
@@ -178,9 +204,14 @@ export function templateString(defaultContext?: unknown): StringConverter<string
 }
 
 /**
- * A converter to convert unknown to one of a set of supplied enumerated values. Anything else fails.
+ * Helper function to create a {@link Converter} which converts `unknown` to one of a set of supplied
+ * enumerated values. Anything else fails.
+ *
+ * @remarks
  * Allowed enumerated values can also be supplied as context at conversion time.
- * @param values Array of allowed values
+ * @param values - Array of allowed values.
+ * @returns A new {@link Converter} returning `<T>`.
+ * @public
  */
 export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
     return new BaseConverter((from: unknown, _self: Converter<T, T[]>, context?: T[]): Result<T> => {
@@ -191,14 +222,17 @@ export function enumeratedValue<T>(values: T[]): Converter<T, T[]> {
 }
 
 /**
- * Converts unknown to one of a set of supplied enumerated values, mapping any of multiple supplied
- * values to the enumeration. Enables mapping of multiple input values to a consistent internal
- * representation (so e.g. 'y', 'yes', 'true' and true can all map to boolean true)
- * @param map An array of tuples describing the mapping. The first element of each tuple is the result
+ * Helper function to create a {@link Converter} which converts `unknown` to one of a set of supplied enumerated
+ * values, mapping any of multiple supplied values to the enumeration.
+ * @remarks
+ * Enables mapping of multiple input values to a consistent internal representation (so e.g. `'y'`, `'yes'`,
+ * `'true'`, `1` and `true` can all map to boolean `true`)
+ * @param map - An array of tuples describing the mapping. The first element of each tuple is the result
  * value, the second is the set of values that map to the result.  Tuples are evaluated in the order
  * supplied and are not checked for duplicates.
- * @param message an optional error message
- * @returns The mapped value
+ * @param message - An optional error message.
+ * @returns A {@link Converter} which applies the mapping and yields `<T>` on success.
+ * @public
  */
 export function mappedEnumeratedValue<T>(map: [T, unknown[]][], message?: string): Converter<T, undefined> {
     return new BaseConverter((from: unknown, _self: Converter<T, undefined>, _context?: unknown) => {
@@ -212,9 +246,11 @@ export function mappedEnumeratedValue<T>(map: [T, unknown[]][], message?: string
 }
 
 /**
- * A converter to convert unknown to some value. Succeeds with the supplied value if an identity
- * comparison succeeds, fails otherwise.
- * @param value The value to be compared
+ * Helper function to create a {@link Converter} which converts `unknown` to some supplied literal value. Succeeds with
+ * the supplied value if an identity comparison succeeds, fails otherwise.
+ * @param value - The value to be compared.
+ * @returns A {@link Converter} which returns the supplied value on success.
+ * @public
  */
 export function literal<T>(value: T): Converter<T, unknown> {
     return new BaseConverter<T, unknown>((from: unknown, _self: Converter<T, unknown>, _context?: unknown): Result<T> => {
@@ -224,14 +260,17 @@ export function literal<T>(value: T): Converter<T, unknown> {
 
 /**
  * Deprecated alias for @see literal
- * @param value The value to be compared
- * @deprecated use literal instead
+ * @param value - The value to be compared.
+ * @deprecated Use {@link Converters.literal} instead.
+ * @internal
  */
 export const value = literal;
 
 /**
- * A converter to convert unknown to a number.  Numbers and strings
- * with a numeric format succeed.  Anything else fails.
+ * A {@link Converter} which converts `unknown` to a `number`.
+ * @remarks
+ * Numbers and strings with a numeric format succeed. Anything else fails.
+ * @public
  */
 export const number = new BaseConverter<number>((from: unknown) => {
     if (typeof from !== 'number') {
@@ -244,9 +283,11 @@ export const number = new BaseConverter<number>((from: unknown) => {
 });
 
 /**
- * A converter to convert unknown to boolean. Boolean values or the
- * case-insensitive strings 'true' and 'false' succeed.  Anything
- * else fails.
+ * A {@link Converter} which converts `unknown` to `boolean`.
+ * @remarks
+ * Boolean values or the case-insensitive strings `'true'` and `'false'` succeed.
+ * Anything else fails.
+ * @public
  */
 export const boolean = new BaseConverter<boolean>((from: unknown) => {
     if (typeof from === 'boolean') {
@@ -262,16 +303,20 @@ export const boolean = new BaseConverter<boolean>((from: unknown) => {
 });
 
 /**
- * A converter to convert an optional string value. Values of type string
- * are returned.  Anything else returns success with an undefined value.
+ * A {@link Converter} which converts an optional `string` value. Values of type
+ * `string` are returned.  Anything else returns {@link Success} with value `undefined`.
+ * @public
  */
 export const optionalString = string.optional();
 
 /**
- * Creates a converter which converts any string into an array of strings
- * by separating at a supplied delimiter. Delimeter may also be supplied
- * as context at conversion time.
- * @param delimiter The delimiter at which to split.
+ * Helper function to create a {@link Converter} which converts any `string` into an
+ * array of `string`, by separating at a supplied delimiter.
+ * @remarks
+ * Delimeter may also be supplied as context at conversion time.
+ * @param delimiter - The delimiter at which to split.
+ * @returns A new {@link Converter} returning `string[]`.
+ * @public
  */
 export function delimitedString(delimiter: string, options: 'filtered'|'all' = 'filtered'): Converter<string[], string> {
     return new BaseConverter<string[], string>((from: unknown, _self: Converter<string[], string>, context?: string) => {
@@ -288,7 +333,9 @@ export function delimitedString(delimiter: string, options: 'filtered'|'all' = '
 }
 
 /**
- * A converter to convert an iso formatted string, a number or a Date object to a Date object
+ * A {@link Converter} which converts an iso formatted string, a number or a `Date` object to
+ * a `Date` object.
+ * @public
  */
 export const isoDate = new BaseConverter<Date>((from: unknown) => {
     if (typeof from === 'string') {
@@ -308,31 +355,39 @@ export const isoDate = new BaseConverter<Date>((from: unknown) => {
 });
 
 /**
- * A converter to convert an optional number value. Values of type number
- * or numeric strings are converted and returned. Anything else returns
- * success with an undefined value.
+ * A {@link Converter} which converts an optional `number` value.
+ * @remarks
+ * Values of type `number` or numeric strings are converted and returned.
+ * Anything else returns {@link Success} with value `undefined`.
+ * @public
  */
 export const optionalNumber = number.optional();
 
 /**
- * A converter to convert an optional boolean value. Values of type boolean
- * or strings that match (case-insensitive) 'true' or 'false' are converted
- * and returned.  Anything else returns success with an undefined value.
+ * A {@link Converter} to convert an optional `boolean` value.
+ * @remarks
+ * Values of type `boolean` or strings that match (case-insensitive) `'true'`
+ * or `'false'` are converted and returned.  Anything else returns {@link Success}
+ * with value `undefined`.
+ * @public
  */
 export const optionalBoolean = boolean.optional();
 
 /**
- * A helper wrapper for polymorphic fields. Invokes the wrapped converters
- * in sequence, returning the first successful result.  Returns an error
- * if none of the supplied converters can convert the value.
- *
- * If onError is 'ignoreErrors' (default), then errors from any of the
+ * A helper function to create a {@link Converter} for polymorphic values.  Returns a
+ * converter which Invokes the wrapped converters in sequence, returning the first successful
+ * result.  Returns an error if none of the supplied converters can convert the value.
+ * @remarks
+ * If `onError` is `ignoreErrors` (default), then errors from any of the
  * converters are ignored provided that some converter succeeds.  If
- * onError is 'failOnError', then an error from any converter fails the entire
+ * onError is `failOnError`, then an error from any converter fails the entire
  * conversion.
  *
- * @param converters An ordered list of converters to be considered
- * @param onError Specifies treatment of unconvertable elements
+ * @param converters - An ordered list of {@link Converter | converters} to be considered.
+ * @param onError - Specifies treatment of unconvertable elements.
+ * @returns A new {@link Converter} which yields a value from the union of the types returned
+ * by the wrapped converters.
+ * @public
  */
 export function oneOf<T, TC=unknown>(converters: Array<Converter<T, TC>>, onError: OnError = 'ignoreErrors'): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self, context?: TC) => {
@@ -355,11 +410,14 @@ export function oneOf<T, TC=unknown>(converters: Array<Converter<T, TC>>, onErro
 }
 
 /**
- * A helper wrapper for converting an array of <T>.  If onError is 'failOnError' (default),
- * then the entire conversion fails if any element cannot be converted.  If onError
- * is 'ignoreErrors', failing elements are silently ignored.
- * @param converter Converter used to convert each item in the array
- * @param ignoreErrors Specifies treatment of unconvertable elements
+ * A helper function to create a {@link Converter} which converts `unknown` to an array of `<T>`.
+ * @remarks
+ * If `onError` is `'failOnError'` (default), then the entire conversion fails if any element cannot
+ * be converted.  If `onError` is `'ignoreErrors'`, then failing elements are silently ignored.
+ * @param converter - {@link Converter} used to convert each item in the array.
+ * @param ignoreErrors - Specifies treatment of unconvertable elements.
+ * @returns A {@link Converter} which returns an array of `<T>`.
+ * @public
  */
 export function arrayOf<T, TC=undefined>(converter: Converter<T, TC>, onError: OnError = 'failOnError'): Converter<T[], TC> {
     return new BaseConverter((from: unknown, _self: Converter<T[], TC>, context?: TC) => {
@@ -386,11 +444,13 @@ export function arrayOf<T, TC=undefined>(converter: Converter<T, TC>, onError: O
 }
 
 /**
- * A helper wrapper for converting to Itemrray<T>.  If onError is 'failOnError' (default),
- * then the entire conversion fails if any element cannot be converted.  If onError
- * is 'ignoreErrors', failing elements are silently ignored.
- * @param converter Converter used to convert each item in the array
- * @param ignoreErrors Specifies treatment of unconvertable elements
+ * A helper function to create a {@link Converter} which converts `unknown` to {@link ExtendedArray | ExtendedArray<T>}.
+ * @remarks
+ * If `onError` is `'failOnError'` (default), then the entire conversion fails if any element cannot
+ * be converted.  If `onError` is `'ignoreErrors'`, then failing elements are silently ignored.
+ * @param converter - {@link Converter} used to convert each item in the array
+ * @param ignoreErrors - Specifies treatment of unconvertable elements
+ * @beta
  */
 export function extendedArrayOf<T, TC=undefined>(label: string, converter: Converter<T, TC>, onError: OnError = 'failOnError'): Converter<ExtendedArray<T>, TC> {
     return arrayOf(converter, onError).map((items: T[]) => {
@@ -399,39 +459,66 @@ export function extendedArrayOf<T, TC=undefined>(label: string, converter: Conve
 }
 
 /**
- * Converter to convert an unknown to an array of strings. Conversion succeeds
- * and returns the supplied value if it as an array of strings, fails otherwise.
+ * {@link Converter} to convert an `unknown` to an array of `string`.
+ * @remarks
+ * Returns {@link Success} with the the supplied value if it as an array
+ * of strings, returns {@link Failure} with an error message otherwise.
+ * @public
  */
 export const stringArray = arrayOf(string);
 
 /**
- * Converter to convert an unknown to an array of numbers. Conversion succeeds
- * and returns the supplied value if it as an array of numbers, fails otherwise.
+ * {@link Converter} to convert an `unknown` to an array of `number`.
+ * @remarks
+ * Returns {@link Success} with the the supplied value if it as an array
+ * of numbers, returns {@link Failure} with an error message otherwise.
+ * @public
  */
 export const numberArray = arrayOf(number);
 
 /**
- * Options for 'recordOf' and 'mapOf' converters
+ * Options for {@link Converters.(recordOf:withOptions)} and {@link Converters.(mapOf:withOptions)}
+ * helper functions.
+ * @public
  */
 export interface KeyedConverterOptions<T extends string = string, TC=undefined> {
+    /**
+     * if `onError` is `'fail'` (default), then the entire conversion fails if any key or element
+     * cannot be converted.  If `onError` is `'ignore'`, failing elements are silently ignored.
+     */
     onError?: 'fail'|'ignore';
+    /**
+     * If present, `keyConverter` is used to convert the source object property names to
+     * keys in the resulting map or record.
+     * @remarks
+     * Can be used to coerce key names to supported values and/or strong types.
+     */
     keyConverter?: Converter<T, TC>;
 }
 
 /**
- * A helper wrapper to convert the string-keyed properties of an object to a Record of T.
- * Conversion fails if any element cannot be converted.  If onError is 'ignore' failing
- * elements are silently ignored.
- * @param converter Converter used to convert each item in the record
+ * A helper function to create a {@link Converter} which converts the `string`-keyed properties
+ * using a supplied {@link Converter | Converter<T>} to produce a `Record<string, T>`.
+ * @remarks
+ * The resulting converter fails conversion if any element cannot be converted.
+ * @param converter - {@link Converter} used to convert each item in the source object.
+ * @returns A {@link Converter} which returns `Record<string, T>`.
+ * {@label default}
+ * @public
  */
 export function recordOf<T, TC=undefined, TK extends string=string>(converter: Converter<T, TC>): Converter<Record<TK, T>, TC>;
 
 /**
- * A helper wrapper to convert the string-keyed properties of an object to a Record of T.
- * If onError is 'fail' (default),  then the entire conversion fails if any element
- * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
- * @param converter Converter used to convert each item in the record
- * @param onError Specifies treatment of unconvertable elements
+ * A helper function to create a {@link Converter} which converts the `string`-keyed properties
+ * using a supplied {@link Converter | Converter<T>} to produce a `Record<string, T>` and optionally
+ * specified handling of elements that cannot be converted.
+ * @remarks
+ * if `onError` is `'fail'` (default), then the entire conversion fails if any key or element
+ * cannot be converted.  If `onError` is `'ignore'`, failing elements are silently ignored.
+ * @param converter - {@link Converter} used to convert each item in the source object.
+ * @returns A {@link Converter} which returns `Record<string, T>`.
+ * {@label withOnError}
+ * @public
  */
 export function recordOf<T, TC=undefined, TK extends string=string>(
     converter: Converter<T, TC>,
@@ -439,18 +526,29 @@ export function recordOf<T, TC=undefined, TK extends string=string>(
 ): Converter<Record<TK, T>, TC>;
 
 /**
- * A helper wrapper to convert the string-keyed properties of an object to a Record of T.
- * If options specify a key converter it will be applied to each key.
- * If onError is 'fail' (default),  then the entire conversion fails if any key or element
- * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
- * @param converter Converter used to convert each item in the record
- * @param options Optional @see KeyedConverterOptions
+ * A helper function to create a {@link Converter} which converts the `string`-keyed properties
+ * using a supplied {@link Converter | Converter<T>} to produce a `Record<TK, T>`.
+ * @remarks
+ * If present, the supplied {@link Converters.KeyedConverterOptions | options} can provide a strongly-typed
+ * converter for keys and/or control the handling of elements that fail conversion.
+ * @param converter - {@link Converter} used to convert each item in the source object.
+ * @param options - Optional {@link Converters.KeyedConverterOptions | KeyedConverterOptions<TK, TC>} which
+ * supplies a key converter and/or error-handling options.
+ * @returns A {@link Converter} which returns `Record<TK, T>`.
+ * {@label withOptions}
+ * @public
  */
 export function recordOf<T, TC=undefined, TK extends string=string>(
     converter: Converter<T, TC>,
     options: KeyedConverterOptions<TK, TC>
 ): Converter<Record<TK, T>, TC>;
 
+/**
+ * Concrete implementation of {@link Converters.(recordOf:default) | Converters.recordOf(Converter<T>)},
+ * {@link Converters.(recordOf:withOnError) | Converters.recordOf(Converter<T>, 'fail'|'ignore')}, and
+ * {@link Converters.(recordOf:withOptions) | Converters.recordOf(Converter<T>, KeyedConverterOptions)}.
+ * @internal
+ */
 export function recordOf<T, TC=undefined, TK extends string=string>(
     converter: Converter<T, TC>,
     option: 'fail'|'ignore'|KeyedConverterOptions<TK, TC> = 'fail'
@@ -487,18 +585,28 @@ export function recordOf<T, TC=undefined, TK extends string=string>(
 }
 
 /**
- * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
- * Conversion fails if any element cannot be converted.
- * @param converter Converter used to convert each item in the map
+ * A helper function to create a {@link Converter} which converts the `string`-keyed properties
+ * using a supplied {@link Converter | Converter<T>} to produce a `Map<string, T>`.
+ * @remarks
+ * The resulting converter fails conversion if any element cannot be converted.
+ * @param converter - {@link Converter} used to convert each item in the source object.
+ * @returns A {@link Converter} which returns `Map<string, T>`.
+ * {@label default}
+ * @public
  */
 export function mapOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Map<TK, T>, TC>;
 
 /**
- * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
- * If onError is 'fail' (default),  then the entire conversion fails if any element
- * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
- * @param converter Converter used to convert each item in the map
- * @param onError Specifies treatment of unconvertable elements
+ * A helper function to create a {@link Converter} which converts the `string`-keyed properties
+ * using a supplied {@link Converter | Converter<T>} to produce a `Map<string, T>` and optionally
+ * specified handling of elements that cannot be converted.
+ * @remarks
+ * if `onError` is `'fail'` (default), then the entire conversion fails if any key or element
+ * cannot be converted.  If `onError` is `'ignore'`, failing elements are silently ignored.
+ * @param converter - {@link Converter} used to convert each item in the source object.
+ * @returns A {@link Converter} which returns `Map<string, T>`.
+ * {@label withOnError}
+ * @public
  */
 export function mapOf<T, TC = undefined, TK extends string = string>(
     converter: Converter<T, TC>,
@@ -506,18 +614,29 @@ export function mapOf<T, TC = undefined, TK extends string = string>(
 ): Converter<Map<TK, T>, TC>;
 
 /**
- * A helper wrapper to convert the string-keyed properties of an object to a Map of T.
- * If options specify a key converter it will be applied to each key.
- * If onError is 'fail' (default),  then the entire conversion fails if any key or element
- * cannot be converted.  If onError is 'ignore' failing elements are silently ignored.
- * @param converter Converter used to convert each item in the map
- * @param options Optional @see KeyedConverterOptions
+ * A helper function to create a {@link Converter} which converts the `string`-keyed properties
+ * using a supplied {@link Converter | Converter<T>} to produce a `Map<TK, T>`.
+ * @remarks
+ * If present, the supplied {@link Converters.KeyedConverterOptions | options} can provide a strongly-typed
+ * converter for keys and/or control the handling of elements that fail conversion.
+ * @param converter - {@link Converter} used to convert each item in the source object.
+ * @param options - Optional {@link Converters.KeyedConverterOptions | KeyedConverterOptions<TK, TC>} which
+ * supplies a key converter and/or error-handling options.
+ * @returns A {@link Converter} which returns `Map<TK, T>`.
+ * {@label withOptions}
+ * @public
  */
 export function mapOf<T, TC = undefined, TK extends string = string>(
     converter: Converter<T, TC>,
     options: KeyedConverterOptions<TK, TC>
 ): Converter<Map<TK, T>, TC>;
 
+/**
+ * Concrete implementation of {@link Converters.(mapOf:default) | Converters.mapOf(Converter<T>)},
+ * {@link Converters.(mapOf:withOnError) | Converters.mapOf(Converter<T>, 'fail'|'ignore')}, and
+ * {@link Converters.(mapOf:withOptions) | Converters.mapOf(Converter<T>, KeyedConverterOptions)}.
+ * @internal
+ */
 export function mapOf<T, TC = undefined, TK extends string = string>(
     converter: Converter<T, TC>,
     option: 'fail' | 'ignore' | KeyedConverterOptions<TK, TC> = 'fail'
@@ -554,12 +673,16 @@ export function mapOf<T, TC = undefined, TK extends string = string>(
 }
 
 /**
- * Gets a converter which validates that a supplied value is of a type validated by
- * a supplied validator and returns it.
- * @param validator A validator function to determine if the converted value is valid
- * @param description A description of the validate type for use in error messages
- * @returns If validator returns true, suceeds with from coerced to T.  Fails with an error
- * message otherwise.
+ * Helper function to create  a {@link Converter} which validates that a supplied value is
+ * of a type validated by a supplied validator function and returns it.
+ * @remarks
+ * If `validator` succeeds, this {@link Converter} returns {@link Success} with the supplied
+ * value of `from` coerced to type `<T>`.  Returns a {@link Failure} with additional
+ * information otherwise.
+ * @param validator - A validator function to determine if the converted value is valid.
+ * @param description - A description of the validated type for use in error messages.
+ * @returns A new {@link Converter | Converter<T>} which applies the supplied validation.
+ * @public
  */
 export function validateWith<T, TC=undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T, TC>, _context?: TC) => {
@@ -571,11 +694,14 @@ export function validateWith<T, TC=undefined>(validator: (from: unknown) => from
 }
 
 /**
- * A helper function to extract and convert an element from an array. Succeeds and returns
- * the converted value if the element exists in the supplied parameter and can be converted.
- * Fails otherwise.
- * @param index The index of the field to be extracted.
- * @param converter Converter used to convert the extracted element.
+ * A helper function to create a {@link Converter} which extracts and converts an element from an array.
+ * @remarks
+ * The returned {@link Converter} returns {@link Success} with the converted value if the element exists
+ * in the supplied array and can be converted. Returns {@link Failure} with an error message otherwise.
+ * @param index - The index of the element to be extracted.
+ * @param converter - A {@link Converter} used to convert the extracted element.
+ * @returns A {@link Converter | Converter<T>} which extracts the specified element from an array.
+ * @public
  */
 export function element<T, TC=undefined>(index: number, converter: Converter<T, TC>): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
@@ -593,13 +719,16 @@ export function element<T, TC=undefined>(index: number, converter: Converter<T, 
 }
 
 /**
- * A helper function to extract and convert an optional element from an array. Succeeds
- * and returns the converted value if the element exists in the supplied parameter and can
- * be converted. Succeeds with undefined if the parameter is an array but the index is too
- * large. Fails if the supplied parameter is not an array, if the requested index is negative,
- * or if the element cannot be converted.
- * @param name The name of the field to be extracted.
- * @param converter Converter used to convert the extracted field.
+ * A helper function to create a {@link Converter} which extracts and converts an optional element from an array.
+ * @remarks
+ * The resulting {@link Converter} returns {@link Success} with the converted value if the element exsist
+ * in the supplied array and can be converted. Returns {@link Success} with value `undefined` if the parameter
+ * is an array but the index is out of range. Returns {@link Failure} with a message if the supplied parameter
+ * is not an array, if the requested index is negative, or if the element cannot be converted.
+ * @param index - The index of the element to be extracted.
+ * @param converter - A {@link Converter} used to convert the extracted element.
+ * @returns A {@link Converter | Converter<T>} which extracts the specified element from an array.
+ * @public
  */
 export function optionalElement<T, TC=undefined>(index: number, converter: Converter<T, TC>): Converter<T|undefined, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
@@ -617,11 +746,15 @@ export function optionalElement<T, TC=undefined>(index: number, converter: Conve
 }
 
 /**
- * A helper function to extract and convert a field from an object. Succeeds and returns
- * the converted value if the field exists in the supplied parameter and can be converted.
- * Fails otherwise.
- * @param name The name of the field to be extracted.
- * @param converter Converter used to convert the extracted field.
+ * A helper function to create a {@link Converter} which extracts and convert a property specified
+ * by name from an object.
+ * @remarks
+ * The resulting {@link Converter} returns {@link Success} with the converted value of the correpsonding
+ * object property if the field exists and can be converted. Returns {@link Failure} with an error message
+ * otherwise.
+ * @param name - The name of the field to be extracted.
+ * @param converter - {@link Converter} used to convert the extracted field.
+ * @public
  */
 export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T, TC>, context?: TC) => {
@@ -638,12 +771,16 @@ export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>
 }
 
 /**
- * A helper function to extract and convert an optional field from an object. Succeeds
- * and returns the converted value if the field exists in the supplied parameter and can
- * be converted. Succeeds with undefined if the parameter is an object but the named field
- * is not present. Fails if the supplied parameter is not an object.
- * @param name The name of the field to be extracted.
- * @param converter Converter used to convert the extracted field.
+ * A helper function to create a {@link Converter} which extracts and convert a property specified
+ * by name from an object.
+ * @remarks
+ * The resulting {@link Converter} returns {@link Success} with the converted value of the correpsonding
+ * object property if the field exists and can be converted. Returns {@link Success} with value `undefined`
+ * if the supplied parametr is an object but the named field is not present.  Returns {@link Failure} with
+ * an error message otherwise.
+ * @param name - The name of the field to be extracted.
+ * @param converter - {@link Converter} used to convert the extracted field.
+ * @public
  */
 export function optionalField<T, TC=undefined>(name: string, converter: Converter<T, TC>): Converter<T|undefined, TC> {
     return new BaseConverter((from: unknown, _self: Converter<T|undefined, TC>, context?: TC) => {
@@ -667,7 +804,8 @@ export function optionalField<T, TC=undefined>(name: string, converter: Converte
 }
 
 /**
- * Options for an @see ObjectConverter.
+ * Options for an {@link Converters.ObjectConverter | ObjectConverter}.
+ * @public
  */
 export interface ObjectConverterOptions<T> {
     /**
@@ -683,34 +821,56 @@ export interface ObjectConverterOptions<T> {
 
 /**
  * Per-property converters for each of the properties in type T.
+ * @remarks
+ * Used to construct a {@link Converters.ObjectConverter | ObjectConverter}
+ * @public
  */
 export type FieldConverters<T, TC=unknown> = { [ key in keyof T ]: Converter<T[key], TC> };
 
 /**
- * Converter to convert an object of type T without changing shape, given a @see FieldConverters<T>.
- * If all of the required fields exist and can be converted, returns a new object with the converted
- * values under the original key names.  If any required fields do not exist or cannot be converted,
- * the entire conversion fails.  See @see ObjectConverterOptions for other conversion options.
+ * A {@link Converter} which converts an object of type `<T>` without changing shape, given
+ * a {@link Converters.FieldConverters | FieldConverters<T>} for the fields in the object.
+ * @remarks
+ * By default, if all of the required fields exist and can be converted, returns a new object with
+ * the converted values under the original key names.  If any required fields do not exist or cannot
+ * be converted, the entire conversion fails. See {@link Converters.ObjectConverterOptions | ObjectConverterOptions}
+ * for other conversion options.
+ * @public
  */
 export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
+    /**
+     * Fields converted by this {@link Converters.ObjectConverter | ObjectConverter}.
+     */
     public readonly fields: FieldConverters<T>;
+    /**
+     * Options used to initialize this {@link Converters.ObjectConverter | ObjectConverter}.
+     */
     public readonly options: ObjectConverterOptions<T>;
 
     /**
-     * Constructs a new @see ObjectConverter<T> using options supplied in an
-     * optional @see ObjectConverterOptions<T>.
-     * @param fields A @see FieldConverters<T> containing converters for each field
-     * @param options An optional @see ObjectConverterOptions to configure the conversion
+     * Constructs a new {@link Converters.ObjectConverter | ObjectConverter<T>} using options
+     * supplied in a {@link Converters.ObjectConverterOptions | ObjectConverterOptions<T>}.
+     * @param fields - A {@link Converters.FieldConverters | FieldConverters<T>} containing
+     * a {@link Converter} for each field
+     * @param options - An optional @see ObjectConverterOptions to configure the conversion
+     * {@label withOptions}
      */
     public constructor(fields: FieldConverters<T, TC>, options?: ObjectConverterOptions<T>)
 
     /**
-     * Constructs a new @see ObjectConverter<T> using optional fields supplied in an
-     * optional array of keyof T.
-     * @param fields A @see FieldConverters<T> containing converters for each field
-     * @param optional An optional array of keyof T listing fields that are not required.
+     * Constructs a new {@link Converters.ObjectConverter | ObjectConverter<T>} with optional
+     * properties specified as an array of `keyof T`.
+     * @param fields - A {@link Converters.FieldConverters | FieldConverters<T>} containing
+     * a {@link Converter} for each field.
+     * @param optional - An array of `keyof T` listing fields that are not required.
+     * {@label withKeys}
      */
     public constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]);
+    /**
+     * Concrete implementation of {@link Converters.ObjectConverter.(constructor:withOptions)}
+     * and {@link Converters.ObjectConverter.(constructor:withKeys)}.
+     * @internal
+     */
     public constructor(fields: FieldConverters<T, TC>, opt?: ObjectConverterOptions<T>|(keyof T)[]) {
         super((from: unknown, _self, context?: TC) => {
             // eslint bug thinks key is used before defined
@@ -756,71 +916,183 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
         }
     }
 
+    /**
+     * Creates a new {@link Converters.ObjectConverter | ObjectConverter} derived from this one but with
+     * new optional properties as specified by a supplied {@link Converters.ObjectConverterOptions | ObjectConverterOptions<T>}.
+     * @param options - The {@link Converters.ObjectConverterOptions | options} to be applied to the new
+     * converter.
+     * @returns A new {@link Converters.ObjectConverter | ObjectConverter} with the additional optional source properties.
+     * {@label withOptions}
+     */
     public partial(options: ObjectConverterOptions<T>): ObjectConverter<Partial<T>, TC>;
+
+    /**
+     * Creates a new {@link Converters.ObjectConverter | ObjectConverter} derived from this one but with
+     * new optional properties as specified by a supplied array of `keyof T`.
+     * @param optional - The keys of the source object properties to be made optional.
+     * @returns A new {@link Converters.ObjectConverter | ObjectConverter} with the additional optional source
+     * properties.
+     * {@label withKeys}
+     */
     public partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>, TC>;
+    /**
+     * Concrete implementation of
+     * {@link Converters.ObjectConverter.(partial:withOptions) | ObjectConverter.partial(ObjectConverterOptions)} and
+     * {@link Converters.ObjectConverter.(partial:withKeys) | ObjectConverter.partial((keyof T)[]}.
+     * @internal
+     */
     public partial(opt?: ObjectConverterOptions<T>|(keyof T)[]): ObjectConverter<Partial<T>, TC> {
         return new ObjectConverter<Partial<T>, TC>(this.fields as FieldConverters<Partial<T>, TC>, opt as ObjectConverterOptions<Partial<T>>)._with(this._traits());
     }
 
-    public addPartial(addOptionalFields: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
-        return this.partial([...this.options.optionalFields ?? [], ...addOptionalFields])._with(this._traits());
+    /**
+     * Creates a new {@link Converters.ObjectConverter | ObjectConverter} derived from this one but with
+     * new optional properties as specified by a supplied array of `keyof T`.
+     * @param addOptionalProperties - The keys to be made optional.
+     * @returns A new {@link Converters.ObjectConverter | ObjectConverter} with the additional optional source
+     * properties.
+     */
+    public addPartial(addOptionalProperties: (keyof T)[]): ObjectConverter<Partial<T>, TC> {
+        return this.partial([...this.options.optionalFields ?? [], ...addOptionalProperties])._with(this._traits());
     }
 }
 
 /**
- * Helper to convert an object without changing shape. The source parameter is an object with
- * key names that correspond to the target object and the appropriate corresponding converter
- * as the property value. If all of the requested fields exist and can be converted, returns a
- * new object with the converted values under the original key names.  If any fields do not exist
- * or cannot be converted, the entire conversion fails.
+ * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter<T>} which converts an object
+ * without changing shape, given a {@link Converters.FieldConverters | FieldConverters<T>} and an optional
+ * {@link Converters.ObjectConverterOptions | ObjectConverterOptions<T>} to further refine conversion beavior.
+ * @remarks
+ * By default, if all of the requested fields exist and can be converted, returns {@link Success}
+ * with a new object that contains the converted values under the original key names.  If any requried properties
+ * do not exist or cannot be converted, the entire conversion fails, returning {@link Failure} with additional
+ * error information.
  *
  * Fields that succeed but convert to undefined are omitted from the result object but do not
  * fail the conversion.
- * @param fields An object containing defining the shape and converters to be applied.
- * @param opt An @see ObjectConverterOptions<T> containing options for the object converter, or
- * an array of (keyof T) containing optional keys.
+ * @param properties - An {@link Converters.FieldConverters | FieldConverters<T>} defining the shape of the
+ * source object and {@link Converter | converters} to be applied to each properties.
+ * @param options - An {@link Converters.ObjectConverterOptions | ObjectConverterOptions<T>} containing options
+ * for the object converter.
+ * @returns A new {@link Converters.ObjectConverter | ObjectConverter} which applies the specified conversions.
+ * {@label withOptions}
+ * @public
  */
-export function object<T>(fields: FieldConverters<T>, opt?: (keyof T)[]|ObjectConverterOptions<T>): ObjectConverter<T> {
-    return new ObjectConverter(fields, opt as ObjectConverterOptions<T>);
+export function object<T>(properties: FieldConverters<T>, options?: ObjectConverterOptions<T>): ObjectConverter<T>;
+
+/**
+ * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter<T>} which converts an object
+ * without changing shape, given a {@link Converters.FieldConverters | FieldConverters<T>} and a set of
+ * optional properties.
+ * @remarks
+ * By default, if all of the requested fields exist and can be converted, returns {@link Success}
+ * with a new object that contains the converted values under the original key names.  If any requried properties
+ * do not exist or cannot be converted, the entire conversion fails, returning {@link Failure} with additional
+ * error information.
+ *
+ * Fields that succeed but convert to undefined are omitted from the result object but do not
+ * fail the conversion.
+ * @param properties - An {@link Converters.FieldConverters | FieldConverters<T>} defining the shape of the
+ * source object and {@link Converter | converters} to be applied to each properties.
+ * @param optional - An array of `(keyof T)` listing the keys to be considered optional.
+ * {@label withKeys}
+ * @returns A new {@link Converters.ObjectConverter | ObjectConverter} which applies the specified conversions.
+ * @public
+ * @deprecated Use {@link Converters.(object:withOptions) | Converters.object(fields, options)} instead.
+ */
+
+export function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
+/**
+ * Concrete implementation of {@link Converters.(object:withOptions) | Converters.object(fields, options)}
+ * and {@link Converters.(object:withKeys) | Converters.objects(fields, optionalKeys)}.
+ * @internal
+ */
+export function object<T>(properties: FieldConverters<T>, options?: (keyof T)[]|ObjectConverterOptions<T>): ObjectConverter<T> {
+    return new ObjectConverter(properties, options as ObjectConverterOptions<T>);
 }
 
 /**
- * Helper to convert an object without changing shape. The source parameter is an object with
- * key names that correspond to the target object and the appropriate corresponding converter
- * as the property value. If all of the requested fields exist and can be converted, returns a
- * new object with the converted values under the original key names.  If any fields do not exist
- * or cannot be converted, the entire conversion fails.
+ * Options for the {@link Converters.(strictObject:withOptions)} helper function.
+ * @public
+ */
+export type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 'strict'>;
+
+/**
+ * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter} which converts an object
+ * without changing shape, a {@link Converters.FieldConverters | FieldConverters<T>} and an optional
+ * {@link Converters.StrictObjectConverterOptions | StrictObjectConverterOptions<T>} to further refine
+ * conversion behavior.
  *
+ * @remarks
  * Fields that succeed but convert to undefined are omitted from the result object but do not
  * fail the conversion.
  *
  * The conversion fails if any unexpected fields are encountered.
  *
- * @param fields An object containing defining the shape and converters to be applied.
- * @param opt - An @see ObjectConverterOptions<T> containing options for the object converter, or
- * an array of (keyof T) containing optional keys.
+ * @param properties - An object containing defining the shape and converters to be applied.
+ * @param options - An optional @see StrictObjectConverterOptions<T> containing options for the object converter.
+ * @returns A new {@link Converters.ObjectConverter | ObjectConverter} which applies the specified conversions.
+ * {@label withOptions}
+ * @public
+ */
+export function strictObject<T>(properties: FieldConverters<T>, options?: StrictObjectConverterOptions<T>): ObjectConverter<T>;
+
+/**
+ * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter} which converts an object
+ * without changing shape, a {@link Converters.FieldConverters | FieldConverters<T>} and an optional
+ * {@link Converters.StrictObjectConverterOptions | StrictObjectConverterOptions<T>} to further refine
+ * conversion behavior.
+ *
+ * @remarks
+ * Fields that succeed but convert to undefined are omitted from the result object but do not
+ * fail the conversion.
+ *
+ * The conversion fails if any unexpected fields are encountered.
+ *
+ * @param properties - An object containing defining the shape and converters to be applied.
+ * @param optional - An array of `keyof T` containing keys to be considered optional.
+ * @returns A new {@link Converters.ObjectConverter | ObjectConverter} which applies the specified conversions.
+ * {@label withKeys}
+ * @deprecated Use {@link Converters.(strictObject:withOptions) | Converters.strictObject(options)} instead.
+ * @public
+ */
+export function strictObject<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
+/**
+ * Concrete implementation for {@link Converters.(strictObject:withOptions) | Converters.strictObject(fields, options)}
+ * and {@link Converters.(strictObject:withKeys) | Converters.strictObject(fields, optional)}.
+ * @internal
  */
 export function strictObject<T>(
-    fields: FieldConverters<T>,
-    opt?: (keyof T)[]|Omit<ObjectConverterOptions<T>, 'strict'>,
+    properties: FieldConverters<T>,
+    opt?: (keyof T)[]|StrictObjectConverterOptions<T>,
 ): ObjectConverter<T> {
     const options: ObjectConverterOptions<T> = (opt && Array.isArray(opt))
         ? { strict: true, optionalFields: opt }
         : { ...(opt ?? {}), strict: true };
-    return new ObjectConverter(fields, options);
+    return new ObjectConverter(properties, options);
 }
 
+/**
+ * A string-keyed `Record<string, Converter>` which maps specific {@link Converter | converters} to the
+ * value of a discriminator property.
+ * @public
+ */
 export type DiscriminatedObjectConverters<T, TD extends string = string, TC=unknown> = Record<TD, Converter<T, TC>>;
 
 /**
- * Helper to convert a discriminated property without changing shape.  Takes the name of the
- * discriminator property and a string-keyed record of object converters, and invokes the
- * converter that corresponds to the value of the discriminator property in the source object.
- * Fails if the source is not an object or if the discriminator property is missing or has
- * a value not present in the converters.
- * @param discriminatorProp Name of the property used to discriminate types
- * @param converters String-keyed record of converters to invoke, where key corresponds to a value of the
- * discriminator property.
+ * Helper to create a {@link Converter} whhich converts a discriminated object without changing shape.
+ * @remarks
+ * Takes the name of the discriminator property and a
+ * {@link Converters.DiscriminatedObjectConverters | string-keyed Record of converters}. During conversion,
+ * the resulting {@link Converter} invokes the converter from `converters` that corresponds to the value of
+ * the discriminator property in the source object.
+ *
+ * If the source is not an object, the discriminator property is missing, or the discriminator has
+ * a value not present in the converters, conversion fails and returns {@link Failure} with more information.
+ * @param discriminatorProp - Name of the property used to discriminate types.
+ * @param converters - {@link Converters.DiscriminatedObjectConverters | String-keyed record of converters} to
+ * invoke, where each key corresponds to a value of the discriminator property.
+ * @returns A {@link Converter} which converts the corresponding discriminated object.
+ * @public
  */
 export function discriminatedObject<T, TD extends string = string, TC=unknown>(discriminatorProp: string, converters: DiscriminatedObjectConverters<T, TD>): Converter<T, TC> {
     return new BaseConverter((from: unknown) => {
@@ -841,30 +1113,34 @@ export function discriminatedObject<T, TD extends string = string, TC=unknown>(d
 }
 
 /**
- * Helper to convert an object to a new object with a different shape. The source parameter is
- * an object with key names that correspond to the target object, and an approriate _field_
- * converter that will extract and convert a single field from the source object.
+ * Helper to create a {@link Converter} which converts a source object to a new object with a
+ * different shape.
  *
- * If all of the extracted fields exist and can be converted, returns a new object with the
- * converted values under the original key names.  If any fields to be extracted do not exist
- * or cannot be converted, the entire conversion fails.
+ * @remarks
+ * On successful conversion, the resulting {@link Converter} returns {@link Success} with a new
+ * object, which contains the converted values under the key names specified at initialization time.
+ * It returns {@link Failure} with an error message if any fields to be extracted do not exist
+ * or cannot be converted.
  *
  * Fields that succeed but convert to undefined are omitted from the result object but do not
  * fail the conversion.
  *
- * @param fields An object defining the shape of the target object and the field converters
- * to be used to construct it.
+ * @param properties - An object with key names that correspond to the target object and an
+ * appropriate {@link Converters.FieldConverters | FieldConverter} which extracts and converts
+ * a single filed from the source object.
+ * @returns A {@link Converter} with the specified conversion behavior.
+ * @public
  */
-export function transform<T, TC=unknown>(fields: FieldConverters<T, TC>): Converter<T, TC> {
+export function transform<T, TC=unknown>(properties: FieldConverters<T, TC>): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self, context?: TC) => {
         // eslint bug thinks key is used before defined
         // eslint-disable-next-line no-use-before-define
         const converted = {} as { [ key in keyof T]: T[key] };
         const errors: string[] = [];
 
-        for (const key in fields) {
-            if (fields[key]) {
-                const result = fields[key].convert(from, context);
+        for (const key in properties) {
+            if (properties[key]) {
+                const result = properties[key].convert(from, context);
                 if (result.isSuccess() && (result.value !== undefined)) {
                     converted[key] = result.value;
                 }
@@ -879,16 +1155,18 @@ export function transform<T, TC=unknown>(fields: FieldConverters<T, TC>): Conver
 }
 
 /**
- * A helper wrapper to convert a range of some other comparable type
- * @param converter Converter used to convert min and max extent of the raid
- * @param constructor Optional static constructor to instantiate the object
+ * A helper wrapper to construct a {@link Converter} which converts to an arbitrary strongly-typed
+ * range of some comparable type.
+ * @param converter - {@link Converter} used to convert `min` and `max` extent of the range.
+ * @param constructor - Static constructor to instantiate the object.
+ * @public
  */
 export function rangeTypeOf<T, RT extends RangeOf<T>, TC=unknown>(converter: Converter<T, TC>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT, TC> {
     return new BaseConverter((from: unknown, _self, context?: TC) => {
         const result = object({
             min: converter,
             max: converter,
-        }, ['min', 'max']).convert(from, context);
+        }, { optionalFields: ['min', 'max'] }).convert(from, context);
         if (result.isSuccess()) {
             return constructor({ min: result.value.min, max: result.value.max });
         }
@@ -896,6 +1174,12 @@ export function rangeTypeOf<T, RT extends RangeOf<T>, TC=unknown>(converter: Con
     });
 }
 
+/**
+ * A helper wrapper to construct a {@link Converter} which converts to {@link RangeOf | RangeOf<T>}
+ * where `<T>` is some comparable type.
+ * @param converter - {@link Converter} used to convert `min` and `max` extent of the range.
+ * @public
+ */
 export function rangeOf<T, TC=unknown>(converter: Converter<T, TC>): Converter<RangeOf<T>, TC> {
     return rangeTypeOf<T, RangeOf<T>, TC>(converter, RangeOf.createRange);
 }

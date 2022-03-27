@@ -40,9 +40,9 @@ const defaultTestProps: TestProps = {
 
 class TestFormattable extends FormattableBase {
     public readonly first: string;
-    public get second() { return this._props.second; }
     public readonly third: string;
     public fourth?: string;
+
     protected readonly _props: TestProps;
 
     public constructor(props?: TestProps) {
@@ -52,6 +52,8 @@ class TestFormattable extends FormattableBase {
         this.third = this._props.third;
         this.fourth = this._props.fourth;
     }
+
+    public get second() { return this._props.second; }
 
     public bogus(): string|undefined {
         if (this._props.bogusMessage) {

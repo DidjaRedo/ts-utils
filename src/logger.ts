@@ -102,15 +102,15 @@ export abstract class LoggerBase {
 }
 
 export class InMemoryLogger extends LoggerBase {
-    public get messages(): string[] { return this._messages; }
-    public get silent(): string[] { return this._silent; }
-
     protected _messages: string[] = [];
     protected _silent: string[] = [];
 
     public constructor(logLevel?: LogLevel) {
         super(logLevel);
     }
+
+    public get messages(): string[] { return this._messages; }
+    public get silent(): string[] { return this._silent; }
 
     public clear(): void {
         this._messages = [];

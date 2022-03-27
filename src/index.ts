@@ -19,12 +19,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+export * from './brand';
 export * from './converter';
-export * as Converters from './converters';
-export * as Csv from './csvHelpers';
 export * from './extendedArray';
 export * from './formatter';
-export * as Hash from './hash';
 export * from './rangeOf';
 export * from './result';
 export * from './utils';
+
+import * as Converters from './converters';
+import * as Csv from './csvHelpers';
+import * as Hash from './hash';
+import * as Validation from './validation';
+export { Converters, Csv, Hash, Validation };

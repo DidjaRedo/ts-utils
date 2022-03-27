@@ -694,6 +694,7 @@ describe('Converters module', () => {
 
             test('passes a supplied context to the key converter', () => {
                 const source = {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     's1{{value}}': '{{value}} is expected',
                     s2: 's2',
                 };
@@ -890,6 +891,7 @@ describe('Converters module', () => {
 
             test('passes a supplied context to the key converter', () => {
                 const source = {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     's1{{value}}': '{{value}} is expected',
                     s2: 's2',
                 };
@@ -1397,7 +1399,9 @@ describe('Converters module', () => {
         });
         type ThingDiscriminator = 'string thing'|'number thing';
         const thing = Converters.discriminatedObject<Thing, ThingDiscriminator>('which', {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'string thing': stConvert,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'number thing': ntConvert,
         });
 

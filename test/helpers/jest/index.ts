@@ -4,10 +4,10 @@ import matchers from './matchers';
 export { MockFileConfig, MockFileSystem } from './helpers';
 
 // eslint-disable-next-line no-undef
-type JestGlobal = NodeJS.Global & { expect: jest.Expect };
+type JestGlobal = typeof global & { expect: jest.Expect };
 
 // eslint-disable-next-line no-undef
-function isJestGlobal(g: NodeJS.Global): g is JestGlobal {
+function isJestGlobal(g: typeof global): g is JestGlobal {
     return g.hasOwnProperty('expect');
 }
 

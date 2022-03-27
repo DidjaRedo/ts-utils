@@ -25,13 +25,18 @@ import { Result, captureResult, fail, mapResults, succeed } from './result';
 
 /**
  * Computes an md5 hash from an array of strings. Not secure and not intended to be secure.
- * @param parts The strings to be hashed
+ * @param parts - The strings to be hashed
  * @returns An md5 hash of the parts
+ * @public
  */
 export function computeHash(parts: string[]): string {
     return crypto.createHash('md5').update(parts.join('|'), 'utf8').digest('hex');
 }
 
+/**
+ * Computes a normalized hash for an arbitrary javascript value.
+ * @public
+ */
 export class Normalizer {
     /**
      * Computes a normalized md5 hash from an arbitrary supplied object.  Not secure and not
@@ -40,8 +45,8 @@ export class Normalizer {
      * Normalization just sorts Maps, Sets and object keys by hash so that differences in order
      * do not affect the hash.
      *
-     * @param from The arbitrary unknown to be hashed
-     * @returns An md5 hash
+     * @param from - The arbitrary `unknown` to be hashed.
+     * @returns A normalized md5 hash for the supplied value.
      */
     public computeHash(from: unknown): Result<string> {
         switch (typeof from) {
@@ -73,6 +78,14 @@ export class Normalizer {
         return fail(`computeHash: Unexpected type - cannot hash '${typeof from}'`);
     }
 
+    /**
+     * Compares two property names from some object being normalized.
+     * @param k1 - First key to be compared.
+     * @param k2 - Second key to be compared.
+     * @returns `1` if `k1` is greater, `-1` if `k2` is greater and
+     * `0` if they are equal.
+     * @internal
+     */
     protected _compareKeys(k1: unknown, k2: unknown): number {
         const cs1 = String(k1);
         const cs2 = String(k2);
@@ -88,10 +101,24 @@ export class Normalizer {
         return 0;
     }
 
+    /**
+     * Normalizes an array of object property entries (e.g. as returned by `Object.entries()`).
+     * @remarks
+     * Converts property names (entry key) to string and then sorts as string.
+     * @param entries - The entries to be normalized.
+     * @returns A normalized sorted array of entries.
+     * @internal
+     */
     protected _normalizeEntries(entries: Iterable<[unknown, unknown]>): [unknown, unknown][] {
         return Array.from(entries).sort((e1, e2) => this._compareKeys(e1[0], e2[0]));
     }
 
+    /**
+     * Constructs a normalized string representation of some literal value.
+     * @param from - The literal value to be normalized.
+     * @returns A normalized string representation of the literal.
+     * @internal
+     */
     protected _normalizeLiteral(from: string|number|bigint|boolean|symbol|undefined|Date|RegExp|null): Result<string> {
         switch (typeof from) {
             case 'string':
