@@ -22,4 +22,7 @@
 
 /* istanbul ignore file */
 
-export { StringValidator } from './string';
+export { StringValidator, StringValidatorConstructorParams } from './string';
+export { BooleanValidator, BooleanValidatorConstructorParams } from './boolean';
+export { NumberValidator, NumberValidatorConstructorParams } from './number';
+export { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams, ObjectValidatorOptions } from './object';

@@ -167,7 +167,7 @@ export class RangeOf<T> implements RangeOfProperties<T> {
      * range.
      * @param t - The value to be tested.
      * @returns The minimum extent of the range if `t` is below the range or
-     * the maximum extent of the range if `t` is above the range.  Returns 
+     * the maximum extent of the range if `t` is above the range.  Returns
      * `undefined` if `t` already falls within the range.
      */
     public findTransition(t: T): T|undefined {

@@ -24,7 +24,7 @@ import { Failure, fail } from '../result';
 import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
 /**
- * Parameters used to construct a {@link Validation.NumberValidator | NumberValidator}.
+ * Parameters used to construct a {@link Validation.Classes.NumberValidator | NumberValidator}.
  * @public
  */
 export type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
@@ -36,9 +36,9 @@ export type NumberValidatorConstructorParams<T extends number = number, TC = unk
  */
 export class NumberValidator<T extends number = number, TC = unknown> extends GenericValidator<T, TC> {
     /**
-     * Constructs a new {@link Validation.NumberValidator | NumberValidator}.
-     * @param params - Optional {@link Validation.NumberValidatorConstructorParams | init params} for the
-     * new {@link Validation.NumberValidator | NumberValidator}.
+     * Constructs a new {@link Validation.Classes.NumberValidator | NumberValidator}.
+     * @param params - Optional {@link Validation.Classes.NumberValidatorConstructorParams | init params} for the
+     * new {@link Validation.Classes.NumberValidator | NumberValidator}.
      */
     public constructor(params?: NumberValidatorConstructorParams<T, TC>) {
         super({

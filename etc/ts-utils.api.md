@@ -46,9 +46,6 @@ export class BaseConverter<T, TC = undefined> implements Converter<T, TC> {
     // @internal (undocumented)
     protected _with(traits: Partial<ConverterTraits>): this;
     withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "withConstaint"
-    //
-    // (undocumented)
     withConstraint(constraint: (val: T) => boolean | Result<T>, options?: ConstraintOptions): Converter<T, TC>;
     withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI[], TC>;
     withTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI, TC>;
@@ -57,10 +54,17 @@ export class BaseConverter<T, TC = undefined> implements Converter<T, TC> {
 // @public
 const boolean: BaseConverter<boolean, undefined>;
 
-// Warning: (ae-forgotten-export) The symbol "BooleanValidator" needs to be exported by the entry point index.d.ts
-//
 // @public
 const boolean_2: BooleanValidator<unknown>;
+
+// @public
+class BooleanValidator<TC = unknown> extends GenericValidator<boolean, TC> {
+    constructor(params?: BooleanValidatorConstructorParams<TC>);
+    static validateBoolean(from: unknown): boolean | Failure<boolean>;
+}
+
+// @public
+type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorConstructorParams<boolean, TC>;
 
 // @public
 export type Brand<T, B> = T & {
@@ -72,7 +76,16 @@ export function captureResult<T>(func: () => T): Result<T>;
 
 declare namespace Classes {
     export {
-        StringValidator
+        StringValidator,
+        StringValidatorConstructorParams,
+        BooleanValidator,
+        BooleanValidatorConstructorParams,
+        NumberValidator,
+        NumberValidatorConstructorParams,
+        FieldValidators,
+        ObjectValidator,
+        ObjectValidatorConstructorParams,
+        ObjectValidatorOptions
     }
 }
 
@@ -292,6 +305,11 @@ export type FieldInitializers<T> = {
     [key in keyof T]: (state: Partial<T>) => Result<T[key]>;
 };
 
+// @public
+type FieldValidators<T, TC = unknown> = {
+    [key in keyof T]: Validator<T[key], TC>;
+};
+
 // @beta
 export function formatList<T>(format: string, items: T[], itemFormatter: Formatter<T>): Result<string>;
 
@@ -475,8 +493,6 @@ class Normalizer {
 // @public
 const number: BaseConverter<number, undefined>;
 
-// Warning: (ae-forgotten-export) The symbol "NumberValidator" needs to be exported by the entry point index.d.ts
-//
 // @public
 const number_2: NumberValidator<number, unknown>;
 
@@ -484,15 +500,20 @@ const number_2: NumberValidator<number, unknown>;
 const numberArray: Converter<number[], undefined>;
 
 // @public
+class NumberValidator<T extends number = number, TC = unknown> extends GenericValidator<T, TC> {
+    constructor(params?: NumberValidatorConstructorParams<T, TC>);
+    static validateNumber<T extends number>(from: unknown): boolean | Failure<T>;
+}
+
+// @public
+type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
+
+// @public
 function object<T>(properties: FieldConverters<T>, options?: ObjectConverterOptions<T>): ObjectConverter<T>;
 
 // @public @deprecated
 function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
 
-// Warning: (ae-forgotten-export) The symbol "FieldValidators" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ObjectValidatorConstructorParams" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ObjectValidator" needs to be exported by the entry point index.d.ts
-//
 // @public
 function object_2<T, TC>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
 
@@ -509,6 +530,41 @@ class ObjectConverter<T, TC = unknown> extends BaseConverter<T, TC> {
 
 // @public
 interface ObjectConverterOptions<T> {
+    optionalFields?: (keyof T)[];
+    strict?: boolean;
+}
+
+// Warning: (ae-forgotten-export) The symbol "ValidatorBase" needs to be exported by the entry point index.d.ts
+//
+// @public
+class ObjectValidator<T, TC = unknown> extends ValidatorBase<T, TC> {
+    constructor(params: ObjectValidatorConstructorParams<T, TC>);
+    addPartial(addOptionalFields: (keyof T)[]): ObjectValidator<Partial<T>, TC>;
+    // @internal (undocumented)
+    protected readonly _allowedFields?: Set<keyof T>;
+    readonly fields: FieldValidators<T>;
+    // @internal (undocumented)
+    protected readonly _innerValidators: FieldValidators<T>;
+    readonly options: ObjectValidatorOptions<T, TC>;
+    partial(options?: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC>;
+    // @internal
+    protected static _resolveValidators<T, TC>(fields: FieldValidators<T, TC>, options?: ObjectValidatorOptions<T, TC>): FieldValidators<T, TC>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: This type of declaration is not supported yet by the resolver
+    //
+    // @internal (undocumented)
+    protected _validate(from: unknown, context?: TC): boolean | Failure<T>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "ValidatorBaseConstructorParams" needs to be exported by the entry point index.d.ts
+//
+// @public
+interface ObjectValidatorConstructorParams<T, TC> extends ValidatorBaseConstructorParams<T, TC> {
+    fields: FieldValidators<T>;
+    options?: ObjectValidatorOptions<T, TC>;
+}
+
+// @public
+interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC> {
     optionalFields?: (keyof T)[];
     strict?: boolean;
 }
@@ -655,10 +711,12 @@ interface StringMatchOptions {
 
 // @public
 class StringValidator<T extends string = string, TC = unknown> extends GenericValidator<T, TC> {
-    // Warning: (ae-forgotten-export) The symbol "StringValidatorConstructorParams" needs to be exported by the entry point index.d.ts
     constructor(params?: StringValidatorConstructorParams<T, TC>);
     static validateString<T extends string>(from: unknown): boolean | Failure<T>;
 }
+
+// @public
+type StringValidatorConstructorParams<T extends string = string, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
 
 // @public
 export function succeed<T>(value: T): Success<T>;

@@ -388,7 +388,7 @@ export class BaseConverter<T, TC=undefined> implements Converter<T, TC> {
     }
 
     /**
-     * {@inheritdoc Converter.withConstaint}
+     * {@inheritdoc Converter.withConstraint}
      */
     public withConstraint(
         constraint: (val: T) => boolean|Result<T>,

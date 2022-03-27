@@ -28,15 +28,15 @@ import { Failure, fail } from '../../../src';
 import { GenericValidator, GenericValidatorConstructorParams } from '../../../src/validation/genericValidator';
 
 class TestGenericValidator<T, TC = unknown> extends GenericValidator<T, TC> {
-    public get options(): ValidatorOptions<TC> {
-        return this._options;
-    }
-
     constructor(params: GenericValidatorConstructorParams<T, TC>) {
         super({
             validator: TestGenericValidator.testValidateString,
             ...params,
         });
+    }
+
+    public get options(): ValidatorOptions<TC> {
+        return this._options;
     }
 
     public static testValidateString<T>(from: unknown): boolean | Failure<T> {

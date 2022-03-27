@@ -35,7 +35,7 @@ import { Brand } from '../brand';
 export type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => boolean | Failure<T>;
 
 /**
- * Options used to initialize a {@link Validation.GenericValidator | GenericValidator}.
+ * Options used to initialize a {@link Validation.Base.GenericValidator | GenericValidator}.
  * @public
  */
 export interface GenericValidatorConstructorParams<T, TC> {
@@ -64,8 +64,8 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
     protected readonly _options: ValidatorOptions<TC>;
 
     /**
-     * Constructs a new {@link Validation.GenericValidator | GenericValidator<T>}.
-     * @param params - The {@link Validation.GenericValidatorConstructorParams | constructor params}
+     * Constructs a new {@link Validation.Base.GenericValidator | GenericValidator<T>}.
+     * @param params - The {@link Validation.Base.GenericValidatorConstructorParams | constructor params}
      * used to configure validation.
      */
     public constructor(params: Partial<GenericValidatorConstructorParams<T, TC>>) {

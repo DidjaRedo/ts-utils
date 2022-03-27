@@ -24,7 +24,7 @@ import { Failure, fail } from '../result';
 import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
 /**
- * Parameters used to construct a {@link Validation.StringValidator | StringValidator}.
+ * Parameters used to construct a {@link Validation.Classes.StringValidator | StringValidator}.
  * @public
  */
 export type StringValidatorConstructorParams<T extends string = string, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
@@ -35,9 +35,9 @@ export type StringValidatorConstructorParams<T extends string = string, TC = unk
  */
 export class StringValidator<T extends string = string, TC = unknown> extends GenericValidator<T, TC> {
     /**
-     * Constructs a new {@link Validation.StringValidator | StringValidator}.
-     * @param params - Optional {@link Validation.StringValidatorConstructorParams | init params} for the
-     * new {@link Validation.StringValidator | StringValidator}.
+     * Constructs a new {@link Validation.Classes.StringValidator | StringValidator}.
+     * @param params - Optional {@link Validation.Classes.StringValidatorConstructorParams | init params}
+     * for the new {@link Validation.Classes.StringValidator | StringValidator}.
      */
     public constructor(params?: StringValidatorConstructorParams<T, TC>) {
         super({

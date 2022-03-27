@@ -28,12 +28,12 @@ import { ValidatorOptions } from '../../../src/validation';
 import { Validators } from '../../../src/validation';
 
 class TestNumberValidator<T extends number = number, TC = unknown> extends NumberValidator<T, TC> {
-    public get options(): ValidatorOptions<TC> {
-        return this._options;
-    }
-
     constructor(params?: NumberValidatorConstructorParams<T, TC>) {
         super(params);
+    }
+
+    public get options(): ValidatorOptions<TC> {
+        return this._options;
     }
 
     public static testValidate<T extends number = number>(from: unknown): boolean | Failure<T> {

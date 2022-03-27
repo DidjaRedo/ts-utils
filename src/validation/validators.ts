@@ -27,29 +27,29 @@ import { NumberValidator } from './number';
 import { StringValidator } from './string';
 
 /**
- * A {@link Validation.StringValidator | StringValidator} which validates a string in place.
+ * A {@link Validation.Classes.StringValidator | StringValidator} which validates a string in place.
  * @public
  */
 export const string = new StringValidator();
 
 /**
- * A {@link Validation.NumberValidator | NumberValidator} which validates a number in place.
+ * A {@link Validation.Classes.NumberValidator | NumberValidator} which validates a number in place.
  * @public
  */
 export const number = new NumberValidator();
 
 /**
- * A {@link Validation.BooleanValidator | BooleanValidator} which validates a boolean in place.
+ * A {@link Validation.Classes.BooleanValidator | BooleanValidator} which validates a boolean in place.
  * @public
  */
 export const boolean = new BooleanValidator();
 
 /**
- * Helper function to create a {@link Validation.ObjectValidator | ObjectValidator} which validates
+ * Helper function to create a {@link Validation.Classes.ObjectValidator | ObjectValidator} which validates
  * an object in place.
- * @param fields - A {@link Validation.FieldValidators | field validator definition}
+ * @param fields - A {@link Validation.Classes.FieldValidators | field validator definition}
  * describing the validations to be applied.
- * @param params - Optional {@link Validation.ObjectValidatorConstructorParams | parameters}
+ * @param params - Optional {@link Validation.Classes.ObjectValidatorConstructorParams | parameters}
  * to refine the behavior of the resulting {@link Validation.Validator | validator}.
  * @returns A new {@link Validation.Validator | Validator} which validates the desired
  * object in place.

@@ -24,7 +24,7 @@ import { Failure, fail } from '../result';
 import { GenericValidator, GenericValidatorConstructorParams } from './genericValidator';
 
 /**
- * Parameters used to construct a {@link Validation.BooleanValidator | BooleanValidator}.
+ * Parameters used to construct a {@link Validation.Classes.BooleanValidator | BooleanValidator}.
  * @public
  */
 export type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorConstructorParams<boolean, TC>;
@@ -35,9 +35,9 @@ export type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorCo
  */
 export class BooleanValidator<TC = unknown> extends GenericValidator<boolean, TC> {
     /**
-     * Constructs a new {@link Validation.BooleanValidator | BooleanValidator}.
-     * @param params - Optional {@link Validation.BooleanValidatorConstructorParams | init params} for the
-     * new {@link Validation.BooleanValidator | BooleanValidator}.
+     * Constructs a new {@link Validation.Classes.BooleanValidator | BooleanValidator}.
+     * @param params - Optional {@link Validation.Classes.BooleanValidatorConstructorParams | init params} for the
+     * new {@link Validation.Classes.BooleanValidator | BooleanValidator}.
      */
     public constructor(params?: BooleanValidatorConstructorParams<TC>) {
         // istanbul ignore next

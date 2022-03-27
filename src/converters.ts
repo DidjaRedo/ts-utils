@@ -310,7 +310,7 @@ export const boolean = new BaseConverter<boolean>((from: unknown) => {
 export const optionalString = string.optional();
 
 /**
- * Helper function to create a {@link Converter} which converts any `string` into an 
+ * Helper function to create a {@link Converter} which converts any `string` into an
  * array of `string`, by separating at a supplied delimiter.
  * @remarks
  * Delimeter may also be supplied as context at conversion time.
@@ -477,7 +477,7 @@ export const stringArray = arrayOf(string);
 export const numberArray = arrayOf(number);
 
 /**
- * Options for {@link Converters.recordOf} and {@link Converters.mapOf}
+ * Options for {@link Converters.(recordOf:withOptions)} and {@link Converters.(mapOf:withOptions)}
  * helper functions.
  * @public
  */
@@ -1011,7 +1011,7 @@ export function object<T>(properties: FieldConverters<T>, options?: (keyof T)[]|
 }
 
 /**
- * Options for the {@link Converters.strictObject} helper function.
+ * Options for the {@link Converters.(strictObject:withOptions)} helper function.
  * @public
  */
 export type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 'strict'>;
@@ -1020,7 +1020,7 @@ export type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 's
  * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter} which converts an object
  * without changing shape, a {@link Converters.FieldConverters | FieldConverters<T>} and an optional
  * {@link Converters.StrictObjectConverterOptions | StrictObjectConverterOptions<T>} to further refine
- * conversion beavior.
+ * conversion behavior.
  *
  * @remarks
  * Fields that succeed but convert to undefined are omitted from the result object but do not
@@ -1040,7 +1040,7 @@ export function strictObject<T>(properties: FieldConverters<T>, options?: Strict
  * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter} which converts an object
  * without changing shape, a {@link Converters.FieldConverters | FieldConverters<T>} and an optional
  * {@link Converters.StrictObjectConverterOptions | StrictObjectConverterOptions<T>} to further refine
- * conversion beavior.
+ * conversion behavior.
  *
  * @remarks
  * Fields that succeed but convert to undefined are omitted from the result object but do not
@@ -1072,7 +1072,7 @@ export function strictObject<T>(
 }
 
 /**
- * A string-keyed `Record<string, Converter>` which maps specific {@link Converters.Converter | converters} to the
+ * A string-keyed `Record<string, Converter>` which maps specific {@link Converter | converters} to the
  * value of a discriminator property.
  * @public
  */
@@ -1126,7 +1126,7 @@ export function discriminatedObject<T, TD extends string = string, TC=unknown>(d
  * fail the conversion.
  *
  * @param properties - An object with key names that correspond to the target object and an
- * appropriate {@link Converters.FieldConverter | FieldConverter} which extracts and converts
+ * appropriate {@link Converters.FieldConverters | FieldConverter} which extracts and converts
  * a single filed from the source object.
  * @returns A {@link Converter} with the specified conversion behavior.
  * @public

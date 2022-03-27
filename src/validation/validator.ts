@@ -107,7 +107,7 @@ export interface Validator<T, TC=undefined> {
          withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
 
          /**
-          * Creates a new {@link Validation.validator | in-place validator} which
+          * Creates a new {@link Validation.Validator | in-place validator} which
           * is derived from this one but which matches a branded result.
           * @param brand - The brand to be applied.
           */
