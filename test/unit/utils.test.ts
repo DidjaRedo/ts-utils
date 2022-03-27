@@ -23,7 +23,17 @@ import 'jest-extended';
 import '../helpers/jest';
 
 import { Result, fail, succeed } from '../../src';
-import { mapToRecord, optionalMapToPossiblyEmptyRecord, optionalMapToRecord, optionalRecordToMap, optionalRecordToPossiblyEmptyMap, recordToMap } from '../../src/utils';
+import {
+    getTypeOfProperty,
+    getValueOfPropertyOrDefault,
+    isKeyOf,
+    mapToRecord,
+    optionalMapToPossiblyEmptyRecord,
+    optionalMapToRecord,
+    optionalRecordToMap,
+    optionalRecordToPossiblyEmptyMap,
+    recordToMap,
+} from '../../src/utils';
 
 describe('Utils module', () => {
     const record: Record<string, string> = {
@@ -125,6 +135,94 @@ describe('Utils module', () => {
 
         test('converts undefined to empty record', () => {
             expect(optionalMapToPossiblyEmptyRecord(undefined, (_k, v) => succeed(v))).toSucceedWith({});
+        });
+    });
+
+    describe('isKeyOf function', () => {
+        const sym = Symbol('symbol');
+        const obj = {
+            'string': 'string value',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            1: 'number value',
+            [sym]: 'symbol value',
+        };
+
+        test('returns true if the requested property exists', () => {
+            expect(isKeyOf('string', obj)).toBe(true);
+            expect(isKeyOf(1, obj)).toBe(true);
+            expect(isKeyOf(sym, obj)).toBe(true);
+        });
+
+        test('returns false if the requested property does not exist', () => {
+            expect(isKeyOf('String', obj)).toBe(false);
+            expect(isKeyOf(2, obj)).toBe(false);
+            expect(isKeyOf(Symbol('symbol'), obj)).toBe(false);
+        });
+    });
+
+    describe('getValueOfPropertyOrDefault function', () => {
+        const sym = Symbol('symbol');
+        const obj = {
+            'string': 'string value',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            1: 'number value',
+            [sym]: 'symbol value',
+        };
+
+        test('it returns a property that exists', () => {
+            expect(getValueOfPropertyOrDefault('string', obj)).toBe('string value');
+            expect(getValueOfPropertyOrDefault(1, obj)).toBe('number value');
+            expect(getValueOfPropertyOrDefault(sym, obj)).toBe('symbol value');
+        });
+
+        test('it returns undefined by default for a property that does not exist', () => {
+            expect(getValueOfPropertyOrDefault('a string', obj)).toBeUndefined();
+            expect(getValueOfPropertyOrDefault(2, obj)).toBeUndefined();
+            expect(getValueOfPropertyOrDefault(Symbol('symbol'), obj)).toBeUndefined();
+        });
+
+        test('it returns a supplied default for a property that does not exist', () => {
+            expect(getValueOfPropertyOrDefault('a string', obj, 'xyzzy')).toBe('xyzzy');
+            expect(getValueOfPropertyOrDefault(2, obj, 'xyzzy')).toBe('xyzzy');
+            expect(getValueOfPropertyOrDefault(Symbol('symbol'), obj, 'xyzzy')).toBe('xyzzy');
+        });
+    });
+
+    describe('getTypeOfProperty function', () => {
+        const sym = Symbol('symbol');
+        const obj = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            1: 'key is a number',
+            [sym]: 'key is a symbol',
+            'string': 'string value',
+            'number': 100,
+            'boolean': true,
+            'object': { },
+            'array': [1, 2, 3],
+            'null': null,
+            'undefined': undefined,
+            'symbol': Symbol('a symbol'),
+            'function': () => true,
+            'valueIsUndefined': 'undefined',
+        };
+
+        test('it returns the expected type for properties that exist', () => {
+            expect(getTypeOfProperty(1, obj)).toBe('string');
+            expect(getTypeOfProperty(sym, obj)).toBe('string');
+            expect(getTypeOfProperty('string', obj)).toBe('string');
+            expect(getTypeOfProperty('number', obj)).toBe('number');
+            expect(getTypeOfProperty('boolean', obj)).toBe('boolean');
+            expect(getTypeOfProperty('object', obj)).toBe('object');
+            expect(getTypeOfProperty('array', obj)).toBe('object');
+            expect(getTypeOfProperty('null', obj)).toBe('object');
+            expect(getTypeOfProperty('undefined', obj)).toBe('undefined');
+            expect(getTypeOfProperty('symbol', obj)).toBe('symbol');
+            expect(getTypeOfProperty('function', obj)).toBe('function');
+            expect(getTypeOfProperty('valueIsUndefined', obj)).toBe('string');
+        });
+
+        test('it returns the literal undefined for properties that do not exist', () => {
+            expect(getTypeOfProperty('nonexistent', obj)).toBe(undefined);
         });
     });
 });

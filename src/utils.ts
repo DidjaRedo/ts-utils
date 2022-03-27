@@ -36,6 +36,40 @@ export function isKeyOf<T extends object>(key: string|number|symbol, item: T): k
 }
 
 /**
+ * Gets the value of a property specified by key from an arbitrary object,
+ * or a default value if the property does not exist.
+ * @param key - The key specifying the property to be retrieved.
+ * @param item - The object from which the property is to be retrieved.
+ * @param defaultValue - An optional default value to be returned if the property
+ * is not present (default `undefined`).
+ * @returns The value of the requested property, or the default value if the
+ * requested property does not exist.
+ */
+export function getValueOfPropertyOrDefault<T extends object>(
+    key: string|number|symbol,
+    item: T,
+    defaultValue?: unknown
+): unknown | undefined {
+    return isKeyOf(key, item) ? item[key] : defaultValue;
+}
+
+/**
+ * Gets the type of a property specified by key from an arbitrary object.
+ * @param key - The key specifying the property to be tested.
+ * @param item - The object from which the property is to be tested.
+ * @returns The type of the requested property, or `undefined` if the
+ * property does not exist.
+ * @example
+ * Returns `'undefined'` (a string) if the property exists but has the value
+ * undefined but `undefined` (the literal) if the property does not exist.
+ */
+export function getTypeOfProperty<T extends object>(
+    key: string|number|symbol,
+    item: T): 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'undefined' | 'object' | 'function' | undefined {
+    return isKeyOf(key, item) ? typeof item[key] : undefined;
+}
+
+/**
  * Type for factory methods which convert a key-value pair to a new unique value.
  * @public
  */

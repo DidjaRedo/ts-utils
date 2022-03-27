@@ -400,6 +400,12 @@ interface GenericValidatorConstructorParams<T, TC> {
     validator?: ValidatorFunc<T, TC>;
 }
 
+// @public
+export function getTypeOfProperty<T extends object>(key: string | number | symbol, item: T): 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'undefined' | 'object' | 'function' | undefined;
+
+// @public
+export function getValueOfPropertyOrDefault<T extends object>(key: string | number | symbol, item: T, defaultValue?: unknown): unknown | undefined;
+
 declare namespace Hash {
     export {
         computeHash,
