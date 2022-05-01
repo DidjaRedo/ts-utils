@@ -313,7 +313,7 @@ export const optionalString = string.optional();
  * Helper function to create a {@link Converter} which converts any `string` into an
  * array of `string`, by separating at a supplied delimiter.
  * @remarks
- * Delimeter may also be supplied as context at conversion time.
+ * Delimiter may also be supplied as context at conversion time.
  * @param delimiter - The delimiter at which to split.
  * @returns A new {@link Converter} returning `string[]`.
  * @public
@@ -384,7 +384,7 @@ export const optionalBoolean = boolean.optional();
  * conversion.
  *
  * @param converters - An ordered list of {@link Converter | converters} to be considered.
- * @param onError - Specifies treatment of unconvertable elements.
+ * @param onError - Specifies treatment of unconvertible elements.
  * @returns A new {@link Converter} which yields a value from the union of the types returned
  * by the wrapped converters.
  * @public
@@ -415,7 +415,7 @@ export function oneOf<T, TC=unknown>(converters: Array<Converter<T, TC>>, onErro
  * If `onError` is `'failOnError'` (default), then the entire conversion fails if any element cannot
  * be converted.  If `onError` is `'ignoreErrors'`, then failing elements are silently ignored.
  * @param converter - {@link Converter} used to convert each item in the array.
- * @param ignoreErrors - Specifies treatment of unconvertable elements.
+ * @param ignoreErrors - Specifies treatment of unconvertible elements.
  * @returns A {@link Converter} which returns an array of `<T>`.
  * @public
  */
@@ -449,7 +449,7 @@ export function arrayOf<T, TC=undefined>(converter: Converter<T, TC>, onError: O
  * If `onError` is `'failOnError'` (default), then the entire conversion fails if any element cannot
  * be converted.  If `onError` is `'ignoreErrors'`, then failing elements are silently ignored.
  * @param converter - {@link Converter} used to convert each item in the array
- * @param ignoreErrors - Specifies treatment of unconvertable elements
+ * @param ignoreErrors - Specifies treatment of unconvertible elements
  * @beta
  */
 export function extendedArrayOf<T, TC=undefined>(label: string, converter: Converter<T, TC>, onError: OnError = 'failOnError'): Converter<ExtendedArray<T>, TC> {
@@ -721,7 +721,7 @@ export function element<T, TC=undefined>(index: number, converter: Converter<T, 
 /**
  * A helper function to create a {@link Converter} which extracts and converts an optional element from an array.
  * @remarks
- * The resulting {@link Converter} returns {@link Success} with the converted value if the element exsist
+ * The resulting {@link Converter} returns {@link Success} with the converted value if the element exists
  * in the supplied array and can be converted. Returns {@link Success} with value `undefined` if the parameter
  * is an array but the index is out of range. Returns {@link Failure} with a message if the supplied parameter
  * is not an array, if the requested index is negative, or if the element cannot be converted.
@@ -749,7 +749,7 @@ export function optionalElement<T, TC=undefined>(index: number, converter: Conve
  * A helper function to create a {@link Converter} which extracts and convert a property specified
  * by name from an object.
  * @remarks
- * The resulting {@link Converter} returns {@link Success} with the converted value of the correpsonding
+ * The resulting {@link Converter} returns {@link Success} with the converted value of the corresponding
  * object property if the field exists and can be converted. Returns {@link Failure} with an error message
  * otherwise.
  * @param name - The name of the field to be extracted.
@@ -774,9 +774,9 @@ export function field<T, TC=undefined>(name: string, converter: Converter<T, TC>
  * A helper function to create a {@link Converter} which extracts and convert a property specified
  * by name from an object.
  * @remarks
- * The resulting {@link Converter} returns {@link Success} with the converted value of the correpsonding
+ * The resulting {@link Converter} returns {@link Success} with the converted value of the corresponding
  * object property if the field exists and can be converted. Returns {@link Success} with value `undefined`
- * if the supplied parametr is an object but the named field is not present.  Returns {@link Failure} with
+ * if the supplied parameter is an object but the named field is not present.  Returns {@link Failure} with
  * an error message otherwise.
  * @param name - The name of the field to be extracted.
  * @param converter - {@link Converter} used to convert the extracted field.
@@ -960,10 +960,10 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
 /**
  * Helper function to create a {@link Converters.ObjectConverter | ObjectConverter<T>} which converts an object
  * without changing shape, given a {@link Converters.FieldConverters | FieldConverters<T>} and an optional
- * {@link Converters.ObjectConverterOptions | ObjectConverterOptions<T>} to further refine conversion beavior.
+ * {@link Converters.ObjectConverterOptions | ObjectConverterOptions<T>} to further refine conversion behavior.
  * @remarks
  * By default, if all of the requested fields exist and can be converted, returns {@link Success}
- * with a new object that contains the converted values under the original key names.  If any requried properties
+ * with a new object that contains the converted values under the original key names.  If any required properties
  * do not exist or cannot be converted, the entire conversion fails, returning {@link Failure} with additional
  * error information.
  *
@@ -985,7 +985,7 @@ export function object<T>(properties: FieldConverters<T>, options?: ObjectConver
  * optional properties.
  * @remarks
  * By default, if all of the requested fields exist and can be converted, returns {@link Success}
- * with a new object that contains the converted values under the original key names.  If any requried properties
+ * with a new object that contains the converted values under the original key names.  If any required properties
  * do not exist or cannot be converted, the entire conversion fails, returning {@link Failure} with additional
  * error information.
  *
@@ -1079,7 +1079,7 @@ export function strictObject<T>(
 export type DiscriminatedObjectConverters<T, TD extends string = string, TC=unknown> = Record<TD, Converter<T, TC>>;
 
 /**
- * Helper to create a {@link Converter} whhich converts a discriminated object without changing shape.
+ * Helper to create a {@link Converter} which converts a discriminated object without changing shape.
  * @remarks
  * Takes the name of the discriminator property and a
  * {@link Converters.DiscriminatedObjectConverters | string-keyed Record of converters}. During conversion,

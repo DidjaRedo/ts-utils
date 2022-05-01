@@ -26,6 +26,7 @@ export * from './formatter';
 export * from './rangeOf';
 export * from './result';
 export * from './utils';
+export { Normalizer } from './normalize';
 
 import * as Converters from './converters';
 import * as Csv from './csvHelpers';
