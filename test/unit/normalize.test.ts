@@ -83,6 +83,12 @@ describe('Normalizer', () => {
             expect(normalizer.normalize(v1)).toEqual(normalizer.normalize(v2));
         });
 
+        test('does not normalize array order', () => {
+            expect(normalizer.normalize([2, 3, 1])).toSucceedAndSatisfy((n) => {
+                expect(n).toEqual([2, 3, 1]);
+            });
+        });
+
         test('fails for a non-normalizable function', () => {
             expect(normalizer.normalize(() => 'hello')).toFailWith(/unexpected type/i);
         });
