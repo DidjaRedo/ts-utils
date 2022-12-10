@@ -25,7 +25,7 @@
  * Represents the {@link IResult | result} of some operation or sequence of operations.
  * @remarks
  * {@link Success | Success<T>} and {@link Failure | Failure<T>} share the common
- * contract {@link IResult}, enabling comingled discriminated usage.
+ * contract {@link IResult}, enabling commingled discriminated usage.
  * @public
  */
 export type Result<T> = Success<T> | Failure<T>;
@@ -62,7 +62,7 @@ export interface IResultLogger {
 /**
  * Represents the result of some operation of sequence of operations.
  * @remarks
- * This common contract enables comingled discriminated usage of {@link Success | Success<T>}
+ * This common contract enables commingled discriminated usage of {@link Success | Success<T>}
  * and {@link Failure | Failure<T>}.
  * @public
  */
@@ -149,7 +149,7 @@ export interface IResult<T> {
      * @param successDetail - An optional detail to be added if this result was successful.
      * @returns A new {@link DetailedResult | DetailedResult<T, TD>} with either
      * the success result or the error message from this {@link IResult} and the
-     * appopriate added detail.
+     * appropriate added detail.
      */
     withDetail<TD>(detail: TD, successDetail?: TD): DetailedResult<T, TD>;
 }
@@ -584,7 +584,7 @@ export function captureResult<T>(func: () => T): Result<T> {
 }
 
 /**
- * Aggregates sucessful result values from a collection of {@link Result | Result<T>}.
+ * Aggregates successful result values from a collection of {@link Result | Result<T>}.
  * @param results - The collection of {@link Result | Result<T>} to be mapped.
  * @returns  If all {@link Result | results} are successful, returns {@link Success} with an
  * array containing all returned values.  If any {@link Result | results} failed, returns
@@ -611,14 +611,14 @@ export function mapResults<T>(results: Iterable<Result<T>>): Result<T[]> {
 }
 
 /**
- * Aggregates sucessful results from a collection of {@link DetailedResult | DetailedResult<T, TD>},
+ * Aggregates successful results from a collection of {@link DetailedResult | DetailedResult<T, TD>},
  * optionally ignoring certain error details.
  * @param results - The collection of {@link DetailedResult | DetailedResult<T, TD>} to be mapped.
  * @param ignore - An array of error detail values (of type `<TD>`) that should be ignored.
  * @returns {@link Success} with an array containing all successful results if all results either
- * suceeded or returned error details listed in `ignore`.  If any results failed with details
+ * succeeded or returned error details listed in `ignore`.  If any results failed with details
  * that cannot be ignored, returns {@link Failure} with an concatenated summary of all non-ignorable
- * error mesasges.
+ * error messages.
  * @public
  */
 export function mapDetailedResults<T, TD>(results: Iterable<DetailedResult<T, TD>>, ignore: TD[]): Result<T[]> {
@@ -670,7 +670,7 @@ export function mapSuccess<T>(results: Iterable<Result<T>>): Result<T[]> {
 
 /**
  * Aggregates error messages from a collection of {@link Result | Result<T>}.
- * @param results - An interable collection of {@link Result | Result<T>} for which
+ * @param results - An iterable collection of {@link Result | Result<T>} for which
  * error messages are aggregated.
  * @returns An array of strings consisting of all error messages returned by
  * {@link Result | results} in the source collection. Ignores {@link Success}
@@ -752,7 +752,7 @@ export function populateObject<T>(initializers: FieldInitializers<T>, order?: (k
             }
         }
         else {
-            errors.push(`populateObject: Key ${key} is present but has no initializer`);
+            errors.push(`populateObject: Key ${String(key)} is present but has no initializer`);
         }
     }
 

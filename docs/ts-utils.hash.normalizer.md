@@ -16,5 +16,5 @@ export declare class Normalizer
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [computeHash(from)](./ts-utils.hash.normalizer.computehash.md) |  | Computes a normalized md5 hash from an arbitrary supplied object. Not secure and not intended to be secure. Also not fast and not intended to be fast.<!-- -->Normalization just sorts Maps, Sets and object keys by hash so that differences in order do not affect the hash. |
+|  [computeHash(from)](./ts-utils.hash.normalizer.computehash.md) |  | <p>Computes a normalized md5 hash from an arbitrary supplied object. Not secure and not intended to be secure. Also not fast and not intended to be fast.</p><p>Normalization just sorts Maps, Sets and object keys by hash so that differences in order do not affect the hash.</p> |
 

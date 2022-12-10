@@ -14,9 +14,9 @@ export interface RangeOfFormats
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [maxOnly](./ts-utils.rangeofformats.maxonly.md) | string |  |
-|  [minMax](./ts-utils.rangeofformats.minmax.md) | string |  |
-|  [minOnly](./ts-utils.rangeofformats.minonly.md) | string |  |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [maxOnly](./ts-utils.rangeofformats.maxonly.md) |  | string |  |
+|  [minMax](./ts-utils.rangeofformats.minmax.md) |  | string |  |
+|  [minOnly](./ts-utils.rangeofformats.minonly.md) |  | string |  |
 

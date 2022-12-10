@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { matcherName, predicate } from './predicate';
 
-import { Context } from 'jest-snapshot/build/types';
+import { Context } from 'jest-snapshot/build';
 import { matcherHint } from 'jest-matcher-utils';
 import { toMatchSnapshot } from 'jest-snapshot';
 
@@ -38,6 +38,6 @@ export default {
             context,
             cbResult.value,
             'toFailTestAndMatchSnapshot',
-        );
+        ) as jest.CustomMatcherResult;
     },
 };

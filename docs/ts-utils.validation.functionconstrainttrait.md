@@ -14,7 +14,7 @@ export interface FunctionConstraintTrait
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [type](./ts-utils.validation.functionconstrainttrait.type.md) | 'function' |  |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [type](./ts-utils.validation.functionconstrainttrait.type.md) |  | 'function' |  |
 

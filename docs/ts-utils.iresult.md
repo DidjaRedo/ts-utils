@@ -18,9 +18,9 @@ This common contract enables comingled discriminated usage of [Success&lt;T&gt;]
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [success](./ts-utils.iresult.success.md) | boolean | Indicates whether the operation was successful. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [success](./ts-utils.iresult.success.md) |  | boolean | Indicates whether the operation was successful. |
 
 ## Methods
 

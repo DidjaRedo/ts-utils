@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { Context } from 'jest-snapshot/build/types';
+import { Context } from 'jest-snapshot/build';
 import { Result } from '../../ts-utils';
 import { matcherHint } from 'jest-matcher-utils';
 import { printReceivedResult } from '../../utils/matcherHelpers';
@@ -41,6 +41,6 @@ export default {
             received.value,
             {},
             snapshot,
-        );
+        ) as jest.CustomMatcherResult;
     },
 };

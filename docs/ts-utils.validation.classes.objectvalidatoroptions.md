@@ -15,8 +15,8 @@ export interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC>
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [optionalFields?](./ts-utils.validation.classes.objectvalidatoroptions.optionalfields.md) | (keyof T)\[\] | <i>(Optional)</i> If present, lists optional fields. Missing non-optional fields cause an error. |
-|  [strict?](./ts-utils.validation.classes.objectvalidatoroptions.strict.md) | boolean | <i>(Optional)</i> If true, unrecognized fields yield an error. If false or undefined (default), unrecognized fields are ignored. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [optionalFields?](./ts-utils.validation.classes.objectvalidatoroptions.optionalfields.md) |  | (keyof T)\[\] | <i>(Optional)</i> If present, lists optional fields. Missing non-optional fields cause an error. |
+|  [strict?](./ts-utils.validation.classes.objectvalidatoroptions.strict.md) |  | boolean | <i>(Optional)</i> If true, unrecognized fields yield an error. If false or undefined (default), unrecognized fields are ignored. |
 

@@ -63,7 +63,7 @@ export default {
         // For the .not case, we want to swallow exceptions or expect failures since
         // we're just testing failure and not the reason.
         const capture = this.isNot;
-        const cbResult = predicate(received, test, capture);
+        const cbResult = predicate(received, test, !!capture);
         const pass = cbResult.isSuccess() && (cbResult.value === true);
         if (pass) {
             return { pass: true, message: passMessage(received) };

@@ -14,7 +14,7 @@ export interface StringMatchOptions
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [message?](./ts-utils.converters.stringmatchoptions.message.md) | string | <i>(Optional)</i> An optional message to be displayed if a non-matching string is encountered. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [message?](./ts-utils.converters.stringmatchoptions.message.md) |  | string | <i>(Optional)</i> An optional message to be displayed if a non-matching string is encountered. |
 

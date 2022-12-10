@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { Context } from 'jest-snapshot/build/types';
+import { Context, toMatchSnapshot } from 'jest-snapshot';
 import { Result } from '../../ts-utils';
 import { matcherHint } from 'jest-matcher-utils';
 import { printReceivedResult } from '../../utils/matcherHelpers';
-import { toMatchSnapshot } from 'jest-snapshot';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -38,6 +37,6 @@ export default {
             context,
             received.value,
             'toSucceedAndMatchSnapshot',
-        );
+        ) as jest.CustomMatcherResult;
     },
 };

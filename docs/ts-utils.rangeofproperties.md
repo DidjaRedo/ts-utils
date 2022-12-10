@@ -14,8 +14,8 @@ export interface RangeOfProperties<T>
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [max?](./ts-utils.rangeofproperties.max.md) | T | <i>(Optional)</i> |
-|  [min?](./ts-utils.rangeofproperties.min.md) | T | <i>(Optional)</i> |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [max?](./ts-utils.rangeofproperties.max.md) |  | T | <i>(Optional)</i> |
+|  [min?](./ts-utils.rangeofproperties.min.md) |  | T | <i>(Optional)</i> |
 
