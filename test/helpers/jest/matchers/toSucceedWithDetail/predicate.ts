@@ -1,5 +1,5 @@
 import { DetailedResult } from '../../ts-utils';
-import { equals } from 'expect/build/jasmineUtils';
+import { equals } from '@jest/expect-utils';
 
 export const matcherName = 'toSucceedWithDetail';
 
