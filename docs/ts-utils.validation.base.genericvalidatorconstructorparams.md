@@ -14,9 +14,9 @@ export interface GenericValidatorConstructorParams<T, TC>
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [options?](./ts-utils.validation.base.genericvalidatorconstructorparams.options.md) | ValidatorOptions&lt;TC&gt; | <i>(Optional)</i> |
-|  [traits?](./ts-utils.validation.base.genericvalidatorconstructorparams.traits.md) | Partial&lt;ValidatorTraits&gt; | <i>(Optional)</i> |
-|  [validator?](./ts-utils.validation.base.genericvalidatorconstructorparams.validator.md) | ValidatorFunc&lt;T, TC&gt; | <i>(Optional)</i> |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [options?](./ts-utils.validation.base.genericvalidatorconstructorparams.options.md) |  | ValidatorOptions&lt;TC&gt; | <i>(Optional)</i> |
+|  [traits?](./ts-utils.validation.base.genericvalidatorconstructorparams.traits.md) |  | Partial&lt;ValidatorTraits&gt; | <i>(Optional)</i> |
+|  [validator?](./ts-utils.validation.base.genericvalidatorconstructorparams.validator.md) |  | ValidatorFunc&lt;T, TC&gt; | <i>(Optional)</i> |
 

@@ -14,9 +14,9 @@ export interface ValidatorTraitValues
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [brand?](./ts-utils.validation.validatortraitvalues.brand.md) | string | <i>(Optional)</i> If present, indicates that the result will be branded with the corresponding brand. |
-|  [constraints](./ts-utils.validation.validatortraitvalues.constraints.md) | ConstraintTrait\[\] | Zero or more additional [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->s describing additional constraints applied by this [Validator](./ts-utils.validation.validator.md)<!-- -->. |
-|  [isOptional](./ts-utils.validation.validatortraitvalues.isoptional.md) | boolean | Indicates whether the validator accepts <code>undefined</code> as a valid value. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [brand?](./ts-utils.validation.validatortraitvalues.brand.md) |  | string | <i>(Optional)</i> If present, indicates that the result will be branded with the corresponding brand. |
+|  [constraints](./ts-utils.validation.validatortraitvalues.constraints.md) |  | ConstraintTrait\[\] | Zero or more additional [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->s describing additional constraints applied by this [Validator](./ts-utils.validation.validator.md)<!-- -->. |
+|  [isOptional](./ts-utils.validation.validatortraitvalues.isoptional.md) |  | boolean | Indicates whether the validator accepts <code>undefined</code> as a valid value. |
 

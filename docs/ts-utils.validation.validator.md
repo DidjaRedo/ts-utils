@@ -14,11 +14,11 @@ export interface Validator<T, TC = undefined>
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [brand](./ts-utils.validation.validator.brand.md) | string \| undefined | The brand for a branded type. |
-|  [isOptional](./ts-utils.validation.validator.isoptional.md) | boolean | Indicates whether this element is explicitly optional. |
-|  [traits](./ts-utils.validation.validator.traits.md) | ValidatorTraits | [Traits](./ts-utils.validation.validatortraits.md) describing this validation. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [brand](./ts-utils.validation.validator.brand.md) |  | string \| undefined | The brand for a branded type. |
+|  [isOptional](./ts-utils.validation.validator.isoptional.md) |  | boolean | Indicates whether this element is explicitly optional. |
+|  [traits](./ts-utils.validation.validator.traits.md) |  | ValidatorTraits | [Traits](./ts-utils.validation.validatortraits.md) describing this validation. |
 
 ## Methods
 

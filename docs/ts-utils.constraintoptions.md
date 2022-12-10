@@ -14,7 +14,7 @@ export interface ConstraintOptions
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [description](./ts-utils.constraintoptions.description.md) | string | Optional description for error messages when constraint function returns false. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [description](./ts-utils.constraintoptions.description.md) |  | string | Optional description for error messages when constraint function returns false. |
 
