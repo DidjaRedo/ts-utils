@@ -1191,6 +1191,11 @@ export interface TransformObjectOptions<TSRC> {
      * is enabled.
      */
     ignore?: (keyof TSRC)[];
+
+    /**
+     * An optional description of this transform to be used for error messages.
+     */
+    description?: string;
 }
 
 /**
@@ -1258,7 +1263,7 @@ export function transformObject<TSRC, TDEST, TC=unknown>(
             errors.push('source is not an object');
         }
 
-        return (errors.length === 0) ? succeed(converted) : fail(errors.join('\n'));
+        return (errors.length === 0) ? succeed(converted) : fail(options?.description ? `${options.description}: ${errors.join('\n')}` : errors.join('\n'));
     });
 }
 
