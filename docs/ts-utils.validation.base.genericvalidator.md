@@ -11,7 +11,7 @@ Generic base implementation for an in-place [Validator](./ts-utils.validation.va
 ```typescript
 export declare class GenericValidator<T, TC = undefined> implements Validator<T, TC> 
 ```
-<b>Implements:</b> Validator&lt;T, TC&gt;
+<b>Implements:</b> [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T, TC&gt;
 
 ## Constructors
 
@@ -23,9 +23,9 @@ export declare class GenericValidator<T, TC = undefined> implements Validator<T,
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand](./ts-utils.validation.base.genericvalidator.brand.md) |  | string \| undefined | The brand for a branded type. |
-|  [isOptional](./ts-utils.validation.base.genericvalidator.isoptional.md) |  | boolean | Indicates whether this element is explicitly optional. |
-|  [traits](./ts-utils.validation.base.genericvalidator.traits.md) |  | ValidatorTraits | [Traits](./ts-utils.validation.validatortraits.md) describing this validation. |
+|  [brand](./ts-utils.validation.base.genericvalidator.brand.md) | <code>readonly</code> | string \| undefined | The brand for a branded type. |
+|  [isOptional](./ts-utils.validation.base.genericvalidator.isoptional.md) | <code>readonly</code> | boolean | Indicates whether this element is explicitly optional. |
+|  [traits](./ts-utils.validation.base.genericvalidator.traits.md) | <code>readonly</code> | [ValidatorTraits](./ts-utils.validation.validatortraits.md) | [Traits](./ts-utils.validation.validatortraits.md) describing this validation. |
 
 ## Methods
 

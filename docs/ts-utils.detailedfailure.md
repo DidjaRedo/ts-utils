@@ -23,7 +23,7 @@ export declare class DetailedFailure<T, TD> extends Failure<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [detail](./ts-utils.detailedfailure.detail.md) |  | TD | The error detail associated with this [DetailedFailure](./ts-utils.detailedfailure.md)<!-- -->. |
+|  [detail](./ts-utils.detailedfailure.detail.md) | <code>readonly</code> | TD | The error detail associated with this [DetailedFailure](./ts-utils.detailedfailure.md)<!-- -->. |
 
 ## Methods
 

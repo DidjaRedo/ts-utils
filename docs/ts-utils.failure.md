@@ -23,8 +23,8 @@ export declare class Failure<T> implements IResult<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [message](./ts-utils.failure.message.md) |  | string | Gets the error message associated with this error. |
-|  [success](./ts-utils.failure.success.md) |  | (not declared) | Indicates whether the operation was successful. |
+|  [message](./ts-utils.failure.message.md) | <code>readonly</code> | string | Gets the error message associated with this error. |
+|  [success](./ts-utils.failure.success.md) | <code>readonly</code> | (not declared) | Indicates whether the operation was successful. |
 
 ## Methods
 

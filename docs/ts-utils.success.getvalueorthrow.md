@@ -16,7 +16,7 @@ getValueOrThrow(_logger?: IResultLogger): T;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_logger | [IResultLogger](./ts-utils.iresultlogger.md) |  |
+|  \_logger | [IResultLogger](./ts-utils.iresultlogger.md) | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

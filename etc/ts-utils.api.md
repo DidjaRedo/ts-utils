@@ -7,7 +7,7 @@
 // @public
 export function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: T): Result<T>;
 
-// Warning: (ae-forgotten-export) The symbol "OnError" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "OnError_2" needs to be exported by the entry point index.d.ts
 //
 // @public
 function arrayOf<T, TC = undefined>(converter: Converter<T, TC>, onError?: OnError_2): Converter<T[], TC>;
@@ -146,6 +146,7 @@ declare namespace Converters {
         strictObject,
         discriminatedObject,
         transform,
+        transformObject,
         rangeTypeOf,
         rangeOf,
         StringMatchOptions,
@@ -165,7 +166,9 @@ declare namespace Converters {
         FieldConverters,
         ObjectConverter,
         StrictObjectConverterOptions,
-        DiscriminatedObjectConverters
+        DiscriminatedObjectConverters,
+        FieldTransformers,
+        TransformObjectOptions
     }
 }
 export { Converters }
@@ -306,6 +309,15 @@ export type FieldInitializers<T> = {
 };
 
 // @public
+type FieldTransformers<TSRC, TDEST, TC = unknown> = {
+    [key in keyof TDEST]: {
+        from: keyof TSRC;
+        converter: Converter<TDEST[key], TC>;
+        optional?: boolean;
+    };
+};
+
+// @public
 type FieldValidators<T, TC = unknown> = {
     [key in keyof T]: Validator<T[key], TC>;
 };
@@ -409,7 +421,7 @@ export function getValueOfPropertyOrDefault<T extends object>(key: string | numb
 declare namespace Hash {
     export {
         computeHash,
-        Normalizer
+        Normalizer_2 as Normalizer
     }
 }
 export { Hash }
@@ -486,7 +498,22 @@ export function mapSuccess<T>(results: Iterable<Result<T>>): Result<T[]>;
 export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>>;
 
 // @public
-class Normalizer {
+export class Normalizer {
+    // @internal
+    protected _compareKeys(k1: unknown, k2: unknown): number;
+    normalize<T>(from: T): Result<T>;
+    // (undocumented)
+    protected _normalizeArray(from: unknown[]): Result<unknown[]>;
+    // Warning: (ae-forgotten-export) The symbol "Entry" needs to be exported by the entry point index.d.ts
+    //
+    // @internal
+    protected _normalizeEntries<T = unknown>(entries: Iterable<Entry<T>>): Entry<T>[];
+    // @internal
+    protected _normalizeLiteral<T>(from: T): Result<T>;
+}
+
+// @public
+class Normalizer_2 {
     // @internal
     protected _compareKeys(k1: unknown, k2: unknown): number;
     computeHash(from: unknown): Result<string>;
@@ -755,6 +782,15 @@ function templateString(defaultContext?: unknown): StringConverter<string, unkno
 
 // @public
 function transform<T, TC = unknown>(properties: FieldConverters<T, TC>): Converter<T, TC>;
+
+// @public
+function transformObject<TSRC, TDEST, TC = unknown>(destinationFields: FieldTransformers<TSRC, TDEST, TC>, options?: TransformObjectOptions<TSRC>): Converter<TDEST, TC>;
+
+// @public
+interface TransformObjectOptions<TSRC> {
+    ignore?: (keyof TSRC)[];
+    strict: true;
+}
 
 // @public
 function validateWith<T, TC = undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC>;

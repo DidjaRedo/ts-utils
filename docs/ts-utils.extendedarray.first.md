@@ -19,7 +19,7 @@ first(failMessage?: string): Result<T>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  failMessage | string | Optional message to be displayed in the event of failure. |
+|  failMessage | string | <i>(Optional)</i> Optional message to be displayed in the event of failure. |
 
 <b>Returns:</b>
 

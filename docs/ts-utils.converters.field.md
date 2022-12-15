@@ -25,5 +25,5 @@ export declare function field<T, TC = undefined>(name: string, converter: Conver
 
 ## Remarks
 
-The resulting [Converter](./ts-utils.converter.md) returns [Success](./ts-utils.success.md) with the converted value of the correpsonding object property if the field exists and can be converted. Returns [Failure](./ts-utils.failure.md) with an error message otherwise.
+The resulting [Converter](./ts-utils.converter.md) returns [Success](./ts-utils.success.md) with the converted value of the corresponding object property if the field exists and can be converted. Returns [Failure](./ts-utils.failure.md) with an error message otherwise.
 

@@ -16,12 +16,12 @@ withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T,
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  constraint | Constraint&lt;T&gt; | the constraint to be applied |
-|  trait | ConstraintTrait | As optional [ConstraintTrait](./ts-utils.validation.constrainttrait.md) to be applied to the resulting [Validator](./ts-utils.validation.validator.md)<!-- -->. |
+|  constraint | [Constraint](./ts-utils.validation.constraint.md)<!-- -->&lt;T&gt; | the constraint to be applied |
+|  trait | [ConstraintTrait](./ts-utils.validation.constrainttrait.md) | <i>(Optional)</i> As optional [ConstraintTrait](./ts-utils.validation.constrainttrait.md) to be applied to the resulting [Validator](./ts-utils.validation.validator.md)<!-- -->. |
 
 <b>Returns:</b>
 
-Validator&lt;T, TC&gt;
+[Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T, TC&gt;
 
 A new [Validator](./ts-utils.validation.validator.md)<!-- -->.
 

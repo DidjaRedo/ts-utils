@@ -17,7 +17,7 @@ export declare function populateObject<T>(initializers: FieldInitializers<T>, or
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  initializers | [FieldInitializers](./ts-utils.fieldinitializers.md)<!-- -->&lt;T&gt; | An object with the shape of the target but with initializer functions for each property. |
-|  order | (keyof T)\[\] |  |
+|  order | (keyof T)\[\] | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

@@ -17,11 +17,11 @@ matching(match: string, options?: Partial<StringMatchOptions>): StringConverter<
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  match | string | The string to be matched |
-|  options | Partial&lt;StringMatchOptions&gt; | Optional [Converters.StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) for this conversion. |
+|  options | Partial&lt;[StringMatchOptions](./ts-utils.converters.stringmatchoptions.md)<!-- -->&gt; | <i>(Optional)</i> Optional [Converters.StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) for this conversion. |
 
 <b>Returns:</b>
 
-StringConverter&lt;T, TC&gt;
+[StringConverter](./ts-utils.converters.stringconverter.md)<!-- -->&lt;T, TC&gt;
 
 [Success](./ts-utils.success.md) with a matching string or [Failure](./ts-utils.failure.md) with an informative error if the string does not match. 
 

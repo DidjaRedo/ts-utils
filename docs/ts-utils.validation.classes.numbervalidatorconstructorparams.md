@@ -9,5 +9,7 @@ Parameters used to construct a [NumberValidator](./ts-utils.validation.classes.n
 <b>Signature:</b>
 
 ```typescript
-export declare type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
+export type NumberValidatorConstructorParams<T extends number = number, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
 ```
+<b>References:</b> [GenericValidatorConstructorParams](./ts-utils.validation.base.genericvalidatorconstructorparams.md)
+

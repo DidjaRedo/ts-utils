@@ -16,12 +16,12 @@ export declare function strictObject<T>(properties: FieldConverters<T>, options?
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  properties | FieldConverters&lt;T&gt; | An object containing defining the shape and converters to be applied. |
-|  options | StrictObjectConverterOptions&lt;T&gt; | An optional |
+|  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | An object containing defining the shape and converters to be applied. |
+|  options | [StrictObjectConverterOptions](./ts-utils.converters.strictobjectconverteroptions.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> An optional |
 
 <b>Returns:</b>
 
-ObjectConverter&lt;T&gt;
+[ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;T&gt;
 
 A new [ObjectConverter](./ts-utils.converters.objectconverter.md) which applies the specified conversions. 
 

@@ -17,7 +17,7 @@ export declare function delimitedString(delimiter: string, options?: 'filtered' 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  delimiter | string | The delimiter at which to split. |
-|  options | 'filtered' \| 'all' |  |
+|  options | 'filtered' \| 'all' | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
@@ -27,5 +27,5 @@ A new [Converter](./ts-utils.converter.md) returning `string[]`<!-- -->.
 
 ## Remarks
 
-Delimeter may also be supplied as context at conversion time.
+Delimiter may also be supplied as context at conversion time.
 

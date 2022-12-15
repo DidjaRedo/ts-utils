@@ -21,18 +21,18 @@ export declare function object<T>(properties: FieldConverters<T>, optional: (key
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  properties | FieldConverters&lt;T&gt; | An [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) defining the shape of the source object and [converters](./ts-utils.converter.md) to be applied to each properties. |
+|  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | An [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) defining the shape of the source object and [converters](./ts-utils.converter.md) to be applied to each properties. |
 |  optional | (keyof T)\[\] | An array of <code>(keyof T)</code> listing the keys to be considered optional.  |
 
 <b>Returns:</b>
 
-ObjectConverter&lt;T&gt;
+[ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;T&gt;
 
 A new [ObjectConverter](./ts-utils.converters.objectconverter.md) which applies the specified conversions.
 
 ## Remarks
 
-By default, if all of the requested fields exist and can be converted, returns [Success](./ts-utils.success.md) with a new object that contains the converted values under the original key names. If any requried properties do not exist or cannot be converted, the entire conversion fails, returning [Failure](./ts-utils.failure.md) with additional error information.
+By default, if all of the requested fields exist and can be converted, returns [Success](./ts-utils.success.md) with a new object that contains the converted values under the original key names. If any required properties do not exist or cannot be converted, the entire conversion fails, returning [Failure](./ts-utils.failure.md) with additional error information.
 
 Fields that succeed but convert to undefined are omitted from the result object but do not fail the conversion.
 

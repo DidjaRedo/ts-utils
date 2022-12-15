@@ -23,8 +23,8 @@ export declare class RangeOf<T> implements RangeOfProperties<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [max?](./ts-utils.rangeof.max.md) |  | T | <i>(Optional)</i> Maximum extent of the range. |
-|  [min?](./ts-utils.rangeof.min.md) |  | T | <i>(Optional)</i> Minimum extent of the range. |
+|  [max?](./ts-utils.rangeof.max.md) | <code>readonly</code> | T | <i>(Optional)</i> Maximum extent of the range. |
+|  [min?](./ts-utils.rangeof.min.md) | <code>readonly</code> | T | <i>(Optional)</i> Minimum extent of the range. |
 
 ## Methods
 

@@ -17,7 +17,7 @@ export declare function mappedEnumeratedValue<T>(map: [T, unknown[]][], message?
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  map | \[T, unknown\[\]\]\[\] | An array of tuples describing the mapping. The first element of each tuple is the result value, the second is the set of values that map to the result. Tuples are evaluated in the order supplied and are not checked for duplicates. |
-|  message | string | An optional error message. |
+|  message | string | <i>(Optional)</i> An optional error message. |
 
 <b>Returns:</b>
 

@@ -14,6 +14,7 @@
 |  [ExtendedArray](./ts-utils.extendedarray.md) | <b><i>(BETA)</i></b> An experimental array template which extend built-in <code>Array</code> to include a handful of predicates which return [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
 |  [Failure](./ts-utils.failure.md) | Reports a failed [result](./ts-utils.iresult.md) from some operation, with an error message. |
 |  [FormattableBase](./ts-utils.formattablebase.md) | <b><i>(BETA)</i></b> Base class which adds common formatting. |
+|  [Normalizer](./ts-utils.normalizer.md) | Normalizes an arbitrary JSON object |
 |  [RangeOf](./ts-utils.rangeof.md) | Simple implementation of a possibly open-ended range of some comparable type <code>&lt;T&gt;</code> with test and formatting. |
 |  [Success](./ts-utils.success.md) | Reports a successful [result](./ts-utils.iresult.md) from some operation and the corresponding value. |
 
@@ -29,9 +30,9 @@
 |  [getTypeOfProperty(key, item)](./ts-utils.gettypeofproperty.md) | Gets the type of a property specified by key from an arbitrary object. |
 |  [getValueOfPropertyOrDefault(key, item, defaultValue)](./ts-utils.getvalueofpropertyordefault.md) | Gets the value of a property specified by key from an arbitrary object, or a default value if the property does not exist. |
 |  [isKeyOf(key, item)](./ts-utils.iskeyof.md) | Helper type-guard function to report whether a specified key is present in a supplied object. |
-|  [mapDetailedResults(results, ignore)](./ts-utils.mapdetailedresults.md) | Aggregates sucessful results from a collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, optionally ignoring certain error details. |
+|  [mapDetailedResults(results, ignore)](./ts-utils.mapdetailedresults.md) | Aggregates successful results from a collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, optionally ignoring certain error details. |
 |  [mapFailures(results)](./ts-utils.mapfailures.md) | Aggregates error messages from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
-|  [mapResults(results)](./ts-utils.mapresults.md) | Aggregates sucessful result values from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
+|  [mapResults(results)](./ts-utils.mapresults.md) | Aggregates successful result values from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
 |  [mapSuccess(results)](./ts-utils.mapsuccess.md) | Aggregates successful results from a a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
 |  [mapToRecord(src, factory)](./ts-utils.maptorecord.md) | Applies a factory method to convert a <code>Map&lt;TK, TS&gt;</code> into a <code>Record&lt;TK, TD&gt;</code>. |
 |  [optionalMapToPossiblyEmptyRecord(src, factory)](./ts-utils.optionalmaptopossiblyemptyrecord.md) | Applies a factory method to convert an optional <code>Map&lt;string, TS&gt;</code> into a <code>Record&lt;string, TD&gt;</code> |

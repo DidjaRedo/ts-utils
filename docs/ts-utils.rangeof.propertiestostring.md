@@ -17,8 +17,8 @@ static propertiesToString<T>(range: RangeOfProperties<T>, formats?: RangeOfForma
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  range | [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt; | The [RangeOfProperties&lt;T&gt;](./ts-utils.rangeofproperties.md) to be formatted. |
-|  formats | [RangeOfFormats](./ts-utils.rangeofformats.md) | Optionas [formats](./ts-utils.rangeofformats.md) to use. Default is [DEFAULT\_RANGEOF\_FORMATS](./ts-utils.default_rangeof_formats.md)<!-- -->. |
-|  emptyValue | T | Value which represents unbounded minimum or maximum for this range. Default is <code>undefined</code>. |
+|  formats | [RangeOfFormats](./ts-utils.rangeofformats.md) | <i>(Optional)</i> Optionas [formats](./ts-utils.rangeofformats.md) to use. Default is [DEFAULT\_RANGEOF\_FORMATS](./ts-utils.default_rangeof_formats.md)<!-- -->. |
+|  emptyValue | T | <i>(Optional)</i> Value which represents unbounded minimum or maximum for this range. Default is <code>undefined</code>. |
 
 <b>Returns:</b>
 

@@ -18,7 +18,7 @@ export declare function propagateWithDetail<T, TD>(result: Result<T>, detail: TD
 |  --- | --- | --- |
 |  result | [Result](./ts-utils.result.md)<!-- -->&lt;T&gt; | The [Result](./ts-utils.result.md) to be propagated. |
 |  detail | TD | The event detail (type <code>&lt;TD&gt;</code>) to be added to the [result](./ts-utils.result.md)<!-- -->. |
-|  successDetail | TD | An optional distinct event detail to be added to [Success](./ts-utils.success.md) results. If <code>successDetail</code> is omitted or <code>undefined</code>, then <code>detail</code> will be applied to [Success](./ts-utils.success.md) results. |
+|  successDetail | TD | <i>(Optional)</i> An optional distinct event detail to be added to [Success](./ts-utils.success.md) results. If <code>successDetail</code> is omitted or <code>undefined</code>, then <code>detail</code> will be applied to [Success](./ts-utils.success.md) results. |
 
 <b>Returns:</b>
 

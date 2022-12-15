@@ -23,8 +23,8 @@ export declare class BaseConverter<T, TC = undefined> implements Converter<T, TC
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand](./ts-utils.baseconverter.brand.md) |  | string \| undefined | Returns the brand for a branded type. |
-|  [isOptional](./ts-utils.baseconverter.isoptional.md) |  | boolean | Indicates whether this element is explicitly optional. |
+|  [brand](./ts-utils.baseconverter.brand.md) | <code>readonly</code> | string \| undefined | Returns the brand for a branded type. |
+|  [isOptional](./ts-utils.baseconverter.isoptional.md) | <code>readonly</code> | boolean | Indicates whether this element is explicitly optional. |
 
 ## Methods
 

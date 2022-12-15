@@ -17,8 +17,8 @@ export interface Converter<T, TC = undefined> extends ConverterTraits
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand?](./ts-utils.converter.brand.md) |  | string | <i>(Optional)</i> Returns the brand for a branded type. |
-|  [isOptional](./ts-utils.converter.isoptional.md) |  | boolean | Indicates whether this element is explicitly optional. |
+|  [brand?](./ts-utils.converter.brand.md) | <code>readonly</code> | string | <i>(Optional)</i> Returns the brand for a branded type. |
+|  [isOptional](./ts-utils.converter.isoptional.md) | <code>readonly</code> | boolean | Indicates whether this element is explicitly optional. |
 
 ## Methods
 

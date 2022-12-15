@@ -11,7 +11,7 @@ Options for an [ObjectValidator](./ts-utils.validation.classes.objectvalidator.m
 ```typescript
 export interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC> 
 ```
-<b>Extends:</b> ValidatorOptions&lt;TC&gt;
+<b>Extends:</b> [ValidatorOptions](./ts-utils.validation.validatoroptions.md)<!-- -->&lt;TC&gt;
 
 ## Properties
 

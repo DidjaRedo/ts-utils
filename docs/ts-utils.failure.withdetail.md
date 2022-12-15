@@ -17,11 +17,11 @@ withDetail<TD>(detail: TD, _successDetail?: TD): DetailedResult<T, TD>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  detail | TD | The default detail to be added to the new [DetailedResult](./ts-utils.detailedresult.md)<!-- -->. |
-|  \_successDetail | TD |  |
+|  \_successDetail | TD | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
 [DetailedResult](./ts-utils.detailedresult.md)<!-- -->&lt;T, TD&gt;
 
-A new [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md) with either the success result or the error message from this [IResult](./ts-utils.iresult.md) and the appopriate added detail.
+A new [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md) with either the success result or the error message from this [IResult](./ts-utils.iresult.md) and the appropriate added detail.
 

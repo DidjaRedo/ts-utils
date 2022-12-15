@@ -21,7 +21,7 @@ export declare function extendedArrayOf<T, TC = undefined>(label: string, conver
 |  --- | --- | --- |
 |  label | string |  |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert each item in the array |
-|  onError | OnError |  |
+|  onError | OnError | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

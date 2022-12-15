@@ -12,5 +12,5 @@ Destination format for some formatted string.
 <b>Signature:</b>
 
 ```typescript
-export declare type FormatTargets = 'text' | 'markdown' | 'embed';
+export type FormatTargets = 'text' | 'markdown' | 'embed';
 ```

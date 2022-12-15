@@ -12,7 +12,7 @@ A collection of [formatters](./ts-utils.formatter.md) indexed by the [default su
 <b>Signature:</b>
 
 ```typescript
-export declare type FormattersByTarget<T> = FormattersByExtendedTarget<FormatTargets, T>;
+export type FormattersByTarget<T> = FormattersByExtendedTarget<FormatTargets, T>;
 ```
 <b>References:</b> [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md)<!-- -->, [FormatTargets](./ts-utils.formattargets.md)
 

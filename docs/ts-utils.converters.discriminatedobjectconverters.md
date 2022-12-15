@@ -9,7 +9,7 @@ A string-keyed `Record<string, Converter>` which maps specific [converters](./ts
 <b>Signature:</b>
 
 ```typescript
-export declare type DiscriminatedObjectConverters<T, TD extends string = string, TC = unknown> = Record<TD, Converter<T, TC>>;
+export type DiscriminatedObjectConverters<T, TD extends string = string, TC = unknown> = Record<TD, Converter<T, TC>>;
 ```
 <b>References:</b> [Converter](./ts-utils.converter.md)
 

@@ -9,5 +9,7 @@ Parameters used to construct a [BooleanValidator](./ts-utils.validation.classes.
 <b>Signature:</b>
 
 ```typescript
-export declare type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorConstructorParams<boolean, TC>;
+export type BooleanValidatorConstructorParams<TC = unknown> = GenericValidatorConstructorParams<boolean, TC>;
 ```
+<b>References:</b> [GenericValidatorConstructorParams](./ts-utils.validation.base.genericvalidatorconstructorparams.md)
+

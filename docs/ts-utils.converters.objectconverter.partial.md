@@ -16,11 +16,11 @@ partial(options: ObjectConverterOptions<T>): ObjectConverter<Partial<T>, TC>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  options | ObjectConverterOptions&lt;T&gt; | The [options](./ts-utils.converters.objectconverteroptions.md) to be applied to the new converter. |
+|  options | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | The [options](./ts-utils.converters.objectconverteroptions.md) to be applied to the new converter. |
 
 <b>Returns:</b>
 
-ObjectConverter&lt;Partial&lt;T&gt;, TC&gt;
+[ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 
 A new [ObjectConverter](./ts-utils.converters.objectconverter.md) with the additional optional source properties. 
 

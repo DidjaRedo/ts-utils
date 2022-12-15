@@ -20,7 +20,7 @@ addPartial(addOptionalFields: (keyof T)[]): ObjectValidator<Partial<T>, TC>;
 
 <b>Returns:</b>
 
-ObjectValidator&lt;Partial&lt;T&gt;, TC&gt;
+[ObjectValidator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 
 A new [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md) with the additional optional source properties.
 

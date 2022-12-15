@@ -16,7 +16,7 @@ getValueOrThrow(logger?: IResultLogger): T;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  logger | [IResultLogger](./ts-utils.iresultlogger.md) | An optional [logger](./ts-utils.iresultlogger.md) to which the error will also be reported. |
+|  logger | [IResultLogger](./ts-utils.iresultlogger.md) | <i>(Optional)</i> An optional [logger](./ts-utils.iresultlogger.md) to which the error will also be reported. |
 
 <b>Returns:</b>
 

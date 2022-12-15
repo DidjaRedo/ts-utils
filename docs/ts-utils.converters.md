@@ -17,7 +17,7 @@
 |  --- | --- |
 |  [arrayOf(converter, onError)](./ts-utils.converters.arrayof.md) | A helper function to create a [Converter](./ts-utils.converter.md) which converts <code>unknown</code> to an array of <code>&lt;T&gt;</code>. |
 |  [delimitedString(delimiter, options)](./ts-utils.converters.delimitedstring.md) | Helper function to create a [Converter](./ts-utils.converter.md) which converts any <code>string</code> into an array of <code>string</code>, by separating at a supplied delimiter. |
-|  [discriminatedObject(discriminatorProp, converters)](./ts-utils.converters.discriminatedobject.md) | Helper to create a [Converter](./ts-utils.converter.md) whhich converts a discriminated object without changing shape. |
+|  [discriminatedObject(discriminatorProp, converters)](./ts-utils.converters.discriminatedobject.md) | Helper to create a [Converter](./ts-utils.converter.md) which converts a discriminated object without changing shape. |
 |  [element(index, converter)](./ts-utils.converters.element.md) | A helper function to create a [Converter](./ts-utils.converter.md) which extracts and converts an element from an array. |
 |  [enumeratedValue(values)](./ts-utils.converters.enumeratedvalue.md) | Helper function to create a [Converter](./ts-utils.converter.md) which converts <code>unknown</code> to one of a set of supplied enumerated values. Anything else fails. |
 |  [extendedArrayOf(label, converter, onError)](./ts-utils.converters.extendedarrayof.md) | <b><i>(BETA)</i></b> A helper function to create a [Converter](./ts-utils.converter.md) which converts <code>unknown</code> to [ExtendedArray&lt;T&gt;](./ts-utils.extendedarray.md)<!-- -->. |
@@ -27,7 +27,7 @@
 |  [mapOf(converter, onError)](./ts-utils.converters.mapof_1.md) | A helper function to create a [Converter](./ts-utils.converter.md) which converts the <code>string</code>-keyed properties using a supplied [Converter&lt;T&gt;](./ts-utils.converter.md) to produce a <code>Map&lt;string, T&gt;</code> and optionally specified handling of elements that cannot be converted. |
 |  [mapOf(converter, options)](./ts-utils.converters.mapof_2.md) | A helper function to create a [Converter](./ts-utils.converter.md) which converts the <code>string</code>-keyed properties using a supplied [Converter&lt;T&gt;](./ts-utils.converter.md) to produce a <code>Map&lt;TK, T&gt;</code>. |
 |  [mappedEnumeratedValue(map, message)](./ts-utils.converters.mappedenumeratedvalue.md) | Helper function to create a [Converter](./ts-utils.converter.md) which converts <code>unknown</code> to one of a set of supplied enumerated values, mapping any of multiple supplied values to the enumeration. |
-|  [object(properties, options)](./ts-utils.converters.object.md) | Helper function to create a [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, given a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and an optional [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md) to further refine conversion beavior. |
+|  [object(properties, options)](./ts-utils.converters.object.md) | Helper function to create a [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, given a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and an optional [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md) to further refine conversion behavior. |
 |  [object(properties, optional)](./ts-utils.converters.object_1.md) | Helper function to create a [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, given a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and a set of optional properties. |
 |  [oneOf(converters, onError)](./ts-utils.converters.oneof.md) | A helper function to create a [Converter](./ts-utils.converter.md) for polymorphic values. Returns a converter which Invokes the wrapped converters in sequence, returning the first successful result. Returns an error if none of the supplied converters can convert the value. |
 |  [optionalElement(index, converter)](./ts-utils.converters.optionalelement.md) | A helper function to create a [Converter](./ts-utils.converter.md) which extracts and converts an optional element from an array. |
@@ -41,6 +41,7 @@
 |  [strictObject(properties, optional)](./ts-utils.converters.strictobject_1.md) | Helper function to create a [ObjectConverter](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and an optional [StrictObjectConverterOptions&lt;T&gt;](./ts-utils.converters.strictobjectconverteroptions.md) to further refine conversion behavior. |
 |  [templateString(defaultContext)](./ts-utils.converters.templatestring.md) | Helper function to create a [StringConverter](./ts-utils.converters.stringconverter.md) which converts <code>unknown</code> to <code>string</code>, applying template conversions supplied at construction time or at runtime as context. |
 |  [transform(properties)](./ts-utils.converters.transform.md) | Helper to create a [Converter](./ts-utils.converter.md) which converts a source object to a new object with a different shape. |
+|  [transformObject(destinationFields, options)](./ts-utils.converters.transformobject.md) | Helper to create a strongly-typed [Converter](./ts-utils.converter.md) which converts a source object to a new object with a different shape. |
 |  [validateWith(validator, description)](./ts-utils.converters.validatewith.md) | Helper function to create a [Converter](./ts-utils.converter.md) which validates that a supplied value is of a type validated by a supplied validator function and returns it. |
 
 ## Interfaces
@@ -50,6 +51,7 @@
 |  [KeyedConverterOptions](./ts-utils.converters.keyedconverteroptions.md) | Options for  and  helper functions. |
 |  [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md) | Options for an [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->. |
 |  [StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) | Options for [StringConverter](./ts-utils.converters.stringconverter.md) matching method |
+|  [TransformObjectOptions](./ts-utils.converters.transformobjectoptions.md) | Options for a [Converters.transformObject()](./ts-utils.converters.transformobject.md) call. |
 
 ## Variables
 
@@ -71,5 +73,6 @@
 |  --- | --- |
 |  [DiscriminatedObjectConverters](./ts-utils.converters.discriminatedobjectconverters.md) | A string-keyed <code>Record&lt;string, Converter&gt;</code> which maps specific [converters](./ts-utils.converter.md) to the value of a discriminator property. |
 |  [FieldConverters](./ts-utils.converters.fieldconverters.md) | Per-property converters for each of the properties in type T. |
+|  [FieldTransformers](./ts-utils.converters.fieldtransformers.md) | Per-property converters and configuration for each field in the destination object of a [Converters.transformObject()](./ts-utils.converters.transformobject.md) call. |
 |  [StrictObjectConverterOptions](./ts-utils.converters.strictobjectconverteroptions.md) | Options for the  helper function. |
 

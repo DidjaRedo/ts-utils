@@ -17,7 +17,7 @@ withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): C
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  guard | (from: unknown) =&gt; from is TI | The type guard function to apply to each element. |
-|  message | string | Optional message to be reported if the type guard fails. |
+|  message | string | <i>(Optional)</i> Optional message to be reported if the type guard fails. |
 
 <b>Returns:</b>
 

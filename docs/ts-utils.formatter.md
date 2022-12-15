@@ -12,7 +12,7 @@ Type definition for a formatting function, which takes a `string` and an item an
 <b>Signature:</b>
 
 ```typescript
-export declare type Formatter<T> = (format: string, item: T) => Result<string>;
+export type Formatter<T> = (format: string, item: T) => Result<string>;
 ```
 <b>References:</b> [Result](./ts-utils.result.md)
 

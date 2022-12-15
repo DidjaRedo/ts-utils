@@ -9,7 +9,7 @@ String-keyed record of initialization functions to be passed to [populateObject(
 <b>Signature:</b>
 
 ```typescript
-export declare type FieldInitializers<T> = {
+export type FieldInitializers<T> = {
     [key in keyof T]: (state: Partial<T>) => Result<T[key]>;
 };
 ```

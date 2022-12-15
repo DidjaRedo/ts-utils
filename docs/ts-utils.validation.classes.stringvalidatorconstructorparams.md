@@ -9,5 +9,7 @@ Parameters used to construct a [StringValidator](./ts-utils.validation.classes.s
 <b>Signature:</b>
 
 ```typescript
-export declare type StringValidatorConstructorParams<T extends string = string, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
+export type StringValidatorConstructorParams<T extends string = string, TC = unknown> = GenericValidatorConstructorParams<T, TC>;
 ```
+<b>References:</b> [GenericValidatorConstructorParams](./ts-utils.validation.base.genericvalidatorconstructorparams.md)
+

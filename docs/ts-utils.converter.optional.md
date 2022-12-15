@@ -16,7 +16,7 @@ optional(onError?: OnError): Converter<T | undefined, TC>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  onError | OnError | Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
+|  onError | OnError | <i>(Optional)</i> Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
 
 <b>Returns:</b>
 

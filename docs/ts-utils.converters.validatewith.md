@@ -17,7 +17,7 @@ export declare function validateWith<T, TC = undefined>(validator: (from: unknow
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  validator | (from: unknown) =&gt; from is T | A validator function to determine if the converted value is valid. |
-|  description | string | A description of the validated type for use in error messages. |
+|  description | string | <i>(Optional)</i> A description of the validated type for use in error messages. |
 
 <b>Returns:</b>
 

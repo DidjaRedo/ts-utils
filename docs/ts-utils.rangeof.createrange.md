@@ -16,7 +16,7 @@ static createRange<T>(init?: RangeOfProperties<T>): Result<RangeOf<T>>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  init | [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt; | [Range initializer](./ts-utils.rangeofproperties.md)<!-- -->. |
+|  init | [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> [Range initializer](./ts-utils.rangeofproperties.md)<!-- -->. |
 
 <b>Returns:</b>
 

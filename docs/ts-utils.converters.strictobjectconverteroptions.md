@@ -9,5 +9,7 @@ Options for the  helper function.
 <b>Signature:</b>
 
 ```typescript
-export declare type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 'strict'>;
+export type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 'strict'>;
 ```
+<b>References:</b> [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)
+

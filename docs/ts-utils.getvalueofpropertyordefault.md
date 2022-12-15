@@ -18,7 +18,7 @@ export declare function getValueOfPropertyOrDefault<T extends object>(key: strin
 |  --- | --- | --- |
 |  key | string \| number \| symbol | The key specifying the property to be retrieved. |
 |  item | T | The object from which the property is to be retrieved. |
-|  defaultValue | unknown | An optional default value to be returned if the property is not present (default <code>undefined</code>). |
+|  defaultValue | unknown | <i>(Optional)</i> An optional default value to be returned if the property is not present (default <code>undefined</code>). |
 
 <b>Returns:</b>
 
