@@ -1112,6 +1112,7 @@ export function discriminatedObject<T, TD extends string = string, TC=unknown>(d
     });
 }
 
+
 /**
  * Helper to create a {@link Converter} which converts a source object to a new object with a
  * different shape.
@@ -1148,6 +1149,92 @@ export function transform<T, TC=unknown>(properties: FieldConverters<T, TC>): Co
                     errors.push(result.message);
                 }
             }
+        }
+
+        return (errors.length === 0) ? succeed(converted) : fail(errors.join('\n'));
+    });
+}
+
+/**
+ * Per-property converters and configuration for each field in the destination object of 
+ * a transformObject call.
+ * @remarks
+ * Used to construct a {@link Converters.ObjectConverter | ObjectConverter}
+ * @public
+ */
+export type FieldTransformers<TSRC, TDEST, TC=unknown> = { [ key in keyof TDEST ]: {
+    from: keyof TSRC,
+    converter: Converter<TDEST[key], TC>,
+    optional?: boolean,
+} };
+
+/**
+ * Options for a transformObject call.
+ */
+export interface TransformObjectOptions {
+    strict: true;
+}
+
+/**
+ * Helper to create a {@link Converter} which converts a source object to a new object with a
+ * different shape.
+ *
+ * @remarks
+ * On successful conversion, the resulting {@link Converter} returns {@link Success} with a new
+ * object, which contains the converted values under the key names specified at initialization time.
+ * It returns {@link Failure} with an error message if any fields to be extracted do not exist
+ * or cannot be converted.
+ *
+ * Fields that succeed but convert to undefined are omitted from the result object but do not
+ * fail the conversion.
+ *
+ * @param destinationFields - An object with key names that correspond to the target object and an
+ * appropriate {@link Converters.FieldConverters | FieldConverter} which extracts and converts
+ * a single field from the source object.
+ * @returns A {@link Converter} with the specified conversion behavior.
+ * @public
+ */
+export function transformObject<TSRC, TDEST, TC=unknown>(
+    destinationFields: FieldTransformers<TSRC, TDEST, TC>,
+    options?: TransformObjectOptions
+): Converter<TDEST, TC> {
+    return new BaseConverter((from: unknown, _self, context?: TC) => {
+        // eslint bug thinks key is used before defined
+        // eslint-disable-next-line no-use-before-define
+        const converted = {} as { [ key in keyof TDEST ]: TDEST[key] };
+        const errors: string[] = [];
+
+        if ((typeof from === 'object') && (!Array.isArray(from)) && (from !== null)) {
+            for (const destinationKey in destinationFields) {
+                if (destinationFields[destinationKey]) {
+                    const srcKey = destinationFields[destinationKey].from;
+                    const converter = destinationFields[destinationKey].converter;
+
+                    if (isKeyOf(srcKey, from)) {
+                        const result = converter.convert(from[srcKey], context);
+                        if (result.isSuccess()) {
+                            converted[destinationKey] = result.value;
+                        }
+                        else {
+                            errors.push(`${srcKey}->${destinationKey}: ${result.message}`);
+                        }
+                    }
+                    else if (destinationFields[destinationKey].optional !== true) {
+                        errors.push(`${String(srcKey)}: required property missing in source object.`);
+                    }
+                }
+            }
+
+            if (options?.strict === true) {
+                for (const key in from) {
+                    if (from.hasOwnProperty(key) && (!isKeyOf(key, destinationFields) || (destinationFields[key] === undefined))) {
+                        errors.push(`${key}: unexpected property in source object`);
+                    }
+                }
+            }
+        }
+        else {
+            errors.push('source is not an object');
         }
 
         return (errors.length === 0) ? succeed(converted) : fail(errors.join('\n'));

@@ -1547,4 +1547,117 @@ describe('Converters module', () => {
                 .toSucceedWith(expected);
         });
     });
+
+    describe('transformObject converter', () => {
+        interface SourceThing {
+            string1: string;
+            string2?: string;
+            num1: number;
+            b1: boolean;
+            nums?: number[];
+        }
+
+        interface DestinationThing {
+            stringField: string;
+            optionalStringField?: string;
+            numField: number;
+            boolField: boolean;
+            numbers?: number[];
+        }
+
+        const converter = Converters.transformObject<SourceThing, DestinationThing>({
+            stringField: {
+                from: 'string1',
+                converter: Converters.string,
+            },
+            optionalStringField: {
+                from: 'string2',
+                converter: Converters.optionalString,
+                optional: true,
+            },
+            numField: {
+                from: 'num1',
+                converter: Converters.number,
+            },
+            boolField: {
+                from: 'b1',
+                converter: Converters.boolean,
+            },
+            numbers: {
+                from: 'nums',
+                converter: Converters.arrayOf(Converters.number),
+                optional: true,
+            },
+        });
+
+        test('converts a valid object with empty optional fields', () => {
+            const src: SourceThing = {
+                string1: 'string1',
+                num1: -1,
+                b1: true,
+            };
+
+            const expected: DestinationThing = {
+                stringField: 'string1',
+                numField: -1,
+                boolField: true,
+            };
+
+            expect(converter.convert(src)).toSucceedWith(expected);
+        });
+
+        test('converts a valid object with optional fields present', () => {
+            const src: SourceThing = {
+                string1: 'string1',
+                string2: 'optional string',
+                num1: -1,
+                b1: true,
+                nums: [-1, 0, 1, 2],
+            };
+
+            const expected: DestinationThing = {
+                stringField: 'string1',
+                optionalStringField: 'optional string',
+                numField: -1,
+                boolField: true,
+                numbers: [-1, 0, 1, 2],
+            };
+
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
+        });
+
+        test('fails if any non-optional fields are missing', () => {
+            const src = {
+                misnamedString1: 'string1',
+                num1: -1,
+                b1: true,
+            };
+
+            expect(converter.convert(src))
+                .toFailWith(/string1: required property missing/i);
+        });
+
+        test('fails if any non-optional fields are mistyped', () => {
+            const src = {
+                string1: 'string1',
+                num1: true,
+                b1: -1,
+            };
+
+            expect(converter.convert(src))
+                .toFailWith(/not a number/i);
+        });
+
+        test('fails for mistyped optional fields', () => {
+            const src = {
+                string1: 'string1',
+                string2: true,
+                num1: -1,
+                b1: true,
+            };
+
+            expect(converter.convert(src)).toFailWith(/not a string/i);
+        });
+    });
 });
