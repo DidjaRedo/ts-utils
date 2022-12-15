@@ -9,7 +9,7 @@ Helper type to brand a simple type to prevent inappropriate use
 <b>Signature:</b>
 
 ```typescript
-export declare type Brand<T, B> = T & {
+export type Brand<T, B> = T & {
     __brand: B;
 };
 ```

@@ -9,7 +9,7 @@ A [Constraint&lt;T&gt;](./ts-utils.validation.constraint.md) function returns `t
 <b>Signature:</b>
 
 ```typescript
-export declare type Constraint<T> = (val: T) => boolean | Failure<T>;
+export type Constraint<T> = (val: T) => boolean | Failure<T>;
 ```
 <b>References:</b> [Failure](./ts-utils.failure.md)
 

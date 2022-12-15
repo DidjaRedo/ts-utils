@@ -16,5 +16,5 @@ constructor(params?: NumberValidatorConstructorParams<T, TC>);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  params | NumberValidatorConstructorParams&lt;T, TC&gt; | Optional [init params](./ts-utils.validation.classes.numbervalidatorconstructorparams.md) for the new [NumberValidator](./ts-utils.validation.classes.numbervalidator.md)<!-- -->. |
+|  params | [NumberValidatorConstructorParams](./ts-utils.validation.classes.numbervalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> Optional [init params](./ts-utils.validation.classes.numbervalidatorconstructorparams.md) for the new [NumberValidator](./ts-utils.validation.classes.numbervalidator.md)<!-- -->. |
 

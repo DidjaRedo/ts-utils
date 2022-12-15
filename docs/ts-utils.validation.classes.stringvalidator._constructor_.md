@@ -16,5 +16,5 @@ constructor(params?: StringValidatorConstructorParams<T, TC>);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  params | StringValidatorConstructorParams&lt;T, TC&gt; | Optional [init params](./ts-utils.validation.classes.stringvalidatorconstructorparams.md) for the new [StringValidator](./ts-utils.validation.classes.stringvalidator.md)<!-- -->. |
+|  params | [StringValidatorConstructorParams](./ts-utils.validation.classes.stringvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> Optional [init params](./ts-utils.validation.classes.stringvalidatorconstructorparams.md) for the new [StringValidator](./ts-utils.validation.classes.stringvalidator.md)<!-- -->. |
 

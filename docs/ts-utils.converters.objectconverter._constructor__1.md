@@ -16,6 +16,6 @@ constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  fields | FieldConverters&lt;T, TC&gt; | A [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) containing a [Converter](./ts-utils.converter.md) for each field. |
-|  optional | (keyof T)\[\] | An array of <code>keyof T</code> listing fields that are not required.  |
+|  fields | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T, TC&gt; | A [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) containing a [Converter](./ts-utils.converter.md) for each field. |
+|  optional | (keyof T)\[\] | <i>(Optional)</i> An array of <code>keyof T</code> listing fields that are not required.  |
 

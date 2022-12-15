@@ -17,8 +17,8 @@ convertOptional(from: unknown, context?: TC, onError?: OnError): Result<T | unde
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> to be converted |
-|  context | TC | An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
-|  onError | OnError | Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
+|  context | TC | <i>(Optional)</i> An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
+|  onError | OnError | <i>(Optional)</i> Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
 
 <b>Returns:</b>
 

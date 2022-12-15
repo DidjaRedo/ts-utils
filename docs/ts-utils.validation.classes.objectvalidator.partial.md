@@ -16,11 +16,11 @@ partial(options?: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  options | ObjectValidatorOptions&lt;T, TC&gt; | The [options](./ts-utils.validation.classes.objectvalidatoroptions.md) to be applied to the new [validator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->. |
+|  options | [ObjectValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> The [options](./ts-utils.validation.classes.objectvalidatoroptions.md) to be applied to the new [validator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->. |
 
 <b>Returns:</b>
 
-ObjectValidator&lt;Partial&lt;T&gt;, TC&gt;
+[ObjectValidator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 
 A new [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md) with the additional optional source properties.
 

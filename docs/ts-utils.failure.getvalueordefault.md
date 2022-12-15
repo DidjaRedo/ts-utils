@@ -16,7 +16,7 @@ getValueOrDefault(dflt?: T): T | undefined;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  dflt | T | The value to be returned if the operation failed (default is <code>undefined</code>). |
+|  dflt | T | <i>(Optional)</i> The value to be returned if the operation failed (default is <code>undefined</code>). |
 
 <b>Returns:</b>
 

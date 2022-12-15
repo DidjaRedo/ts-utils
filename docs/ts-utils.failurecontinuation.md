@@ -9,7 +9,7 @@ Continuation callback to be called in the event that an [Result](./ts-utils.resu
 <b>Signature:</b>
 
 ```typescript
-export declare type FailureContinuation<T> = (message: string) => Result<T>;
+export type FailureContinuation<T> = (message: string) => Result<T>;
 ```
 <b>References:</b> [Result](./ts-utils.result.md)
 

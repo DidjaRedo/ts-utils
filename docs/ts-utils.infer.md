@@ -12,7 +12,7 @@ Infers the type that will be returned by an intstantiated converter. Works for c
 <b>Signature:</b>
 
 ```typescript
-export declare type Infer<TCONV> = TCONV extends Converter<infer TTO> ? InnerInferredType<TTO> : never;
+export type Infer<TCONV> = TCONV extends Converter<infer TTO> ? InnerInferredType<TTO> : never;
 ```
 <b>References:</b> [Converter](./ts-utils.converter.md)
 

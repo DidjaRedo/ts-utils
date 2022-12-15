@@ -17,7 +17,7 @@ withConstraint(constraint: (val: T) => boolean | Result<T>, options?: Constraint
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  constraint | (val: T) =&gt; boolean \| [Result](./ts-utils.result.md)<!-- -->&lt;T&gt; | Constraint evaluation function. |
-|  options | [ConstraintOptions](./ts-utils.constraintoptions.md) | [Options](./ts-utils.constraintoptions.md) for constraint evaluation. |
+|  options | [ConstraintOptions](./ts-utils.constraintoptions.md) | <i>(Optional)</i> [Options](./ts-utils.constraintoptions.md) for constraint evaluation. |
 
 <b>Returns:</b>
 

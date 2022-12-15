@@ -27,8 +27,8 @@ By default, succeeds if all of the required fields exist and are validate, and f
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [fields](./ts-utils.validation.classes.objectvalidator.fields.md) |  | FieldValidators&lt;T&gt; | A [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md) object specifying a [Validator](./ts-utils.validation.validator.md) for each of the expected properties |
-|  [options](./ts-utils.validation.classes.objectvalidator.options.md) |  | ObjectValidatorOptions&lt;T, TC&gt; | [Options](./ts-utils.validation.classes.objectvalidatoroptions.md) which apply to this validator. |
+|  [fields](./ts-utils.validation.classes.objectvalidator.fields.md) | <code>readonly</code> | [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md)<!-- -->&lt;T&gt; | A [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md) object specifying a [Validator](./ts-utils.validation.validator.md) for each of the expected properties |
+|  [options](./ts-utils.validation.classes.objectvalidator.options.md) | <code>readonly</code> | [ObjectValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md)<!-- -->&lt;T, TC&gt; | [Options](./ts-utils.validation.classes.objectvalidatoroptions.md) which apply to this validator. |
 
 ## Methods
 

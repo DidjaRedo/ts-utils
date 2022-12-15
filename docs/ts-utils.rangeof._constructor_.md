@@ -16,6 +16,6 @@ constructor(min?: T, max?: T);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  min | T | Optional mininum extent of the range. |
-|  max | T | Optional maximum extent of the range. |
+|  min | T | <i>(Optional)</i> Optional mininum extent of the range. |
+|  max | T | <i>(Optional)</i> Optional maximum extent of the range. |
 

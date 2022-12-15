@@ -17,7 +17,7 @@ convert(from: unknown, context?: TC): Result<T>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> to be converted |
-|  context | TC | An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
+|  context | TC | <i>(Optional)</i> An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
 
 <b>Returns:</b>
 

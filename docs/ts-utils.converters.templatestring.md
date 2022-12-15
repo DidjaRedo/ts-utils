@@ -16,11 +16,11 @@ export declare function templateString(defaultContext?: unknown): StringConverte
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  defaultContext | unknown | Optional default context to use for template values. |
+|  defaultContext | unknown | <i>(Optional)</i> Optional default context to use for template values. |
 
 <b>Returns:</b>
 
-StringConverter&lt;string, unknown&gt;
+[StringConverter](./ts-utils.converters.stringconverter.md)<!-- -->&lt;string, unknown&gt;
 
 A new [Converter](./ts-utils.converter.md) returning `string`<!-- -->.
 

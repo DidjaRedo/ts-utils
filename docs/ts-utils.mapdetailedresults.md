@@ -4,7 +4,7 @@
 
 ## mapDetailedResults() function
 
-Aggregates sucessful results from a collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, optionally ignoring certain error details.
+Aggregates successful results from a collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, optionally ignoring certain error details.
 
 <b>Signature:</b>
 
@@ -23,5 +23,5 @@ export declare function mapDetailedResults<T, TD>(results: Iterable<DetailedResu
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T\[\]&gt;
 
-[Success](./ts-utils.success.md) with an array containing all successful results if all results either suceeded or returned error details listed in `ignore`<!-- -->. If any results failed with details that cannot be ignored, returns [Failure](./ts-utils.failure.md) with an concatenated summary of all non-ignorable error mesasges.
+[Success](./ts-utils.success.md) with an array containing all successful results if all results either succeeded or returned error details listed in `ignore`<!-- -->. If any results failed with details that cannot be ignored, returns [Failure](./ts-utils.failure.md) with an concatenated summary of all non-ignorable error messages.
 

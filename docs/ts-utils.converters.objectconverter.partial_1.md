@@ -16,11 +16,11 @@ partial(optional?: (keyof T)[]): ObjectConverter<Partial<T>, TC>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  optional | (keyof T)\[\] | The keys of the source object properties to be made optional. |
+|  optional | (keyof T)\[\] | <i>(Optional)</i> The keys of the source object properties to be made optional. |
 
 <b>Returns:</b>
 
-ObjectConverter&lt;Partial&lt;T&gt;, TC&gt;
+[ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 
 A new [ObjectConverter](./ts-utils.converters.objectconverter.md) with the additional optional source properties. 
 

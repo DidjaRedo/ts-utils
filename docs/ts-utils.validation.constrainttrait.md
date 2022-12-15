@@ -9,5 +9,7 @@ Union of all supported constraint traits.
 <b>Signature:</b>
 
 ```typescript
-export declare type ConstraintTrait = FunctionConstraintTrait;
+export type ConstraintTrait = FunctionConstraintTrait;
 ```
+<b>References:</b> [FunctionConstraintTrait](./ts-utils.validation.functionconstrainttrait.md)
+

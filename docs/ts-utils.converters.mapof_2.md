@@ -17,7 +17,7 @@ export declare function mapOf<T, TC = undefined, TK extends string = string>(con
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert each item in the source object. |
-|  options | KeyedConverterOptions&lt;TK, TC&gt; | Optional [KeyedConverterOptions&lt;TK, TC&gt;](./ts-utils.converters.keyedconverteroptions.md) which supplies a key converter and/or error-handling options. |
+|  options | [KeyedConverterOptions](./ts-utils.converters.keyedconverteroptions.md)<!-- -->&lt;TK, TC&gt; | Optional [KeyedConverterOptions&lt;TK, TC&gt;](./ts-utils.converters.keyedconverteroptions.md) which supplies a key converter and/or error-handling options. |
 
 <b>Returns:</b>
 

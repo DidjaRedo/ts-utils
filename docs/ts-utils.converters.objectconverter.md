@@ -28,8 +28,8 @@ By default, if all of the required fields exist and can be converted, returns a 
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [fields](./ts-utils.converters.objectconverter.fields.md) |  | FieldConverters&lt;T&gt; | Fields converted by this [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->. |
-|  [options](./ts-utils.converters.objectconverter.options.md) |  | ObjectConverterOptions&lt;T&gt; | Options used to initialize this [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->. |
+|  [fields](./ts-utils.converters.objectconverter.fields.md) | <code>readonly</code> | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | Fields converted by this [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->. |
+|  [options](./ts-utils.converters.objectconverter.options.md) | <code>readonly</code> | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | Options used to initialize this [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->. |
 
 ## Methods
 

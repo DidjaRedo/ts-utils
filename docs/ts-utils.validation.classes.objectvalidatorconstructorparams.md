@@ -17,6 +17,6 @@ export interface ObjectValidatorConstructorParams<T, TC> extends ValidatorBaseCo
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [fields](./ts-utils.validation.classes.objectvalidatorconstructorparams.fields.md) |  | FieldValidators&lt;T&gt; | A [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md) object specifying a [Validator](./ts-utils.validation.validator.md) for each of the expected properties of a result object. |
-|  [options?](./ts-utils.validation.classes.objectvalidatorconstructorparams.options.md) |  | ObjectValidatorOptions&lt;T, TC&gt; | <i>(Optional)</i> Optional additional [ValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md) to configure validation. |
+|  [fields](./ts-utils.validation.classes.objectvalidatorconstructorparams.fields.md) |  | [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md)<!-- -->&lt;T&gt; | A [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md) object specifying a [Validator](./ts-utils.validation.validator.md) for each of the expected properties of a result object. |
+|  [options?](./ts-utils.validation.classes.objectvalidatorconstructorparams.options.md) |  | [ObjectValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> Optional additional [ValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md) to configure validation. |
 

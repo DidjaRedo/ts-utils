@@ -16,5 +16,5 @@ constructor(params: ObjectValidatorConstructorParams<T, TC>);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  params | ObjectValidatorConstructorParams&lt;T, TC&gt; |  |
+|  params | [ObjectValidatorConstructorParams](./ts-utils.validation.classes.objectvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; |  |
 

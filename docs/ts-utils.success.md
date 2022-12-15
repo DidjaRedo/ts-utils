@@ -23,8 +23,8 @@ export declare class Success<T> implements IResult<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [success](./ts-utils.success.success.md) |  | (not declared) | Indicates whether the operation was successful. |
-|  [value](./ts-utils.success.value.md) |  | T | The result value returned by the successful operation. |
+|  [success](./ts-utils.success.success.md) | <code>readonly</code> | (not declared) | Indicates whether the operation was successful. |
+|  [value](./ts-utils.success.value.md) | <code>readonly</code> | T | The result value returned by the successful operation. |
 
 ## Methods
 

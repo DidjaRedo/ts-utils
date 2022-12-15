@@ -9,7 +9,7 @@ Callback to be called when a [DetailedResult](./ts-utils.detailedresult.md) enco
 <b>Signature:</b>
 
 ```typescript
-export declare type DetailedSuccessContinuation<T, TD, TN> = (value: T, detail?: TD) => DetailedResult<TN, TD>;
+export type DetailedSuccessContinuation<T, TD, TN> = (value: T, detail?: TD) => DetailedResult<TN, TD>;
 ```
 <b>References:</b> [DetailedResult](./ts-utils.detailedresult.md)
 

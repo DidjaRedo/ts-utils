@@ -16,6 +16,6 @@ export interface ConverterTraits
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand?](./ts-utils.convertertraits.brand.md) |  | string | <i>(Optional)</i> |
-|  [isOptional](./ts-utils.convertertraits.isoptional.md) |  | boolean |  |
+|  [brand?](./ts-utils.convertertraits.brand.md) | <code>readonly</code> | string | <i>(Optional)</i> |
+|  [isOptional](./ts-utils.convertertraits.isoptional.md) | <code>readonly</code> | boolean |  |
 

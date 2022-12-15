@@ -9,7 +9,9 @@ Per-property [validators](./ts-utils.validation.validator.md) for each of the pr
 <b>Signature:</b>
 
 ```typescript
-export declare type FieldValidators<T, TC = unknown> = {
+export type FieldValidators<T, TC = unknown> = {
     [key in keyof T]: Validator<T[key], TC>;
 };
 ```
+<b>References:</b> [Validator](./ts-utils.validation.validator.md)
+

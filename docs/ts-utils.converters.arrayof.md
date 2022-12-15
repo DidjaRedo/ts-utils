@@ -17,7 +17,7 @@ export declare function arrayOf<T, TC = undefined>(converter: Converter<T, TC>, 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert each item in the array. |
-|  onError | OnError |  |
+|  onError | OnError | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

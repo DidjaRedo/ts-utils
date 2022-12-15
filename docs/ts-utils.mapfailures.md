@@ -16,7 +16,7 @@ export declare function mapFailures<T>(results: Iterable<Result<T>>): string[];
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  results | Iterable&lt;[Result](./ts-utils.result.md)<!-- -->&lt;T&gt;&gt; | An interable collection of [Result&lt;T&gt;](./ts-utils.result.md) for which error messages are aggregated. |
+|  results | Iterable&lt;[Result](./ts-utils.result.md)<!-- -->&lt;T&gt;&gt; | An iterable collection of [Result&lt;T&gt;](./ts-utils.result.md) for which error messages are aggregated. |
 
 <b>Returns:</b>
 

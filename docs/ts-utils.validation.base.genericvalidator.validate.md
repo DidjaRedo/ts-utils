@@ -17,7 +17,7 @@ validate(from: unknown, context?: TC): Result<T>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
-|  context | TC | Optional validation context. |
+|  context | TC | <i>(Optional)</i> Optional validation context. |
 
 <b>Returns:</b>
 

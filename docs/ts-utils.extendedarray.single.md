@@ -19,7 +19,7 @@ single(predicate?: (item: T) => boolean): Result<T>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  predicate | (item: T) =&gt; boolean | The predicate function to be applied. |
+|  predicate | (item: T) =&gt; boolean | <i>(Optional)</i> The predicate function to be applied. |
 
 <b>Returns:</b>
 

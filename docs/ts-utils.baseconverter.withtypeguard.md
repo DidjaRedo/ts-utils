@@ -17,7 +17,7 @@ withTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Conve
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  guard | (from: unknown) =&gt; from is TI | The type guard function to apply. |
-|  message | string | Optional message to be reported if the type guard fails. |
+|  message | string | <i>(Optional)</i> Optional message to be reported if the type guard fails. |
 
 <b>Returns:</b>
 

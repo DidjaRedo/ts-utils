@@ -4,7 +4,7 @@
 
 ## Converters.discriminatedObject() function
 
-Helper to create a [Converter](./ts-utils.converter.md) whhich converts a discriminated object without changing shape.
+Helper to create a [Converter](./ts-utils.converter.md) which converts a discriminated object without changing shape.
 
 <b>Signature:</b>
 
@@ -17,7 +17,7 @@ export declare function discriminatedObject<T, TD extends string = string, TC = 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  discriminatorProp | string | Name of the property used to discriminate types. |
-|  converters | DiscriminatedObjectConverters&lt;T, TD&gt; | [String-keyed record of converters](./ts-utils.converters.discriminatedobjectconverters.md) to invoke, where each key corresponds to a value of the discriminator property. |
+|  converters | [DiscriminatedObjectConverters](./ts-utils.converters.discriminatedobjectconverters.md)<!-- -->&lt;T, TD&gt; | [String-keyed record of converters](./ts-utils.converters.discriminatedobjectconverters.md) to invoke, where each key corresponds to a value of the discriminator property. |
 
 <b>Returns:</b>
 

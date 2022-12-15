@@ -17,5 +17,5 @@ constructor(value: T, detail?: TD);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  value | T | The value to be returned. |
-|  detail | TD | An optional successful detail to be returned. If omitted, detail will be <code>undefined</code>. |
+|  detail | TD | <i>(Optional)</i> An optional successful detail to be returned. If omitted, detail will be <code>undefined</code>. |
 

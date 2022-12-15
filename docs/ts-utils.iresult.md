@@ -14,13 +14,13 @@ export interface IResult<T>
 
 ## Remarks
 
-This common contract enables comingled discriminated usage of [Success&lt;T&gt;](./ts-utils.success.md) and [Failure&lt;T&gt;](./ts-utils.failure.md)<!-- -->.
+This common contract enables commingled discriminated usage of [Success&lt;T&gt;](./ts-utils.success.md) and [Failure&lt;T&gt;](./ts-utils.failure.md)<!-- -->.
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [success](./ts-utils.iresult.success.md) |  | boolean | Indicates whether the operation was successful. |
+|  [success](./ts-utils.iresult.success.md) | <code>readonly</code> | boolean | Indicates whether the operation was successful. |
 
 ## Methods
 

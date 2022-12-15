@@ -9,7 +9,7 @@ Per-property converters for each of the properties in type T.
 <b>Signature:</b>
 
 ```typescript
-export declare type FieldConverters<T, TC = unknown> = {
+export type FieldConverters<T, TC = unknown> = {
     [key in keyof T]: Converter<T[key], TC>;
 };
 ```

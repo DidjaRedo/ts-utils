@@ -12,7 +12,7 @@ Type inference to determine the result type of an [Result](./ts-utils.result.md)
 <b>Signature:</b>
 
 ```typescript
-export declare type ResultValueType<T> = T extends Result<infer TV> ? TV : never;
+export type ResultValueType<T> = T extends Result<infer TV> ? TV : never;
 ```
 <b>References:</b> [Result](./ts-utils.result.md)
 

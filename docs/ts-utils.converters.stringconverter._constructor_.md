@@ -16,7 +16,7 @@ constructor(defaultContext?: TC, traits?: ConverterTraits, converter?: (from: un
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  defaultContext | TC | Optional context used by the conversion. |
-|  traits | [ConverterTraits](./ts-utils.convertertraits.md) | Optional traits to be applied to the conversion. |
-|  converter | (from: unknown, self: [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;, context?: TC) =&gt; [Result](./ts-utils.result.md)<!-- -->&lt;T&gt; | Optional conversion function to be used for the conversion. |
+|  defaultContext | TC | <i>(Optional)</i> Optional context used by the conversion. |
+|  traits | [ConverterTraits](./ts-utils.convertertraits.md) | <i>(Optional)</i> Optional traits to be applied to the conversion. |
+|  converter | (from: unknown, self: [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;, context?: TC) =&gt; [Result](./ts-utils.result.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> Optional conversion function to be used for the conversion. |
 

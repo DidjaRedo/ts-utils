@@ -4,7 +4,7 @@
 
 ## mapResults() function
 
-Aggregates sucessful result values from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->.
+Aggregates successful result values from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->.
 
 <b>Signature:</b>
 

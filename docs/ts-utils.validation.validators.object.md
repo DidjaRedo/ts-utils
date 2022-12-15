@@ -16,12 +16,12 @@ export declare function object<T, TC>(fields: FieldValidators<T, TC>, params?: O
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  fields | FieldValidators&lt;T, TC&gt; | A [field validator definition](./ts-utils.validation.classes.fieldvalidators.md) describing the validations to be applied. |
-|  params | Omit&lt;ObjectValidatorConstructorParams&lt;T, TC&gt;, 'fields'&gt; | Optional [parameters](./ts-utils.validation.classes.objectvalidatorconstructorparams.md) to refine the behavior of the resulting [validator](./ts-utils.validation.validator.md)<!-- -->. |
+|  fields | [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md)<!-- -->&lt;T, TC&gt; | A [field validator definition](./ts-utils.validation.classes.fieldvalidators.md) describing the validations to be applied. |
+|  params | Omit&lt;[ObjectValidatorConstructorParams](./ts-utils.validation.classes.objectvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt;, 'fields'&gt; | <i>(Optional)</i> Optional [parameters](./ts-utils.validation.classes.objectvalidatorconstructorparams.md) to refine the behavior of the resulting [validator](./ts-utils.validation.validator.md)<!-- -->. |
 
 <b>Returns:</b>
 
-ObjectValidator&lt;T, TC&gt;
+[ObjectValidator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->&lt;T, TC&gt;
 
 A new [Validator](./ts-utils.validation.validator.md) which validates the desired object in place.
 

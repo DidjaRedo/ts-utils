@@ -17,7 +17,7 @@ export declare function succeedWithDetail<T, TD>(value: T, detail?: TD): Detaile
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  value | T | The value of type <code>&lt;T&gt;</code> to be returned. |
-|  detail | TD | An optional detail of type <code>&lt;TD&gt;</code> to be returned. |
+|  detail | TD | <i>(Optional)</i> An optional detail of type <code>&lt;TD&gt;</code> to be returned. |
 
 <b>Returns:</b>
 

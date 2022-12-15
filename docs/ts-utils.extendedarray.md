@@ -26,7 +26,7 @@ export declare class ExtendedArray<T> extends Array<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [itemDescription](./ts-utils.extendedarray.itemdescription.md) |  | string | <b><i>(BETA)</i></b> |
+|  [itemDescription](./ts-utils.extendedarray.itemdescription.md) | <code>readonly</code> | string | <b><i>(BETA)</i></b> |
 
 ## Methods
 

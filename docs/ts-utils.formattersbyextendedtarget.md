@@ -12,7 +12,7 @@ A collection of [formatters](./ts-utils.formatter.md) indexed by target name, to
 <b>Signature:</b>
 
 ```typescript
-export declare type FormattersByExtendedTarget<TFT extends FormatTargets, T> = Record<TFT, Formatter<T>>;
+export type FormattersByExtendedTarget<TFT extends FormatTargets, T> = Record<TFT, Formatter<T>>;
 ```
 <b>References:</b> [FormatTargets](./ts-utils.formattargets.md)<!-- -->, [Formatter](./ts-utils.formatter.md)
 

@@ -19,7 +19,7 @@ static isExtendedArray<T>(a?: T[]): a is ExtendedArray<T>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  a | T\[\] | The <code>Array</code> to be tested. |
+|  a | T\[\] | <i>(Optional)</i> The <code>Array</code> to be tested. |
 
 <b>Returns:</b>
 

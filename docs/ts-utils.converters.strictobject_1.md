@@ -21,12 +21,12 @@ export declare function strictObject<T>(properties: FieldConverters<T>, optional
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  properties | FieldConverters&lt;T&gt; | An object containing defining the shape and converters to be applied. |
+|  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | An object containing defining the shape and converters to be applied. |
 |  optional | (keyof T)\[\] | An array of <code>keyof T</code> containing keys to be considered optional. |
 
 <b>Returns:</b>
 
-ObjectConverter&lt;T&gt;
+[ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;T&gt;
 
 A new [ObjectConverter](./ts-utils.converters.objectconverter.md) which applies the specified conversions. 
 

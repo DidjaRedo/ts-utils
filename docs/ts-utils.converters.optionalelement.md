@@ -27,5 +27,5 @@ A [Converter&lt;T&gt;](./ts-utils.converter.md) which extracts the specified ele
 
 ## Remarks
 
-The resulting [Converter](./ts-utils.converter.md) returns [Success](./ts-utils.success.md) with the converted value if the element exsist in the supplied array and can be converted. Returns [Success](./ts-utils.success.md) with value `undefined` if the parameter is an array but the index is out of range. Returns [Failure](./ts-utils.failure.md) with a message if the supplied parameter is not an array, if the requested index is negative, or if the element cannot be converted.
+The resulting [Converter](./ts-utils.converter.md) returns [Success](./ts-utils.success.md) with the converted value if the element exists in the supplied array and can be converted. Returns [Success](./ts-utils.success.md) with value `undefined` if the parameter is an array but the index is out of range. Returns [Failure](./ts-utils.failure.md) with a message if the supplied parameter is not an array, if the requested index is negative, or if the element cannot be converted.
 

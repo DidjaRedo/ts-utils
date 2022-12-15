@@ -23,7 +23,7 @@ export declare class DetailedSuccess<T, TD> extends Success<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [detail](./ts-utils.detailedsuccess.detail.md) |  | TD \| undefined | The success detail associated with this [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->, or <code>undefined</code> if no detail was supplied. |
+|  [detail](./ts-utils.detailedsuccess.detail.md) | <code>readonly</code> | TD \| undefined | The success detail associated with this [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->, or <code>undefined</code> if no detail was supplied. |
 
 ## Methods
 
