@@ -817,6 +817,10 @@ export interface ObjectConverterOptions<T> {
      * unrecognized fields are ignored.
      */
     strict?: boolean;
+    /**
+     * Optional description to be included in error messages.
+     */
+    description?: string;
 }
 
 /**
@@ -904,7 +908,7 @@ export class ObjectConverter<T, TC=unknown> extends BaseConverter<T, TC> {
                     errors.push('source is not an object');
                 }
             }
-            return (errors.length === 0) ? succeed(converted) : fail(errors.join('\n'));
+            return (errors.length === 0) ? succeed(converted) : fail(this.options.description ? `${this.options.description}: ${errors.join('\n')}` : errors.join('\n'));
         });
 
         this.fields = fields;

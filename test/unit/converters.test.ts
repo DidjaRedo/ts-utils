@@ -1259,6 +1259,13 @@ describe('Converters module', () => {
             });
         });
 
+        describe('with an optional description', () => {
+            test('includes description in error message if present', () => {
+                const converter = Converters.object(wantConverters, { description: 'xyzzy' });
+                expect(converter.convert({ invalid: 'totally unexpected' })).toFailWith(/xyzzy/i);
+            });
+        });
+
         describe('for unknown properties', () => {
             const converters: Converters.FieldConverters<Want> = {
                 stringField: Converters.string,
