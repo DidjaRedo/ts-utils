@@ -1241,13 +1241,13 @@ export function transformObject<TSRC, TDEST, TC=unknown>(
 
                     if (isKeyOf(srcKey, from)) {
                         const result = converter.convert(from[srcKey], context);
-                        if (result.isSuccess()) {
+                        if (result.isSuccess() && result.value !== undefined) {
                             converted[destinationKey] = result.value;
-                            used.add(srcKey);
                         }
-                        else {
+                        else if (result.isFailure()) {
                             errors.push(`${srcKey}->${destinationKey}: ${result.message}`);
                         }
+                        used.add(srcKey);
                     }
                     else if (destinationFields[destinationKey].optional !== true) {
                         errors.push(`${String(srcKey)}: required property missing in source object.`);
@@ -1267,7 +1267,7 @@ export function transformObject<TSRC, TDEST, TC=unknown>(
             errors.push('source is not an object');
         }
 
-        return (errors.length === 0) ? succeed(converted) : fail(options?.description ? `${options.description}: ${errors.join('\n')}` : errors.join('\n'));
+        return (errors.length === 0) ? succeed(converted) : fail(options?.description ? `${options.description}:\n  ${errors.join('\n  ')}` : errors.join('\n'));
     });
 }
 
