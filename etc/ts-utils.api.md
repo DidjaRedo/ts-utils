@@ -563,6 +563,7 @@ class ObjectConverter<T, TC = unknown> extends BaseConverter<T, TC> {
 
 // @public
 interface ObjectConverterOptions<T> {
+    description?: string;
     optionalFields?: (keyof T)[];
     strict?: boolean;
 }
@@ -788,6 +789,7 @@ function transformObject<TSRC, TDEST, TC = unknown>(destinationFields: FieldTran
 
 // @public
 interface TransformObjectOptions<TSRC> {
+    description?: string;
     ignore?: (keyof TSRC)[];
     strict: true;
 }

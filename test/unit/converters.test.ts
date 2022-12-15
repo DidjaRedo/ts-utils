@@ -1259,6 +1259,13 @@ describe('Converters module', () => {
             });
         });
 
+        describe('with an optional description', () => {
+            test('includes description in error message if present', () => {
+                const converter = Converters.object(wantConverters, { description: 'xyzzy' });
+                expect(converter.convert({ invalid: 'totally unexpected' })).toFailWith(/xyzzy/i);
+            });
+        });
+
         describe('for unknown properties', () => {
             const converters: Converters.FieldConverters<Want> = {
                 stringField: Converters.string,
@@ -1595,7 +1602,7 @@ describe('Converters module', () => {
 
         const converter = Converters.transformObject(transformers);
         const strict = Converters.transformObject(transformers, { strict: true });
-        const strict2 = Converters.transformObject(transformers, { strict: true, ignore: ['extra'] });
+        const strict2 = Converters.transformObject(transformers, { strict: true, ignore: ['extra'], description: 'strict2' });
 
         test('converts a valid object with empty optional fields', () => {
             const src: SourceThing = {
@@ -1688,6 +1695,19 @@ describe('Converters module', () => {
             };
 
             expect(strict2.convert(src)).toSucceedWith(expected);
+        });
+
+        test('displays description in error messages if supplied', () => {
+            const src = {
+                string1: 'string1',
+                string2: 'optional string',
+                num1: -1,
+                b1: true,
+                nums: [-1, 0, 1, 2],
+                extra2: 'this is an extra field',
+            };
+
+            expect(strict2.convert(src)).toFailWith(/strict2: extra2/i);
         });
 
         test('fails if any non-optional fields are missing', () => {
