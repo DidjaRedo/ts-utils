@@ -7,9 +7,12 @@
         "**/boneyard/**/*.ts": true
     },
     "cSpell.words": [
+        "badp",
         "dflt",
+        "furst",
         "luxon",
         "nums",
+        "prefixp",
         "TDEST",
         "TSRC",
         "xyzzy"

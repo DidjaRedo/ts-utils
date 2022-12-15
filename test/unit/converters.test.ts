@@ -219,7 +219,7 @@ describe('Converters module', () => {
             });
         });
 
-        test('uses delimeter from context if supplied', () => {
+        test('uses delimiter from context if supplied', () => {
             const converter = Converters.delimitedString(',');
             expect(converter.convert('a|b|c', '|')).toSucceedWith(['a', 'b', 'c']);
         });
@@ -280,7 +280,7 @@ describe('Converters module', () => {
     });
 
     describe('oneOf converter', () => {
-        describe('with onError set to ignoreOrrors', () => {
+        describe('with onError set to ignoreErrors', () => {
             const stringFirst = Converters.oneOf<string|number>([Converters.string, Converters.number]);
             const numFirst = Converters.oneOf<string|number>([Converters.number, Converters.string]);
 
@@ -471,7 +471,7 @@ describe('Converters module', () => {
         const min = 0;
         const max = 1000;
         const converter = Converters.rangeOf(Converters.number);
-        test('converts a range with valid or omitted min and max specificatons', () => {
+        test('converts a range with valid or omitted min and max specifications', () => {
             const expected = [
                 { min, max },
                 { min },
@@ -529,6 +529,7 @@ describe('Converters module', () => {
         // n correctly fails because 'number' doesn't extend Converter.
         // const n: Infer<number> = 10;
         const narc = Converters.arrayOf(Converters.number);
+        // cSpell: disable
         const narr: Infer<typeof narc> = [1, 2, 3];
         const objc = Converters.object({
             str: Converters.string,
@@ -551,6 +552,7 @@ describe('Converters module', () => {
         expect(s).toBeDefined();
         expect(narr).toBeDefined();
         expect(objt).toBeDefined();
+        // cSpell: enable
     });
 
     describe('recordOf converter', () => {
@@ -635,7 +637,7 @@ describe('Converters module', () => {
             ).toSucceedWith(validObject);
         });
 
-        test('defailts to onError="fail"', () => {
+        test('defaults to onError="fail"', () => {
             expect(Converters.recordOf(Converters.string).convert({ bad: true })).toFail();
             expect(Converters.recordOf(Converters.string, {}).convert({ bad: true })).toFail();
         });
@@ -855,7 +857,7 @@ describe('Converters module', () => {
             ).toSucceedWith(expected);
         });
 
-        test('passes a supplied context to the base conveter', () => {
+        test('passes a supplied context to the base converter', () => {
             const source = {
                 p1: '{{expected}} is expected',
                 p2: 'p2',
@@ -1346,7 +1348,7 @@ describe('Converters module', () => {
             prop2: Converters.string,
         };
 
-        test('fails if required porperties are missing', () => {
+        test('fails if required properties are missing', () => {
             const converter = Converters.strictObject(fields);
             expect(converter.convert({
                 prop1: 'hello',
@@ -1419,7 +1421,7 @@ describe('Converters module', () => {
             expect(thing.convert(ntNot)).toFailWith(/not a number/i);
         });
 
-        test('fails to convert non-discriminated or incorrectly discriminnated objects objects', () => {
+        test('fails to convert non-discriminated or incorrectly discriminated objects objects', () => {
             expect(thing.convert({ property: 'hello' })).toFailWith(/discriminator.*not present/i);
             expect(thing.convert({ which: null, property: 'hello' })).toFailWith(/discriminator.*not present/i);
             expect(thing.convert({ which: 'boolean thing', property: true })).toFailWith(/no converter for discriminator/i);
@@ -1555,6 +1557,7 @@ describe('Converters module', () => {
             num1: number;
             b1: boolean;
             nums?: number[];
+            extra?: string;
         }
 
         interface DestinationThing {
@@ -1565,7 +1568,7 @@ describe('Converters module', () => {
             numbers?: number[];
         }
 
-        const converter = Converters.transformObject<SourceThing, DestinationThing>({
+        const transformers: Converters.FieldTransformers<SourceThing, DestinationThing> = {
             stringField: {
                 from: 'string1',
                 converter: Converters.string,
@@ -1588,7 +1591,11 @@ describe('Converters module', () => {
                 converter: Converters.arrayOf(Converters.number),
                 optional: true,
             },
-        });
+        };
+
+        const converter = Converters.transformObject(transformers);
+        const strict = Converters.transformObject(transformers, { strict: true });
+        const strict2 = Converters.transformObject(transformers, { strict: true, ignore: ['extra'] });
 
         test('converts a valid object with empty optional fields', () => {
             const src: SourceThing = {
@@ -1627,6 +1634,62 @@ describe('Converters module', () => {
                 .toSucceedWith(expected);
         });
 
+        test('ignores unused source fields by default', () => {
+            const src: SourceThing = {
+                string1: 'string1',
+                string2: 'optional string',
+                num1: -1,
+                b1: true,
+                nums: [-1, 0, 1, 2],
+                extra: 'this is an extra field',
+            };
+
+            const expected: DestinationThing = {
+                stringField: 'string1',
+                optionalStringField: 'optional string',
+                numField: -1,
+                boolField: true,
+                numbers: [-1, 0, 1, 2],
+            };
+
+            expect(converter.convert(src))
+                .toSucceedWith(expected);
+        });
+
+        test('fails in strict mode if unused fields are present in the source object', () => {
+            const src: SourceThing = {
+                string1: 'string1',
+                string2: 'optional string',
+                num1: -1,
+                b1: true,
+                nums: [-1, 0, 1, 2],
+                extra: 'this is an extra field',
+            };
+
+            expect(strict.convert(src)).toFailWith(/extra: unexpected property/i);
+        });
+
+        test('succeeds in strict mode if unused fields in the source object are listed in options.ignore', () => {
+            const src: SourceThing = {
+                string1: 'string1',
+                string2: 'optional string',
+                num1: -1,
+                b1: true,
+                nums: [-1, 0, 1, 2],
+                extra: 'this is an extra field',
+            };
+
+            const expected: DestinationThing = {
+                stringField: 'string1',
+                optionalStringField: 'optional string',
+                numField: -1,
+                boolField: true,
+                numbers: [-1, 0, 1, 2],
+            };
+
+            expect(strict2.convert(src)).toSucceedWith(expected);
+        });
+
         test('fails if any non-optional fields are missing', () => {
             const src = {
                 misnamedString1: 'string1',
@@ -1658,6 +1721,10 @@ describe('Converters module', () => {
             };
 
             expect(converter.convert(src)).toFailWith(/not a string/i);
+        });
+
+        test('fails if source is not an object', () => {
+            expect(converter.convert(10)).toFailWith(/not an object/i);
         });
     });
 });

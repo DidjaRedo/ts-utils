@@ -1156,53 +1156,73 @@ export function transform<T, TC=unknown>(properties: FieldConverters<T, TC>): Co
 }
 
 /**
- * Per-property converters and configuration for each field in the destination object of 
- * a transformObject call.
- * @remarks
- * Used to construct a {@link Converters.ObjectConverter | ObjectConverter}
+ * Per-property converters and configuration for each field in the destination object of
+ * a {@link Converters.transformObject} call.
  * @public
  */
 export type FieldTransformers<TSRC, TDEST, TC=unknown> = { [ key in keyof TDEST ]: {
+    /**
+     * The name of the property in the source object to be converter.
+     */
     from: keyof TSRC,
+    /**
+     * The converter used to convert the property.
+     */
     converter: Converter<TDEST[key], TC>,
+    /**
+     * If `true` then a missing source property is ignored.  If `false` or omitted
+     * then a missing source property causes an error.
+     */
     optional?: boolean,
 } };
 
 /**
- * Options for a transformObject call.
+ * Options for a {@link Converters.transformObject} call.
  */
-export interface TransformObjectOptions {
+export interface TransformObjectOptions<TSRC> {
+    /**
+     * If `strict` is `true` then unused properties in the source object cause
+     * an error, otherwise they are ignored.
+     */
     strict: true;
+
+    /**
+     * An optional list of source properties to be ignored when strict mode
+     * is enabled.
+     */
+    ignore?: (keyof TSRC)[];
 }
 
 /**
- * Helper to create a {@link Converter} which converts a source object to a new object with a
- * different shape.
+ * Helper to create a strongly-typed {@link Converter} which converts a source object to a
+ * new object with a different shape.
  *
  * @remarks
  * On successful conversion, the resulting {@link Converter} returns {@link Success} with a new
  * object, which contains the converted values under the key names specified at initialization time.
+ *
  * It returns {@link Failure} with an error message if any fields to be extracted do not exist
  * or cannot be converted.
  *
- * Fields that succeed but convert to undefined are omitted from the result object but do not
- * fail the conversion.
- *
  * @param destinationFields - An object with key names that correspond to the target object and an
- * appropriate {@link Converters.FieldConverters | FieldConverter} which extracts and converts
- * a single field from the source object.
+ * appropriate {@link Converters.FieldTransformers | FieldTransformers} which specifies the name
+ * of the corresponding property in the source object, the converter used to convert the source
+ * property and any configuration to guide the conversion.
+ * @param options - Options which affect the transformation.
+ *
  * @returns A {@link Converter} with the specified conversion behavior.
  * @public
  */
 export function transformObject<TSRC, TDEST, TC=unknown>(
     destinationFields: FieldTransformers<TSRC, TDEST, TC>,
-    options?: TransformObjectOptions
+    options?: TransformObjectOptions<TSRC>
 ): Converter<TDEST, TC> {
     return new BaseConverter((from: unknown, _self, context?: TC) => {
         // eslint bug thinks key is used before defined
         // eslint-disable-next-line no-use-before-define
         const converted = {} as { [ key in keyof TDEST ]: TDEST[key] };
         const errors: string[] = [];
+        const used: Set<keyof TSRC> = new Set(options?.ignore);
 
         if ((typeof from === 'object') && (!Array.isArray(from)) && (from !== null)) {
             for (const destinationKey in destinationFields) {
@@ -1214,6 +1234,7 @@ export function transformObject<TSRC, TDEST, TC=unknown>(
                         const result = converter.convert(from[srcKey], context);
                         if (result.isSuccess()) {
                             converted[destinationKey] = result.value;
+                            used.add(srcKey);
                         }
                         else {
                             errors.push(`${srcKey}->${destinationKey}: ${result.message}`);
@@ -1227,7 +1248,7 @@ export function transformObject<TSRC, TDEST, TC=unknown>(
 
             if (options?.strict === true) {
                 for (const key in from) {
-                    if (from.hasOwnProperty(key) && (!isKeyOf(key, destinationFields) || (destinationFields[key] === undefined))) {
+                    if (isKeyOf(key, from) && (!used.has(key as keyof TSRC))) {
                         errors.push(`${key}: unexpected property in source object`);
                     }
                 }
