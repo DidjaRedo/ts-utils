@@ -16,6 +16,7 @@ export interface ObjectConverterOptions<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [description?](./ts-utils.converters.objectconverteroptions.description.md) |  | string | <i>(Optional)</i> Optional description to be included in error messages. |
 |  [optionalFields?](./ts-utils.converters.objectconverteroptions.optionalfields.md) |  | (keyof T)\[\] | <i>(Optional)</i> If present, lists optional fields. Missing non-optional fields cause an error. |
 |  [strict?](./ts-utils.converters.objectconverteroptions.strict.md) |  | boolean | <i>(Optional)</i> If true, unrecognized fields yield an error. If false or undefined (default), unrecognized fields are ignored. |
 

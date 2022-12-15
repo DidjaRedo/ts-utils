@@ -16,6 +16,7 @@ export interface TransformObjectOptions<TSRC>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [description?](./ts-utils.converters.transformobjectoptions.description.md) |  | string | <i>(Optional)</i> An optional description of this transform to be used for error messages. |
 |  [ignore?](./ts-utils.converters.transformobjectoptions.ignore.md) |  | (keyof TSRC)\[\] | <i>(Optional)</i> An optional list of source properties to be ignored when strict mode is enabled. |
 |  [strict](./ts-utils.converters.transformobjectoptions.strict.md) |  | true | If <code>strict</code> is <code>true</code> then unused properties in the source object cause an error, otherwise they are ignored. |
 
