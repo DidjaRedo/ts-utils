@@ -1707,7 +1707,7 @@ describe('Converters module', () => {
                 extra2: 'this is an extra field',
             };
 
-            expect(strict2.convert(src)).toFailWith(/strict2: extra2/i);
+            expect(strict2.convert(src)).toFailWith(/strict2:/i);
         });
 
         test('fails if any non-optional fields are missing', () => {
