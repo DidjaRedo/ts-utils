@@ -1182,6 +1182,7 @@ export type FieldTransformers<TSRC, TDEST, TC=unknown> = { [ key in keyof TDEST 
 
 /**
  * Options for a {@link Converters.transformObject} call.
+ * @public
  */
 export interface TransformObjectOptions<TSRC> {
     /**

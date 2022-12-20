@@ -172,6 +172,13 @@ class RecordParser {
     }
 }
 
+/**
+ * Reads a record-jar from an array of strings, each of which represents one
+ * line in the source file.
+ * @param lines - the array of strings to be parsed
+ * @returns a corresponding array of `Record<string, string>`
+ * @public
+ */
 export function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]> {
     return RecordParser.parse(lines);
 }

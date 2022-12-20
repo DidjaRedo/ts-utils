@@ -653,7 +653,7 @@ export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = str
 // @public
 const optionalString: Converter<string | undefined, unknown>;
 
-// @public (undocumented)
+// @public
 function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]>;
 
 // @public
