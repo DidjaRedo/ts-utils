@@ -24,6 +24,36 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Result, captureResult, fail, succeed } from './result';
 
+interface RecordBody {
+    body: string;
+    isContinuation: boolean;
+}
+
+function parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
+    let body = `${oldBody ?? ''}${from.trim()}`;
+    const isContinuation = body.endsWith('\\');
+    if (isContinuation) {
+        body = body.slice(0, body.length - 1);
+    }
+    if (body.includes('\\')) {
+        const invalid: string[] = [];
+        body = body.replace(/\\./g, (match) => {
+            switch (match) {
+                case '\\\\': return '\\';
+                case '\\&': return '&';
+                case '\\r': return '\r';
+                case '\\n': return '\n';
+                case '\\t': return '\t';
+            }
+            invalid.push(match);
+            return '\\';
+        });
+        if (invalid.length > 0) {
+            return fail(`unrecognized escape "${invalid.join(', ')}" in record-jar body`);
+        }
+    }
+    return succeed({ body, isContinuation });
+}
 
 /**
  * Parses an in-memory representation of a record-jar file.
@@ -36,31 +66,29 @@ export function parseRecordJarLines(lines: string[]): Result<Record<string, stri
     const records: Record<string, string>[] = [];
     let current: Record<string, string> = {};
     let name: string | undefined = undefined;
-    let body: string | undefined = undefined;
-    let isContinue = false;
+    let body: RecordBody | undefined = undefined;
 
     for (let n = 0; n < lines.length; n++) {
         const line = lines[n];
-        if (line === '%%' && !isContinue) {
+        if (line === '%%' && !body?.isContinuation) {
             if (name !== undefined) {
-                current[name] = body!;
+                current[name] = body!.body;
             }
             records.push(current);
             current = {};
             name = undefined;
             body = undefined;
         }
-        else if (isContinue || /^\s+/.test(line)) {
+        else if (body?.isContinuation || /^\s+/.test(line)) {
             // starts with whitespace - continuation of previous line
             if (body === undefined) {
                 return fail(`${n}: continuation ("${line}") without prior value`);
             }
-            body = `${body}${line.trim()}`;
-            isContinue = body.endsWith('\\');
-            if (isContinue) {
-                body = body.slice(0, body.length - 1);
-                isContinue = true;
+            const result = parseRecordBody(line, body.body);
+            if (result.isFailure()) {
+                return fail(result.message);
             }
+            body = result.value;
         }
         else {
             const parts = line.split(':');
@@ -68,18 +96,18 @@ export function parseRecordJarLines(lines: string[]): Result<Record<string, stri
                 return fail(`${n}: malformed line ("${line}") in record-jar`);
             }
             if (name !== undefined) {
-                current[name] = body!;
+                current[name] = body!.body;
             }
             name = parts[0].trimEnd();
-            body = parts[1].trim();
-            isContinue = body.endsWith('\\');
-            if (isContinue) {
-                body = body.slice(0, body.length - 1);
+            const result = parseRecordBody(parts[1]);
+            if (result.isFailure()) {
+                return fail(result.message);
             }
+            body = result.value;
         }
     }
     if (name !== undefined) {
-        current[name] = body!;
+        current[name] = body!.body;
         records.push(current);
         current = {};
         name = undefined;

@@ -65,6 +65,7 @@
 |  [Converters](./ts-utils.converters.md) |  |
 |  [Csv](./ts-utils.csv.md) |  |
 |  [Hash](./ts-utils.hash.md) |  |
+|  [RecordJar](./ts-utils.recordjar.md) |  |
 |  [Validation](./ts-utils.validation.md) |  |
 
 ## Variables

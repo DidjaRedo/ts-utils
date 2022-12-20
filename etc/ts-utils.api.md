@@ -634,6 +634,9 @@ export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = str
 const optionalString: Converter<string | undefined, unknown>;
 
 // @public
+function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]>;
+
+// @public
 export function populateObject<T>(initializers: FieldInitializers<T>, order?: (keyof T)[]): Result<T>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "propagateWithDetail" is marked as @public, but its signature references "DetailedResult" which is marked as @beta
@@ -685,6 +688,17 @@ function rangeTypeOf<T, RT extends RangeOf<T>, TC = unknown>(converter: Converte
 
 // @beta
 function readCsvFileSync(srcPath: string): Result<unknown>;
+
+// @beta
+function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]>;
+
+declare namespace RecordJar {
+    export {
+        parseRecordJarLines,
+        readRecordJarFileSync
+    }
+}
+export { RecordJar }
 
 // @public
 function recordOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Record<TK, T>, TC>;

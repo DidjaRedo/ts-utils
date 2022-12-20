@@ -46,7 +46,6 @@ describe('record-jar helpers', () => {
                 'FieldTab:before\\tafter',
                 'FieldBackslash: before\\\\after',
                 'FieldAmpersand: before\\&after',
-                'FieldEuro: Before^#x20ac;after',
             ])).toSucceedWith([{
                 /* eslint-disable @typescript-eslint/naming-convention */
                 FieldCR: 'before\rafter',
@@ -54,6 +53,15 @@ describe('record-jar helpers', () => {
                 FieldTab: 'before\tafter',
                 FieldBackslash: 'before\\after',
                 FieldAmpersand: 'before&after',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            }]);
+        });
+
+        test('parses unicode characters in a body', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'FieldEuro: Before^#x20ac;after',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
                 FieldEuro: 'before€after',
                 /* eslint-enable @typescript-eslint/naming-convention */
             }]);
@@ -61,7 +69,7 @@ describe('record-jar helpers', () => {
 
         test('fails for a misplaced backslash', () => {
             expect(RecordJar.parseRecordJarLines([
-                'BadField: before\xafter',
+                'BadField: before\\xafter',
             ])).toFailWith(/unrecognized escape/i);
         });
 
