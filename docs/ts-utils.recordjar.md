@@ -8,6 +8,6 @@
 
 |  Function | Description |
 |  --- | --- |
-|  [parseRecordJarLines(lines)](./ts-utils.recordjar.parserecordjarlines.md) | Parses an in-memory representation of a record-jar file. |
-|  [readRecordJarFileSync(srcPath)](./ts-utils.recordjar.readrecordjarfilesync.md) | <b><i>(BETA)</i></b> Reads a record-jar file from a supplied path. |
+|  [parseRecordJarLines(lines)](./ts-utils.recordjar.parserecordjarlines.md) |  |
+|  [readRecordJarFileSync(srcPath)](./ts-utils.recordjar.readrecordjarfilesync.md) | Reads a record-jar file from a supplied path. |
 

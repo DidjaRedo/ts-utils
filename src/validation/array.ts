@@ -38,7 +38,7 @@ export interface ArrayValidatorConstructorParams<T, TC = unknown> extends Valida
  */
 export class ArrayValidator<T, TC = unknown> extends ValidatorBase<T[], TC> {
     /**
-     * {@link Validation.Classes.ArrayValidatorOptions | Options} which apply to this
+     * {@link Validation.ValidatorOptions | Options} which apply to this
      * validator.
      */
     public readonly options: ValidatorOptions<TC>;

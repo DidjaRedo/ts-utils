@@ -4,8 +4,6 @@
 
 ## RecordJar.parseRecordJarLines() function
 
-Parses an in-memory representation of a record-jar file.
-
 <b>Signature:</b>
 
 ```typescript
@@ -16,11 +14,9 @@ export declare function parseRecordJarLines(lines: string[]): Result<Record<stri
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  lines | string\[\] | an array of strings, each of which represents a line in the original file. |
+|  lines | string\[\] |  |
 
 <b>Returns:</b>
 
 [Result](./ts-utils.result.md)<!-- -->&lt;Record&lt;string, string&gt;\[\]&gt;
-
-An array of `Record<string, string>`<!-- -->, each of which corresponds to a single record from the source record-jar data.
 
