@@ -35,15 +35,20 @@ function parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
     if (isContinuation) {
         body = body.slice(0, body.length - 1);
     }
-    if (body.includes('\\')) {
+    if (body.includes('\\') || body.includes('&')) {
         const invalid: string[] = [];
-        body = body.replace(/\\./g, (match) => {
+        body = body.replace(/(\\.)|(&#x[a-fA-F0-9]{2,6};)/g, (match) => {
             switch (match) {
                 case '\\\\': return '\\';
                 case '\\&': return '&';
                 case '\\r': return '\r';
                 case '\\n': return '\n';
                 case '\\t': return '\t';
+            }
+            if (match.startsWith('&')) {
+                const hexCode = `0x${match.slice(3, match.length - 1)}`;
+                const charCode = Number.parseInt(hexCode, 16);
+                return String.fromCharCode(charCode);
             }
             invalid.push(match);
             return '\\';
@@ -61,23 +66,35 @@ function parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
  * a line in the original file.
  * @returns An array of `Record<string, string>`, each of which corresponds to
  * a single record from the source record-jar data.
+ * @see https://datatracker.ietf.org/doc/html/draft-phillips-record-jar-01
+ * @public
  */
 export function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]> {
     const records: Record<string, string>[] = [];
-    let current: Record<string, string> = {};
+    let fields: [string, string][] = [];
     let name: string | undefined = undefined;
     let body: RecordBody | undefined = undefined;
 
     for (let n = 0; n < lines.length; n++) {
         const line = lines[n];
-        if (line === '%%' && !body?.isContinuation) {
+        if (line.startsWith('%%') && !body?.isContinuation) {
             if (name !== undefined) {
-                current[name] = body!.body;
+                if ((body?.body.length ?? 0) < 1) {
+                    return fail(`${n}: empty body value not allowed`);
+                }
+                fields.push([name, body!.body]);
             }
-            records.push(current);
-            current = {};
             name = undefined;
             body = undefined;
+
+            if (fields.length > 0) {
+                records.push(Object.fromEntries(fields));
+                fields = [];
+            }
+        }
+        else if (/^\s*$/.test(line) && !body?.isContinuation) {
+            // ignore blank lines
+            continue;
         }
         else if (body?.isContinuation || /^\s+/.test(line)) {
             // starts with whitespace - continuation of previous line
@@ -86,32 +103,45 @@ export function parseRecordJarLines(lines: string[]): Result<Record<string, stri
             }
             const result = parseRecordBody(line, body.body);
             if (result.isFailure()) {
-                return fail(result.message);
+                return fail(`${n}: ${result.message}`);
             }
             body = result.value;
         }
         else {
-            const parts = line.split(':');
-            if (parts.length !== 2) {
+            const separatorIndex = line.indexOf(':');
+            if (separatorIndex < 1) {
                 return fail(`${n}: malformed line ("${line}") in record-jar`);
             }
+            const parts = [
+                line.slice(0, separatorIndex),
+                line.slice(separatorIndex + 1),
+            ];
+
             if (name !== undefined) {
-                current[name] = body!.body;
+                if ((body?.body.length ?? 0) < 1) {
+                    return fail(`${n}: empty body value not allowed`);
+                }
+                fields.push([name, body!.body]);
             }
             name = parts[0].trimEnd();
             const result = parseRecordBody(parts[1]);
             if (result.isFailure()) {
-                return fail(result.message);
+                return fail(`${n}: ${result.message}`);
             }
             body = result.value;
         }
     }
     if (name !== undefined) {
-        current[name] = body!.body;
-        records.push(current);
-        current = {};
+        if ((body?.body.length ?? 0) < 1) {
+            return fail(`${lines.length}: empty body value not allowed`);
+        }
+        fields.push([name, body!.body]);
         name = undefined;
         body = undefined;
+    }
+
+    if (fields.length > 0) {
+        records.push(Object.fromEntries(fields));
     }
     return succeed(records);
 }
@@ -120,7 +150,8 @@ export function parseRecordJarLines(lines: string[]): Result<Record<string, stri
  * Reads a record-jar file from a supplied path.
  * @param srcPath - Source path from which the file is read.
  * @returns The contents of the file as an array of `Record<string, string>`
- * @beta
+ * @see https://datatracker.ietf.org/doc/html/draft-phillips-record-jar-01
+ * @public
  */
 export function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]> {
     return captureResult(() => {

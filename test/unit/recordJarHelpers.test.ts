@@ -22,6 +22,7 @@
 
 import '../helpers/jest';
 import { RecordJar } from '../../src';
+import fs from 'fs';
 
 describe('record-jar helpers', () => {
     describe('parseRecordJarLines function', () => {
@@ -59,10 +60,20 @@ describe('record-jar helpers', () => {
 
         test('parses unicode characters in a body', () => {
             expect(RecordJar.parseRecordJarLines([
-                'FieldEuro: Before^#x20ac;after',
+                'FieldEuro: before&#x20ac;after',
             ])).toSucceedWith([{
                 /* eslint-disable @typescript-eslint/naming-convention */
                 FieldEuro: 'before€after',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            }]);
+        });
+
+        test('parses a value which contains a colon', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'FieldColon:    value with a colon before:after',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
+                FieldColon: 'value with a colon before:after',
                 /* eslint-enable @typescript-eslint/naming-convention */
             }]);
         });
@@ -71,6 +82,20 @@ describe('record-jar helpers', () => {
             expect(RecordJar.parseRecordJarLines([
                 'BadField: before\\xafter',
             ])).toFailWith(/unrecognized escape/i);
+            expect(RecordJar.parseRecordJarLines([
+                'BadField: fails in continuation too\\',
+                '  before\\aafter',
+            ])).toFailWith(/unrecognized escape/i);
+        });
+
+        test('fails for malformed lines', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'no colon',
+            ])).toFailWith(/malformed line/);
+
+            expect(RecordJar.parseRecordJarLines([
+                ': this field name is empty',
+            ])).toFailWith(/malformed line/);
         });
 
         test('parses multiple records', () => {
@@ -145,12 +170,118 @@ describe('record-jar helpers', () => {
             }]);
         });
 
+        test('ignores blank lines', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'Field1 : Value1',
+                'Field2: Value2',
+                '',
+                'Field3:Value3',
+                '%%',
+                '    ',
+                'Field1 : value1a',
+                'Field2 : value2a',
+                'Field3 : value3a',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
+                Field1: 'Value1',
+                Field2: 'Value2',
+                Field3: 'Value3',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+            {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                Field1: 'value1a',
+                Field2: 'value2a',
+                Field3: 'value3a',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+            ]);
+        });
+
+        test('ignores comments and empty records', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'Field1 : Value1',
+                'Field2: Value2',
+                'Field3:Value3',
+                '%% some extra comments here',
+                '%% are ignored so this is still the',
+                '%% second record',
+                'Field1 : value1a',
+                'Field2 : value2a',
+                'Field3 : value3a',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
+                Field1: 'Value1',
+                Field2: 'Value2',
+                Field3: 'Value3',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+            {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                Field1: 'value1a',
+                Field2: 'value2a',
+                Field3: 'value3a',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+            ]);
+        });
+
         test('fails for empty continuation line', () => {
             expect(RecordJar.parseRecordJarLines([
                 'SomeText:         \\',
                 '                  \\',
                 '                  \\',
-            ])).toFailWith(/empty continuation line/i);
+            ])).toFailWith(/empty body value/i);
+        });
+
+        test('fails for a dangling continuation line', () => {
+            expect(RecordJar.parseRecordJarLines([
+                '%%',
+                '  bad continuation',
+            ])).toFailWith(/without prior value/i);
+        });
+    });
+
+    describe('readRecordJarFileSync method', () => {
+        const path = 'path/to/some/record.jar';
+        const stringPayload = [
+            'Field1 : Value1',
+            'Field2: Value2',
+            'Field3:Value3',
+        ].join('\n');
+        const expected = [{
+            /* eslint-disable @typescript-eslint/naming-convention */
+            Field1: 'Value1',
+            Field2: 'Value2',
+            Field3: 'Value3',
+            /* eslint-enable @typescript-eslint/naming-convention */
+        }];
+
+        test('returns a requested record-jar file', () => {
+            const spy = jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
+                if (typeof gotPath !== 'string') {
+                    throw new Error('Mock implementation only accepts string');
+                }
+                expect(gotPath).toContain(path);
+                return stringPayload;
+            });
+
+            expect(RecordJar.readRecordJarFileSync(path)).toSucceedWith(expected);
+            spy.mockRestore();
+        });
+
+        test('propagates any error', () => {
+            const path = 'path/to/some/record.jar';
+            const spy = jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
+                if (typeof gotPath !== 'string') {
+                    throw new Error('Mock implementation only accepts string');
+                }
+                expect(gotPath).toContain(path);
+                throw new Error('Mock Error!');
+            });
+
+            expect(RecordJar.readRecordJarFileSync(path)).toFailWith(/mock error/i);
+            spy.mockRestore();
         });
     });
 });
