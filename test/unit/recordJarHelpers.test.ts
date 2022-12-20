@@ -38,6 +38,33 @@ describe('record-jar helpers', () => {
                 /* eslint-enable @typescript-eslint/naming-convention */
             }]);
         });
+
+        test('parses escapes in a body', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'FieldCR : before\\rafter',
+                'FieldNL: before\\nafter',
+                'FieldTab:before\\tafter',
+                'FieldBackslash: before\\\\after',
+                'FieldAmpersand: before\\&after',
+                'FieldEuro: Before^#x20ac;after',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
+                FieldCR: 'before\rafter',
+                FieldNL: 'before\nafter',
+                FieldTab: 'before\tafter',
+                FieldBackslash: 'before\\after',
+                FieldAmpersand: 'before&after',
+                FieldEuro: 'before€after',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            }]);
+        });
+
+        test('fails for a misplaced backslash', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'BadField: before\xafter',
+            ])).toFailWith(/unrecognized escape/i);
+        });
+
         test('parses multiple records', () => {
             expect(RecordJar.parseRecordJarLines([
                 'Field1 : Value1',
@@ -71,7 +98,9 @@ describe('record-jar helpers', () => {
                 ' 5945713821785251664274274663919320030599218174135...',
             ])).toSucceedWith([
                 {
+                    /* eslint-disable @typescript-eslint/naming-convention */
                     'Eulers-Number': '2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274274663919320030599218174135...',
+                    /* eslint-enable @typescript-eslint/naming-convention */
                 },
             ]);
         });
@@ -106,6 +135,14 @@ describe('record-jar helpers', () => {
                 SwallowingExample: 'There are no spaces between the numbers one and two in this example 12.',
                 /* eslint-enable @typescript-eslint/naming-convention */
             }]);
+        });
+
+        test('fails for empty continuation line', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'SomeText:         \\',
+                '                  \\',
+                '                  \\',
+            ])).toFailWith(/empty continuation line/i);
         });
     });
 });
