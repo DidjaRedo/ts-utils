@@ -20,11 +20,13 @@
  * SOFTWARE.
  */
 
+import { ArrayValidator, ArrayValidatorConstructorParams } from './array';
 import { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams } from './object';
 
 import { BooleanValidator } from './boolean';
 import { NumberValidator } from './number';
 import { StringValidator } from './string';
+import { Validator } from './validator';
 
 /**
  * A {@link Validation.Classes.StringValidator | StringValidator} which validates a string in place.
@@ -60,4 +62,19 @@ export function object<T, TC>(
     params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>,
 ): ObjectValidator<T, TC> {
     return new ObjectValidator({ fields, ...(params ?? {}) });
+}
+
+/**
+ * Helper function to create a {@link Validation.Classes.ArrayValidator | ArrayValidator} which
+ * validates an array in place.
+ * @param validateElement - A {@link Validation.Validator | validator} which validates each element.
+ * @returns A new {@link Validation.Classes.ArrayValidator | ArrayValidator } which validates the desired
+ * array in place.
+ * @public
+ */
+export function arrayOf<T, TC>(
+    validateElement: Validator<T, TC>,
+    params?: Omit<ArrayValidatorConstructorParams<T, TC>, 'validateElement'>
+): ArrayValidator<T, TC> {
+    return new ArrayValidator({ validateElement, ...(params ?? {}) });
 }
