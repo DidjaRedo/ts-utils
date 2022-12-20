@@ -88,7 +88,7 @@
 |  [Formatter](./ts-utils.formatter.md) | <b><i>(BETA)</i></b> Type definition for a formatting function, which takes a <code>string</code> and an item and returns [Result&lt;string&gt;](./ts-utils.result.md)<!-- -->. |
 |  [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md) | <b><i>(BETA)</i></b> A collection of [formatters](./ts-utils.formatter.md) indexed by target name, to enable different format methods per output target. |
 |  [FormattersByTarget](./ts-utils.formattersbytarget.md) | <b><i>(BETA)</i></b> A collection of [formatters](./ts-utils.formatter.md) indexed by the [default supported target formats](./ts-utils.formattargets.md)<!-- -->. |
-|  [Infer](./ts-utils.infer.md) | <b><i>(BETA)</i></b> Infers the type that will be returned by an intstantiated converter. Works for complex as well as simple types. |
+|  [Infer](./ts-utils.infer.md) | <b><i>(BETA)</i></b> Infers the type that will be returned by an instantiated converter. Works for complex as well as simple types. |
 |  [Result](./ts-utils.result.md) | Represents the [result](./ts-utils.iresult.md) of some operation or sequence of operations. |
 |  [ResultDetailType](./ts-utils.resultdetailtype.md) | <b><i>(BETA)</i></b> Type inference to determine the detail type <code>TD</code> of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->. |
 |  [ResultValueType](./ts-utils.resultvaluetype.md) | <b><i>(BETA)</i></b> Type inference to determine the result type of an [Result](./ts-utils.result.md)<!-- -->. |

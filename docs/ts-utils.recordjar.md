@@ -11,3 +11,9 @@
 |  [parseRecordJarLines(lines)](./ts-utils.recordjar.parserecordjarlines.md) | Reads a record-jar from an array of strings, each of which represents one line in the source file. |
 |  [readRecordJarFileSync(srcPath)](./ts-utils.recordjar.readrecordjarfilesync.md) | Reads a record-jar file from a supplied path. |
 
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [recordJar](./ts-utils.recordjar.recordjar.md) | A [Converter](./ts-utils.converter.md) to an array of <code>Record&lt;string, string&gt;</code> from an array of strings. |
+

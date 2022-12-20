@@ -21,7 +21,7 @@
  */
 import '../helpers/jest';
 import * as Converters from '../../src/converters';
-import { ExtendedArray, Infer, succeed } from '../../src';
+import { ExtendedArray, Infer, Validation, succeed } from '../../src';
 
 describe('Converters module', () => {
     describe('string converter', () => {
@@ -276,6 +276,24 @@ describe('Converters module', () => {
 
         test('fails for an unexpected type', () => {
             expect(Converters.isoDate.convert({ date: new Date() })).toFailWith(/cannot convert/i);
+        });
+    });
+
+    describe('validated converter', () => {
+        test('validates in place with the supplied validator', () => {
+            type TestVal = { sVal: string; nVal: number };
+            const validator = Validation.Validators.object<TestVal>({
+                sVal: Validation.Validators.string,
+                nVal: Validation.Validators.number,
+            });
+            const converter = Converters.validated(validator);
+
+            const val: TestVal = { sVal: 'string', nVal: 10 };
+            const val2: TestVal = { sVal: 'string', nVal: 10 };
+            expect(converter.convert(val)).toSucceedAndSatisfy((got) => {
+                expect(got).toBe(val);
+                expect(got).not.toBe(val2);
+            });
         });
     });
 

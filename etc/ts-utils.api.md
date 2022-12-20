@@ -156,6 +156,7 @@ declare namespace Converters {
         mappedEnumeratedValue,
         literal,
         delimitedString,
+        validated,
         oneOf,
         arrayOf,
         extendedArrayOf,
@@ -572,7 +573,7 @@ function object<T>(properties: FieldConverters<T>, options?: ObjectConverterOpti
 function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
 
 // @public
-function object_2<T, TC>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
+function object_2<T, TC = unknown>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
 
 // @public
 class ObjectConverter<T, TC = unknown> extends BaseConverter<T, TC> {
@@ -715,10 +716,14 @@ function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]
 declare namespace RecordJar {
     export {
         parseRecordJarLines,
-        readRecordJarFileSync
+        readRecordJarFileSync,
+        recordJar
     }
 }
 export { RecordJar }
+
+// @public
+const recordJar: Converter<Record<string, string>[], unknown>;
 
 // @public
 function recordOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Record<TK, T>, TC>;
@@ -827,6 +832,9 @@ interface TransformObjectOptions<TSRC> {
     ignore?: (keyof TSRC)[];
     strict: true;
 }
+
+// @public
+function validated<T, TC = unknown>(validator: Validator<T, TC>): Converter<T, TC>;
 
 // @public
 function validateWith<T, TC = undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC>;

@@ -57,7 +57,7 @@ export const boolean = new BooleanValidator();
  * object in place.
  * @public
  */
-export function object<T, TC>(
+export function object<T, TC = unknown>(
     fields: FieldValidators<T, TC>,
     params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>,
 ): ObjectValidator<T, TC> {

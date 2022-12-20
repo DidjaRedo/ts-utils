@@ -128,7 +128,7 @@ export interface Converter<T, TC=undefined> extends ConverterTraits {
 
     /**
      * Creates a {@link Converter} which maps the individual items of a collection
-     * resulting from this {@link Converter} using the supplied map fuction.
+     * resulting from this {@link Converter} using the supplied map function.
      *
      * @remarks
      * Fails if `from` is not an array.
@@ -208,7 +208,7 @@ type InnerInferredType<TCONV> =
         : (TCONV extends Array<infer TELEM> ? InnerInferredType<TELEM>[] : TCONV);
 
 /**
- * Infers the type that will be returned by an intstantiated converter.  Works
+ * Infers the type that will be returned by an instantiated converter.  Works
  * for complex as well as simple types.
  * @example `Infer<typeof Converters.mapOf(Converters.stringArray)>` is `Map<string, string[]>`
  * @beta

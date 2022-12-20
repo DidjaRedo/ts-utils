@@ -20,9 +20,12 @@
  * SOFTWARE.
  */
 
+import * as Converters from './converters';
 import * as fs from 'fs';
 import * as path from 'path';
+
 import { Result, captureResult, fail, succeed } from './result';
+import { Validators } from './validation';
 
 interface RecordBody {
     body: string;
@@ -182,6 +185,12 @@ class RecordParser {
 export function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]> {
     return RecordParser.parse(lines);
 }
+
+/**
+ * A {@link Converter} to an array of `Record<string, string>` from an array of strings.
+ * @public
+ */
+export const recordJar = Converters.validated(Validators.arrayOf(Validators.string)).map(parseRecordJarLines);
 
 /**
  * Reads a record-jar file from a supplied path.

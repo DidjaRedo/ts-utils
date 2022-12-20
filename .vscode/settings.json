@@ -10,12 +10,16 @@
         "badp",
         "dflt",
         "Eulers",
+        "fixlint",
         "furst",
         "luxon",
         "nums",
         "prefixp",
+        "TCONV",
         "TDEST",
+        "TELEM",
         "TSRC",
+        "TTOELEM",
         "xyzzy"
     ]
 }
