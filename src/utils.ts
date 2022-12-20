@@ -44,6 +44,7 @@ export function isKeyOf<T extends object>(key: string|number|symbol, item: T): k
  * is not present (default `undefined`).
  * @returns The value of the requested property, or the default value if the
  * requested property does not exist.
+ * @public
  */
 export function getValueOfPropertyOrDefault<T extends object>(
     key: string|number|symbol,
@@ -62,6 +63,7 @@ export function getValueOfPropertyOrDefault<T extends object>(
  * @example
  * Returns `'undefined'` (a string) if the property exists but has the value
  * undefined but `undefined` (the literal) if the property does not exist.
+ * @public
  */
 export function getTypeOfProperty<T extends object>(
     key: string|number|symbol,

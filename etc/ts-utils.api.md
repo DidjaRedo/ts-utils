@@ -12,6 +12,28 @@ export function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: 
 // @public
 function arrayOf<T, TC = undefined>(converter: Converter<T, TC>, onError?: OnError_2): Converter<T[], TC>;
 
+// @public
+function arrayOf_2<T, TC>(validateElement: Validator<T, TC>, params?: Omit<ArrayValidatorConstructorParams<T, TC>, 'validateElement'>): ArrayValidator<T, TC>;
+
+// Warning: (ae-forgotten-export) The symbol "ValidatorBase" needs to be exported by the entry point index.d.ts
+//
+// @public
+class ArrayValidator<T, TC = unknown> extends ValidatorBase<T[], TC> {
+    constructor(params: ArrayValidatorConstructorParams<T, TC>);
+    readonly options: ValidatorOptions<TC>;
+    protected _validate<T>(from: unknown, context?: TC): boolean | Failure<T>;
+    // (undocumented)
+    protected readonly _validateElement: Validator<T, TC>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "ValidatorBaseConstructorParams" needs to be exported by the entry point index.d.ts
+//
+// @public
+interface ArrayValidatorConstructorParams<T, TC = unknown> extends ValidatorBaseConstructorParams<T[], TC> {
+    // (undocumented)
+    validateElement: Validator<T, TC>;
+}
+
 declare namespace Base {
     export {
         ValidatorFunc,
@@ -76,6 +98,8 @@ export function captureResult<T>(func: () => T): Result<T>;
 
 declare namespace Classes {
     export {
+        ArrayValidator,
+        ArrayValidatorConstructorParams,
         StringValidator,
         StringValidatorConstructorParams,
         BooleanValidator,
@@ -132,6 +156,7 @@ declare namespace Converters {
         mappedEnumeratedValue,
         literal,
         delimitedString,
+        validated,
         oneOf,
         arrayOf,
         extendedArrayOf,
@@ -548,7 +573,7 @@ function object<T>(properties: FieldConverters<T>, options?: ObjectConverterOpti
 function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
 
 // @public
-function object_2<T, TC>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
+function object_2<T, TC = unknown>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
 
 // @public
 class ObjectConverter<T, TC = unknown> extends BaseConverter<T, TC> {
@@ -568,8 +593,6 @@ interface ObjectConverterOptions<T> {
     strict?: boolean;
 }
 
-// Warning: (ae-forgotten-export) The symbol "ValidatorBase" needs to be exported by the entry point index.d.ts
-//
 // @public
 class ObjectValidator<T, TC = unknown> extends ValidatorBase<T, TC> {
     constructor(params: ObjectValidatorConstructorParams<T, TC>);
@@ -589,8 +612,6 @@ class ObjectValidator<T, TC = unknown> extends ValidatorBase<T, TC> {
     protected _validate(from: unknown, context?: TC): boolean | Failure<T>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "ValidatorBaseConstructorParams" needs to be exported by the entry point index.d.ts
-//
 // @public
 interface ObjectValidatorConstructorParams<T, TC> extends ValidatorBaseConstructorParams<T, TC> {
     fields: FieldValidators<T>;
@@ -632,6 +653,9 @@ export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = str
 
 // @public
 const optionalString: Converter<string | undefined, unknown>;
+
+// @public
+function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]>;
 
 // @public
 export function populateObject<T>(initializers: FieldInitializers<T>, order?: (keyof T)[]): Result<T>;
@@ -685,6 +709,21 @@ function rangeTypeOf<T, RT extends RangeOf<T>, TC = unknown>(converter: Converte
 
 // @beta
 function readCsvFileSync(srcPath: string): Result<unknown>;
+
+// @public
+function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]>;
+
+declare namespace RecordJar {
+    export {
+        parseRecordJarLines,
+        readRecordJarFileSync,
+        recordJar
+    }
+}
+export { RecordJar }
+
+// @public
+const recordJar: Converter<Record<string, string>[], unknown>;
 
 // @public
 function recordOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Record<TK, T>, TC>;
@@ -795,6 +834,9 @@ interface TransformObjectOptions<TSRC> {
 }
 
 // @public
+function validated<T, TC = unknown>(validator: Validator<T, TC>): Converter<T, TC>;
+
+// @public
 function validateWith<T, TC = undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC>;
 
 declare namespace Validation {
@@ -839,6 +881,7 @@ interface ValidatorOptions<TC> {
 declare namespace Validators {
     export {
         object_2 as object,
+        arrayOf_2 as arrayOf,
         string_2 as string,
         number_2 as number,
         boolean_2 as boolean

@@ -4,7 +4,7 @@
 
 ## Converter.mapItems() method
 
-Creates a [Converter](./ts-utils.converter.md) which maps the individual items of a collection resulting from this [Converter](./ts-utils.converter.md) using the supplied map fuction.
+Creates a [Converter](./ts-utils.converter.md) which maps the individual items of a collection resulting from this [Converter](./ts-utils.converter.md) using the supplied map function.
 
 <b>Signature:</b>
 

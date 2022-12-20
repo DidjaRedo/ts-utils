@@ -27,6 +27,7 @@ import { Result, captureResult, fail, succeed } from './result';
 import { DateTime } from 'luxon';
 import { ExtendedArray } from './extendedArray';
 import Mustache from 'mustache';
+import { Validator } from './validation';
 import { isKeyOf } from './utils';
 
 type OnError = 'failOnError' | 'ignoreErrors';
@@ -353,6 +354,18 @@ export const isoDate = new BaseConverter<Date>((from: unknown) => {
     }
     return fail(`Cannot convert ${JSON.stringify(from)} to Date`);
 });
+
+/**
+ * Helper function to create a {@link Converter} from any {@link Validation.Validator}
+ * @param validator - the validator to be wrapped
+ * @returns A {@link Converter} which uses the supplied validator.
+ * @public
+ */
+export function validated<T, TC=unknown>(validator: Validator<T, TC>): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self?: Converter<T, TC>, context?: TC) => {
+        return validator.validate(from, context);
+    });
+}
 
 /**
  * A {@link Converter} which converts an optional `number` value.
@@ -1182,6 +1195,7 @@ export type FieldTransformers<TSRC, TDEST, TC=unknown> = { [ key in keyof TDEST 
 
 /**
  * Options for a {@link Converters.transformObject} call.
+ * @public
  */
 export interface TransformObjectOptions<TSRC> {
     /**

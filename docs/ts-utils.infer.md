@@ -7,7 +7,7 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-Infers the type that will be returned by an intstantiated converter. Works for complex as well as simple types.
+Infers the type that will be returned by an instantiated converter. Works for complex as well as simple types.
 
 <b>Signature:</b>
 

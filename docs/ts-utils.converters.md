@@ -42,6 +42,7 @@
 |  [templateString(defaultContext)](./ts-utils.converters.templatestring.md) | Helper function to create a [StringConverter](./ts-utils.converters.stringconverter.md) which converts <code>unknown</code> to <code>string</code>, applying template conversions supplied at construction time or at runtime as context. |
 |  [transform(properties)](./ts-utils.converters.transform.md) | Helper to create a [Converter](./ts-utils.converter.md) which converts a source object to a new object with a different shape. |
 |  [transformObject(destinationFields, options)](./ts-utils.converters.transformobject.md) | Helper to create a strongly-typed [Converter](./ts-utils.converter.md) which converts a source object to a new object with a different shape. |
+|  [validated(validator)](./ts-utils.converters.validated.md) | Helper function to create a [Converter](./ts-utils.converter.md) from any [Validation.Validator](./ts-utils.validation.validator.md) |
 |  [validateWith(validator, description)](./ts-utils.converters.validatewith.md) | Helper function to create a [Converter](./ts-utils.converter.md) which validates that a supplied value is of a type validated by a supplied validator function and returns it. |
 
 ## Interfaces

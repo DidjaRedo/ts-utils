@@ -9,7 +9,7 @@ Helper function to create a [ObjectValidator](./ts-utils.validation.classes.obje
 <b>Signature:</b>
 
 ```typescript
-export declare function object<T, TC>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
+export declare function object<T, TC = unknown>(fields: FieldValidators<T, TC>, params?: Omit<ObjectValidatorConstructorParams<T, TC>, 'fields'>): ObjectValidator<T, TC>;
 ```
 
 ## Parameters
