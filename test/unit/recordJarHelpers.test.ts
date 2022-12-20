@@ -198,6 +198,28 @@ describe('record-jar helpers', () => {
             ]);
         });
 
+        test('consumes blank lines in a continuation', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'LongField: line with a continuation \\',
+                'Field: looks like a field but gets appended',
+                'LongField2: line with a continuation \\',
+                '',
+                'Field: is actually a new field',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
+                LongField: 'line with a continuation Field: looks like a field but gets appended',
+                LongField2: 'line with a continuation ',
+                Field: 'is actually a new field',
+                /* eslint-enable @typescript-eslint/naming-convention */
+            }]);
+
+            expect(RecordJar.parseRecordJarLines([
+                'LongField: \\',
+                '',
+                '%%',
+            ])).toFailWith(/empty body value/i);
+        });
+
         test('ignores comments and empty records', () => {
             expect(RecordJar.parseRecordJarLines([
                 'Field1 : Value1',

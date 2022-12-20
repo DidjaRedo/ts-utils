@@ -29,15 +29,43 @@ interface RecordBody {
     isContinuation: boolean;
 }
 
-function parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
-    let body = `${oldBody ?? ''}${from.trim()}`;
-    const isContinuation = body.endsWith('\\');
-    if (isContinuation) {
-        body = body.slice(0, body.length - 1);
+class RecordParser {
+    public readonly records: Record<string, string>[] = [];
+
+    protected _fields: [string, string][] = [];
+    protected _name: string | undefined = undefined;
+    protected _body: RecordBody | undefined = undefined;
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    public static parse(lines: string[]): Result<Record<string, string>[]> {
+        return new RecordParser()._parse(lines);
     }
-    if (body.includes('\\') || body.includes('&')) {
+
+    protected static _parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
+        let body = `${oldBody ?? ''}${from.trim()}`;
+        const isContinuation = body.endsWith('\\');
+        if (isContinuation) {
+            body = body.slice(0, body.length - 1);
+        }
+        if (this._hasEscapes(body)) {
+            const result = this._replaceEscapes(body);
+            if (result.isFailure()) {
+                return fail(result.message);
+            }
+            body = result.value;
+        }
+        return succeed({ body, isContinuation });
+    }
+
+    protected static _hasEscapes(from: string): boolean {
+        return from.includes('\\') || from.includes('&');
+    }
+
+    protected static _replaceEscapes(body: string): Result<string> {
         const invalid: string[] = [];
-        body = body.replace(/(\\.)|(&#x[a-fA-F0-9]{2,6};)/g, (match) => {
+        const escaped = body.replace(/(\\.)|(&#x[a-fA-F0-9]{2,6};)/g, (match) => {
             switch (match) {
                 case '\\\\': return '\\';
                 case '\\&': return '&';
@@ -56,94 +84,96 @@ function parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
         if (invalid.length > 0) {
             return fail(`unrecognized escape "${invalid.join(', ')}" in record-jar body`);
         }
+        return succeed(escaped);
     }
-    return succeed({ body, isContinuation });
+
+    protected _parse(lines: string[]): Result<Record<string, string>[]> {
+        for (let n = 0; n < lines.length; n++) {
+            const line = lines[n];
+            if (line.startsWith('%%') && !this._body?.isContinuation) {
+                const result = this._writePendingRecord();
+                if (result.isFailure()) {
+                    return fail(`${n}: ${result.message}`);
+                }
+            }
+            else if (/^\s*$/.test(line)) {
+                // ignore blank lines but cancel continuation
+                if (this._body) {
+                    this._body.isContinuation = false;
+                }
+                continue;
+            }
+            else if (this._body?.isContinuation || /^\s+/.test(line)) {
+                // explicit continuation on previous line or implicit starts with whitespace
+                if (this._body === undefined) {
+                    return fail(`${n}: continuation ("${line}") without prior value.`);
+                }
+                const result = RecordParser._parseRecordBody(line, this._body.body);
+                if (result.isFailure()) {
+                    return fail(`${n}: ${result.message}`);
+                }
+                this._body = result.value;
+            }
+            else {
+                const result = this._parseField(line);
+                if (result.isFailure()) {
+                    return fail(`${n}: ${result.message}`);
+                }
+            }
+        }
+
+        const result = this._writePendingRecord();
+        if (result.isFailure()) {
+            return fail(`${lines.length}: ${result.message}`);
+        }
+        return succeed(this.records);
+    }
+
+    protected _parseField(line: string): Result<boolean> {
+        const separatorIndex = line.indexOf(':');
+        if (separatorIndex < 1) {
+            return fail(`malformed line ("${line}") in record-jar.`);
+        }
+        const parts = [
+            line.slice(0, separatorIndex),
+            line.slice(separatorIndex + 1),
+        ];
+
+        return this._writePendingField().onSuccess(() => {
+            this._name = parts[0].trimEnd();
+            return RecordParser._parseRecordBody(parts[1]).onSuccess((body) => {
+                this._body = body;
+                return succeed(true);
+            });
+        });
+    }
+
+    protected _writePendingRecord(): Result<Record<string, string> | undefined> {
+        return this._writePendingField().onSuccess(() => {
+            const record = this._fields.length > 0 ? Object.fromEntries(this._fields) : undefined;
+            if (record !== undefined) {
+                this.records.push(record);
+                this._fields = [];
+            }
+            return succeed(undefined);
+        });
+    }
+
+    protected _writePendingField(): Result<boolean> {
+        if (this._name !== undefined) {
+            if (this._body!.body.length < 1) {
+                return fail('empty body value not allowed');
+            }
+            this._fields.push([this._name, this._body!.body]);
+            this._name = undefined;
+            this._body = undefined;
+        }
+        return succeed(true);
+    }
 }
 
-/**
- * Parses an in-memory representation of a record-jar file.
- * @param lines - an array of strings, each of which represents
- * a line in the original file.
- * @returns An array of `Record<string, string>`, each of which corresponds to
- * a single record from the source record-jar data.
- * @see https://datatracker.ietf.org/doc/html/draft-phillips-record-jar-01
- * @public
- */
 export function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]> {
-    const records: Record<string, string>[] = [];
-    let fields: [string, string][] = [];
-    let name: string | undefined = undefined;
-    let body: RecordBody | undefined = undefined;
-
-    for (let n = 0; n < lines.length; n++) {
-        const line = lines[n];
-        if (line.startsWith('%%') && !body?.isContinuation) {
-            if (name !== undefined) {
-                if ((body?.body.length ?? 0) < 1) {
-                    return fail(`${n}: empty body value not allowed`);
-                }
-                fields.push([name, body!.body]);
-            }
-            name = undefined;
-            body = undefined;
-
-            if (fields.length > 0) {
-                records.push(Object.fromEntries(fields));
-                fields = [];
-            }
-        }
-        else if (/^\s*$/.test(line) && !body?.isContinuation) {
-            // ignore blank lines
-            continue;
-        }
-        else if (body?.isContinuation || /^\s+/.test(line)) {
-            // starts with whitespace - continuation of previous line
-            if (body === undefined) {
-                return fail(`${n}: continuation ("${line}") without prior value`);
-            }
-            const result = parseRecordBody(line, body.body);
-            if (result.isFailure()) {
-                return fail(`${n}: ${result.message}`);
-            }
-            body = result.value;
-        }
-        else {
-            const separatorIndex = line.indexOf(':');
-            if (separatorIndex < 1) {
-                return fail(`${n}: malformed line ("${line}") in record-jar`);
-            }
-            const parts = [
-                line.slice(0, separatorIndex),
-                line.slice(separatorIndex + 1),
-            ];
-
-            if (name !== undefined) {
-                if ((body?.body.length ?? 0) < 1) {
-                    return fail(`${n}: empty body value not allowed`);
-                }
-                fields.push([name, body!.body]);
-            }
-            name = parts[0].trimEnd();
-            const result = parseRecordBody(parts[1]);
-            if (result.isFailure()) {
-                return fail(`${n}: ${result.message}`);
-            }
-            body = result.value;
-        }
-    }
-    if (name !== undefined) {
-        if ((body?.body.length ?? 0) < 1) {
-            return fail(`${lines.length}: empty body value not allowed`);
-        }
-        fields.push([name, body!.body]);
-        name = undefined;
-        body = undefined;
-    }
-
-    if (fields.length > 0) {
-        records.push(Object.fromEntries(fields));
-    }
-    return succeed(records);
+    return RecordParser.parse(lines);
 }
 
 /**
