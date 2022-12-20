@@ -31,5 +31,6 @@ export { Normalizer } from './normalize';
 import * as Converters from './converters';
 import * as Csv from './csvHelpers';
 import * as Hash from './hash';
+import * as RecordJar from './recordJarHelpers';
 import * as Validation from './validation';
-export { Converters, Csv, Hash, Validation };
+export { Converters, Csv, Hash, RecordJar, Validation };
