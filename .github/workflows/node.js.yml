@@ -14,7 +14,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      PUBLISH_PACKAGE: ${{ github_event_name === 'push' && github.ref === 'refs/heads/master' }}
+      PUBLISH_PACKAGE: ${{ github.event_name === 'push' && github.ref === 'refs/heads/master' }}
       NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
     strategy:
