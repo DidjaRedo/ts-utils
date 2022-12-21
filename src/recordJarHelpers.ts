@@ -26,6 +26,7 @@ import * as path from 'path';
 
 import { Result, captureResult, fail, succeed } from './result';
 import { Validators } from './validation';
+import { isKeyOf } from './utils';
 
 interface RecordBody {
     body: string;
@@ -37,7 +38,7 @@ export type JarRecord = Record<string, string | string[]>;
 class RecordParser {
     public readonly records: JarRecord[] = [];
 
-    protected _fields: [string, string | string[]][] = [];
+    protected _fields: JarRecord = {};
     protected _name: string | undefined = undefined;
     protected _body: RecordBody | undefined = undefined;
 
@@ -153,12 +154,16 @@ class RecordParser {
         });
     }
 
+    protected _havePendingRecord(): boolean {
+        return Object.keys(this._fields).length > 0;
+    }
+
     protected _writePendingRecord(): Result<JarRecord | undefined> {
         return this._writePendingField().onSuccess(() => {
-            const record = this._fields.length > 0 ? Object.fromEntries(this._fields) : undefined;
+            const record = this._havePendingRecord() ? this._fields : undefined;
             if (record !== undefined) {
                 this.records.push(record);
-                this._fields = [];
+                this._fields = {};
             }
             return succeed(undefined);
         });
@@ -169,7 +174,17 @@ class RecordParser {
             if (this._body!.body.length < 1) {
                 return fail('empty body value not allowed');
             }
-            this._fields.push([this._name, this._body!.body]);
+            if (!isKeyOf(this._name, this._fields)) {
+                this._fields[this._name] = this._body!.body;
+            }
+            else if (typeof this._fields[this._name] === 'string') {
+                const current = this._fields[this._name] as string;
+                this._fields[this._name] = [current, this._body!.body];
+            }
+            else {
+                const current = this._fields[this._name] as string[];
+                current.push(this._body!.body);
+            }
             this._name = undefined;
             this._body = undefined;
         }
