@@ -42,6 +42,7 @@ jobs:
           node-version: 16
           registry: https://registry.npmjs.org
       - run: echo Publishing to npm
+      - run: npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
       - run: npm ci
       - run: npm run build
       - run: (cd dist; npm publish --tag latest)
