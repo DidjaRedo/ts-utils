@@ -44,4 +44,4 @@ jobs:
       - run: echo Publishing to npm
       - run: npm ci
       - run: npm run build
-      - run: (cd dist; npm publish --tag latest --dry-run)
+      - run: (cd dist; npm publish --tag latest)
