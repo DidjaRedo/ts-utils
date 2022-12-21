@@ -45,6 +45,7 @@ export type JarFieldPicker<T extends JarRecord = JarRecord> = (record: T) => (ke
  */
 export interface JarRecordParserOptions {
     readonly arrayFields?: string[] | JarFieldPicker;
+    readonly fixedContinuationSize?: number;
 }
 
 class RecordParser {
@@ -64,8 +65,7 @@ class RecordParser {
         return new RecordParser(options)._parse(lines);
     }
 
-    protected static _parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
-        let body = `${oldBody ?? ''}${from.trim()}`;
+    protected static _parseRecordBody(body: string): Result<RecordBody> {
         const isContinuation = body.endsWith('\\');
         if (isContinuation) {
             body = body.slice(0, body.length - 1);
@@ -146,7 +146,7 @@ class RecordParser {
                 if (this._body === undefined) {
                     return fail(`${n}: continuation ("${line}") without prior value.`);
                 }
-                const result = RecordParser._parseRecordBody(line, this._body.body);
+                const result = this._parseContinuation(line);
                 if (result.isFailure()) {
                     return fail(`${n}: ${result.message}`);
                 }
@@ -179,9 +179,29 @@ class RecordParser {
 
         return this._writePendingField().onSuccess(() => {
             this._name = parts[0].trimEnd();
-            return RecordParser._parseRecordBody(parts[1]).onSuccess((body) => {
+            return RecordParser._parseRecordBody(parts[1].trim()).onSuccess((body) => {
                 this._body = body;
                 return succeed(true);
+            });
+        });
+    }
+
+    protected _parseContinuation(line: string): Result<RecordBody> {
+        let trimmed = line.trim();
+        if (!this._body!.isContinuation) {
+            // istanbul ignore next
+            const fixedSize = this.options?.fixedContinuationSize ?? 0;
+            if (fixedSize > 0) {
+                if (trimmed.length < line.length - fixedSize) {
+                    // oops, took too much
+                    trimmed = line.slice(fixedSize);
+                }
+            }
+        }
+        return RecordParser._parseRecordBody(trimmed).onSuccess((newBody) => {
+            return succeed({
+                body: `${this._body!.body}${newBody.body}`,
+                isContinuation: newBody.isContinuation,
             });
         });
     }
