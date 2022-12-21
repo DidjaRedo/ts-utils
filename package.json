@@ -21,6 +21,9 @@
     "type": "git",
     "url": "git+https://github.com/DidjaRedo/ts-utils.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "keywords": [
     "typescript",
     "json"
