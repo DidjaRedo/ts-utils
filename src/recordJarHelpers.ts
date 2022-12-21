@@ -32,17 +32,19 @@ interface RecordBody {
     isContinuation: boolean;
 }
 
-class RecordParser {
-    public readonly records: Record<string, string>[] = [];
+export type JarRecord = Record<string, string | string[]>;
 
-    protected _fields: [string, string][] = [];
+class RecordParser {
+    public readonly records: JarRecord[] = [];
+
+    protected _fields: [string, string | string[]][] = [];
     protected _name: string | undefined = undefined;
     protected _body: RecordBody | undefined = undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
-    public static parse(lines: string[]): Result<Record<string, string>[]> {
+    public static parse(lines: string[]): Result<JarRecord[]> {
         return new RecordParser()._parse(lines);
     }
 
@@ -90,7 +92,7 @@ class RecordParser {
         return succeed(escaped);
     }
 
-    protected _parse(lines: string[]): Result<Record<string, string>[]> {
+    protected _parse(lines: string[]): Result<JarRecord[]> {
         for (let n = 0; n < lines.length; n++) {
             const line = lines[n];
             if (line.startsWith('%%') && !this._body?.isContinuation) {
@@ -151,7 +153,7 @@ class RecordParser {
         });
     }
 
-    protected _writePendingRecord(): Result<Record<string, string> | undefined> {
+    protected _writePendingRecord(): Result<JarRecord | undefined> {
         return this._writePendingField().onSuccess(() => {
             const record = this._fields.length > 0 ? Object.fromEntries(this._fields) : undefined;
             if (record !== undefined) {
@@ -182,7 +184,7 @@ class RecordParser {
  * @returns a corresponding array of `Record<string, string>`
  * @public
  */
-export function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]> {
+export function parseRecordJarLines(lines: string[]): Result<JarRecord[]> {
     return RecordParser.parse(lines);
 }
 
@@ -199,7 +201,7 @@ export const recordJar = Converters.validated(Validators.arrayOf(Validators.stri
  * @see https://datatracker.ietf.org/doc/html/draft-phillips-record-jar-01
  * @public
  */
-export function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]> {
+export function readRecordJarFileSync(srcPath: string): Result<JarRecord[]> {
     return captureResult(() => {
         const fullPath = path.resolve(srcPath);
         return fs.readFileSync(fullPath, 'utf8').toString().split(/\r?\n/);
