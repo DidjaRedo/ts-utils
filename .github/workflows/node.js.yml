@@ -11,12 +11,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    env:
-      PUBLISH_PACKAGE: ${{ github_event_name === 'push' && github.ref === 'refs/heads/master' }}
-      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
@@ -34,5 +29,17 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
     - run: npm run coverage
-    - if: ${{ env.PUBLISH_PACKAGE }}
-      run: (cd dist; npm publish --tag latest --dry-run)
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    env:
+      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+      - run: echo Publishing to npm
+      - run: (cd dist; npm publish --tag latest --dry-run)
