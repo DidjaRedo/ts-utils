@@ -12,10 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      PUBLISH_PACKAGE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
@@ -34,9 +30,12 @@ jobs:
     - run: npm test
     - run: npm run coverage
   publish:
-    if: ${{ env.PUBLISH_PACKAGE }}
     needs: build
     runs-on: ubuntu-latest
+    env:
+      PUBLISH_PACKAGE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+    if: ${{ env.PUBLISH_PACKAGE }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
