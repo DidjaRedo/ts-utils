@@ -177,6 +177,24 @@ describe('record-jar helpers', () => {
                 },
                 ]);
             });
+
+            test('correctly parses an overflow body with fixed continuation size', () => {
+                expect(RecordJar.parseRecordJarLines([
+                    'Continuations : fixed continuation 2:',
+                    ' no space for 1 indent,',
+                    '  no space for 2 indent,',
+                    '   1 space for 3 indent,',
+                    '    2 space for 4 indent',
+                ], {
+                    fixedContinuationSize: 2,
+                })).toSucceedWith([
+                    {
+                        /* eslint-disable @typescript-eslint/naming-convention */
+                        Continuations: 'fixed continuation 2:no space for 1 indent,no space for 2 indent, 1 space for 3 indent,  2 space for 4 indent',
+                        /* eslint-enable @typescript-eslint/naming-convention */
+                    },
+                ]);
+            });
         });
 
         test('parses multiple records', () => {
