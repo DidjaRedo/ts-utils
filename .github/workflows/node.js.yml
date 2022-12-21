@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     env:
       PUBLISH_PACKAGE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
@@ -34,5 +33,15 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
     - run: npm run coverage
-    - if: ${{ env.PUBLISH_PACKAGE }}
-      run: (cd dist; npm publish --tag latest --dry-run)
+  publish:
+    if: ${{ env.PUBLISH_PACKAGE }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+      - run: echo Publishing to npm
+      - run: (cd dist; npm publish --tag latest --dry-run)
