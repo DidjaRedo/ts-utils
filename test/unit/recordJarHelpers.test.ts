@@ -98,6 +98,87 @@ describe('record-jar helpers', () => {
             ])).toFailWith(/malformed line/);
         });
 
+        test('parses multiple like-named fields into an array', () => {
+            expect(RecordJar.parseRecordJarLines([
+                'Field1 : Value1',
+                'Field1: Value2',
+                '%%',
+                'Field1 : value1a',
+                'Field1 : value2a',
+                'Field1 : value3a',
+            ])).toSucceedWith([{
+                /* eslint-disable @typescript-eslint/naming-convention */
+                Field1: ['Value1', 'Value2'],
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+            {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                Field1: ['value1a', 'value2a', 'value3a'],
+                /* eslint-enable @typescript-eslint/naming-convention */
+            },
+            ]);
+        });
+
+        describe('with options', () => {
+            test('parses single values into arrays for fields specified in array', () => {
+                expect(RecordJar.parseRecordJarLines([
+                    'Field1 : Value1',
+                    'Field2: Value2',
+                    '%%',
+                    'Field1 : value1',
+                    'Field1: value2',
+                    'Field2 : value1a',
+                    'Field2 : value2a',
+                    'Field2 : value3a',
+                    'Field3 : one value',
+                ], {
+                    arrayFields: ['Field1'],
+                })).toSucceedWith([{
+                    /* eslint-disable @typescript-eslint/naming-convention */
+                    Field1: ['Value1'],
+                    Field2: 'Value2',
+                    /* eslint-enable @typescript-eslint/naming-convention */
+                },
+                {
+                    /* eslint-disable @typescript-eslint/naming-convention */
+                    Field1: ['value1', 'value2'],
+                    Field2: ['value1a', 'value2a', 'value3a'],
+                    Field3: 'one value',
+                    /* eslint-enable @typescript-eslint/naming-convention */
+                },
+                ]);
+            });
+
+            test('parses single values into arrays for fields specified via function', () => {
+                expect(RecordJar.parseRecordJarLines([
+                    'Field1 : Value1',
+                    'Field2: Value2',
+                    '%%',
+                    'Field1 : value1',
+                    'Field1: value2',
+                    'Field2 : value1a',
+                    'Field2 : value2a',
+                    'Field2 : value3a',
+                    'Field3 : one value',
+                ], {
+                    arrayFields: () => ['Field1'],
+                })).toSucceedWith([{
+                    /* eslint-disable @typescript-eslint/naming-convention */
+                    Field1: ['Value1'],
+                    Field2: 'Value2',
+                    /* eslint-enable @typescript-eslint/naming-convention */
+                },
+                {
+                    /* eslint-disable @typescript-eslint/naming-convention */
+                    Field1: ['value1', 'value2'],
+                    Field2: ['value1a', 'value2a', 'value3a'],
+                    Field3: 'one value',
+                    /* eslint-enable @typescript-eslint/naming-convention */
+                },
+                ]);
+            });
+        });
+
         test('parses multiple records', () => {
             expect(RecordJar.parseRecordJarLines([
                 'Field1 : Value1',

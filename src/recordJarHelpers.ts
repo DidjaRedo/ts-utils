@@ -20,30 +20,48 @@
  * SOFTWARE.
  */
 
-import * as Converters from './converters';
 import * as fs from 'fs';
 import * as path from 'path';
 
 import { Result, captureResult, fail, succeed } from './result';
-import { Validators } from './validation';
+import { isKeyOf } from './utils';
 
 interface RecordBody {
     body: string;
     isContinuation: boolean;
 }
 
-class RecordParser {
-    public readonly records: Record<string, string>[] = [];
+/**
+ * Represents a single record in a JAR file
+ * @public
+ */
+export type JarRecord = Record<string, string | string[]>;
 
-    protected _fields: [string, string][] = [];
+export type JarFieldPicker<T extends JarRecord = JarRecord> = (record: T) => (keyof T)[];
+
+/**
+ * Options for a JAR record parser.
+ * @public
+ */
+export interface JarRecordParserOptions {
+    readonly arrayFields?: string[] | JarFieldPicker;
+}
+
+class RecordParser {
+    public readonly records: JarRecord[] = [];
+    public readonly options: JarRecordParserOptions;
+
+    protected _fields: JarRecord = {};
     protected _name: string | undefined = undefined;
     protected _body: RecordBody | undefined = undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    private constructor() {}
+    private constructor(options?: JarRecordParserOptions) {
+        this.options = options ?? {};
+    }
 
-    public static parse(lines: string[]): Result<Record<string, string>[]> {
-        return new RecordParser()._parse(lines);
+    public static parse(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]> {
+        return new RecordParser(options)._parse(lines);
     }
 
     protected static _parseRecordBody(from: string, oldBody?: string): Result<RecordBody> {
@@ -90,7 +108,24 @@ class RecordParser {
         return succeed(escaped);
     }
 
-    protected _parse(lines: string[]): Result<Record<string, string>[]> {
+    protected static _applyOptions(record: JarRecord, options: JarRecordParserOptions): JarRecord {
+        if (options.arrayFields) {
+            record = { ...record }; // don't edit incoming values
+            const arrayFields = Array.isArray(options.arrayFields)
+                ? options.arrayFields
+                : options.arrayFields(record);
+
+            for (const field of arrayFields) {
+                if (isKeyOf(field, record) && typeof record[field] === 'string') {
+                    const current = record[field] as string;
+                    record[field] = [current];
+                }
+            }
+        }
+        return record;
+    }
+
+    protected _parse(lines: string[]): Result<JarRecord[]> {
         for (let n = 0; n < lines.length; n++) {
             const line = lines[n];
             if (line.startsWith('%%') && !this._body?.isContinuation) {
@@ -151,12 +186,17 @@ class RecordParser {
         });
     }
 
-    protected _writePendingRecord(): Result<Record<string, string> | undefined> {
+    protected _havePendingRecord(): boolean {
+        return Object.keys(this._fields).length > 0;
+    }
+
+    protected _writePendingRecord(): Result<JarRecord | undefined> {
         return this._writePendingField().onSuccess(() => {
-            const record = this._fields.length > 0 ? Object.fromEntries(this._fields) : undefined;
+            let record = this._havePendingRecord() ? this._fields : undefined;
             if (record !== undefined) {
+                record = RecordParser._applyOptions(record, this.options);
                 this.records.push(record);
-                this._fields = [];
+                this._fields = {};
             }
             return succeed(undefined);
         });
@@ -167,7 +207,17 @@ class RecordParser {
             if (this._body!.body.length < 1) {
                 return fail('empty body value not allowed');
             }
-            this._fields.push([this._name, this._body!.body]);
+            if (!isKeyOf(this._name, this._fields)) {
+                this._fields[this._name] = this._body!.body;
+            }
+            else if (typeof this._fields[this._name] === 'string') {
+                const current = this._fields[this._name] as string;
+                this._fields[this._name] = [current, this._body!.body];
+            }
+            else {
+                const current = this._fields[this._name] as string[];
+                current.push(this._body!.body);
+            }
             this._name = undefined;
             this._body = undefined;
         }
@@ -179,31 +229,27 @@ class RecordParser {
  * Reads a record-jar from an array of strings, each of which represents one
  * line in the source file.
  * @param lines - the array of strings to be parsed
+ * @param options - Optional parser configuration
  * @returns a corresponding array of `Record<string, string>`
  * @public
  */
-export function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]> {
-    return RecordParser.parse(lines);
+export function parseRecordJarLines(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]> {
+    return RecordParser.parse(lines, options);
 }
-
-/**
- * A {@link Converter} to an array of `Record<string, string>` from an array of strings.
- * @public
- */
-export const recordJar = Converters.validated(Validators.arrayOf(Validators.string)).map(parseRecordJarLines);
 
 /**
  * Reads a record-jar file from a supplied path.
  * @param srcPath - Source path from which the file is read.
+ * @param options - Optional parser configuration
  * @returns The contents of the file as an array of `Record<string, string>`
  * @see https://datatracker.ietf.org/doc/html/draft-phillips-record-jar-01
  * @public
  */
-export function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]> {
+export function readRecordJarFileSync(srcPath: string, options?: JarRecordParserOptions): Result<JarRecord[]> {
     return captureResult(() => {
         const fullPath = path.resolve(srcPath);
         return fs.readFileSync(fullPath, 'utf8').toString().split(/\r?\n/);
     }).onSuccess((lines) => {
-        return parseRecordJarLines(lines);
+        return parseRecordJarLines(lines, options);
     });
 }
