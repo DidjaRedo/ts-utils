@@ -188,11 +188,14 @@ class RecordParser {
 
     protected _parseContinuation(line: string): Result<RecordBody> {
         let trimmed = line.trim();
-        if (!this._body!.isContinuation && (this.options?.fixedContinuationSize ?? 0) > 0) {
+        if (!this._body!.isContinuation) {
+            // istanbul ignore next
             const fixedSize = this.options?.fixedContinuationSize ?? 0;
-            if (trimmed.length < line.length - fixedSize) {
-                // oops, took too much
-                trimmed = line.slice(fixedSize);
+            if (fixedSize > 0) {
+                if (trimmed.length < line.length - fixedSize) {
+                    // oops, took too much
+                    trimmed = line.slice(fixedSize);
+                }
             }
         }
         return RecordParser._parseRecordBody(trimmed).onSuccess((newBody) => {
