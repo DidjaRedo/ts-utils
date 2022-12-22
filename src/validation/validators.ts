@@ -22,10 +22,12 @@
 
 import { ArrayValidator, ArrayValidatorConstructorParams } from './array';
 import { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams } from './object';
+import { TypeGuardValidator, TypeGuardValidatorConstructorParams } from './typeGuard';
 
 import { BooleanValidator } from './boolean';
 import { NumberValidator } from './number';
 import { StringValidator } from './string';
+import { TypeGuardWithContext } from './common';
 import { Validator } from './validator';
 
 /**
@@ -77,4 +79,21 @@ export function arrayOf<T, TC>(
     params?: Omit<ArrayValidatorConstructorParams<T, TC>, 'validateElement'>
 ): ArrayValidator<T, TC> {
     return new ArrayValidator({ validateElement, ...(params ?? {}) });
+}
+
+/**
+ * Helper function to create a {@link Validation.Classes.TypeGuardValidator | TypeGuardValidator} which
+ * validates a value or object in place.
+ * @param description - a description of the thing to be validated for use in error messages
+ * @param guard - a {@link Validation.TypeGuardWithContext} which performs the validation.
+ * @returns A new {@link Validation.Classes.TypeGuardValidator | TypeGuardValidator } which validates
+ * the values using the supplied type guard.
+ * @public
+ */
+export function isA<T, TC>(
+    description: string,
+    guard: TypeGuardWithContext<T, TC>,
+    params?: Omit<TypeGuardValidatorConstructorParams<T, TC>, 'description' | 'guard'>
+): TypeGuardValidator<T, TC> {
+    return new TypeGuardValidator({ description, guard, ...(params ?? {}) });
 }

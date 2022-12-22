@@ -23,11 +23,11 @@
 import { BaseConverter, Converter, ConverterTraits } from './converter';
 import { RangeOf, RangeOfProperties } from './rangeOf';
 import { Result, captureResult, fail, succeed } from './result';
+import { TypeGuardWithContext, Validator } from './validation';
 
 import { DateTime } from 'luxon';
 import { ExtendedArray } from './extendedArray';
 import Mustache from 'mustache';
-import { Validator } from './validation';
 import { isKeyOf } from './utils';
 
 type OnError = 'failOnError' | 'ignoreErrors';
@@ -130,6 +130,7 @@ export class StringConverter<T extends string = string, TC = unknown> extends Ba
      * {@label regexp}
      */
     public matching(match: RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+
     /**
      * Concrete implementation of {@link Converters.StringConverter.(matching#string) | StringConverter.matching(string)},
      * {@link Converters.StringConverter.(matching#array) | StringConverter.matching(string[])},
@@ -364,6 +365,23 @@ export const isoDate = new BaseConverter<Date>((from: unknown) => {
 export function validated<T, TC=unknown>(validator: Validator<T, TC>): Converter<T, TC> {
     return new BaseConverter((from: unknown, _self?: Converter<T, TC>, context?: TC) => {
         return validator.validate(from, context);
+    });
+}
+
+/**
+ * Helper function to create a {@link Converter} from a supplied type guard function.
+ * @param description - a description of the thing to be validated for use in error messages
+ * @param guard - a {@link Validation.TypeGuardWithContext} which performs the validation.
+ * @returns A new {@link Converter} which validates the values using the supplied type guard
+ * and returns them in place.
+ * @public
+ */
+export function isA<T, TC=unknown>(description: string, guard: TypeGuardWithContext<T, TC>): Converter<T, TC> {
+    return new BaseConverter((from: unknown, _self?: Converter<T, TC>, context?: TC) => {
+        if (guard(from, context)) {
+            return succeed(from);
+        }
+        return fail(`invalid ${description} (${JSON.stringify(from)})`);
     });
 }
 

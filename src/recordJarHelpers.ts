@@ -37,6 +37,9 @@ interface RecordBody {
  */
 export type JarRecord = Record<string, string | string[]>;
 
+/**
+ * @public
+ */
 export type JarFieldPicker<T extends JarRecord = JarRecord> = (record: T) => (keyof T)[];
 
 /**

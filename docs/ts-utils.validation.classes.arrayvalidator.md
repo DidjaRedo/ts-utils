@@ -4,7 +4,7 @@
 
 ## Validation.Classes.ArrayValidator class
 
-An in-place [Validator](./ts-utils.validation.validator.md) for `number` values.
+An in-place [Validator](./ts-utils.validation.validator.md) for arrays of validated values or objects.
 
 <b>Signature:</b>
 

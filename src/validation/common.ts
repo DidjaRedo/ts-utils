@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Erik Fortune
+ * Copyright (c) 2022 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,9 @@
  * SOFTWARE.
  */
 
-/* istanbul ignore file */
-
-export { ArrayValidator, ArrayValidatorConstructorParams } from './array';
-export { StringValidator, StringValidatorConstructorParams } from './string';
-export { BooleanValidator, BooleanValidatorConstructorParams } from './boolean';
-export { NumberValidator, NumberValidatorConstructorParams } from './number';
-export { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams, ObjectValidatorOptions } from './object';
-export { TypeGuardValidator, TypeGuardValidatorConstructorParams } from './typeGuard';
+/**
+ * A type guard function which validates a specific type, with an optional context
+ * that can be used to shape the validation.
+ * @public
+ */
+export type TypeGuardWithContext<T, TC = unknown> = (from: unknown, context?: TC) => from is T;

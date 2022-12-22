@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+export * from './common';
 export * from './traits';
 export * from './validator';
 

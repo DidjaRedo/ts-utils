@@ -39,4 +39,5 @@
 |  --- | --- |
 |  [Constraint](./ts-utils.validation.constraint.md) | A [Constraint&lt;T&gt;](./ts-utils.validation.constraint.md) function returns <code>true</code> if the supplied value meets the constraint. Can return [Failure](./ts-utils.failure.md) with an error message or simply return <code>false</code> for a default message. |
 |  [ConstraintTrait](./ts-utils.validation.constrainttrait.md) | Union of all supported constraint traits. |
+|  [TypeGuardWithContext](./ts-utils.validation.typeguardwithcontext.md) | A type guard function which validates a specific type, with an optional context that can be used to shape the validation. |
 

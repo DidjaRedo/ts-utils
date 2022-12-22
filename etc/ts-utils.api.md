@@ -109,7 +109,9 @@ declare namespace Classes {
         FieldValidators,
         ObjectValidator,
         ObjectValidatorConstructorParams,
-        ObjectValidatorOptions
+        ObjectValidatorOptions,
+        TypeGuardValidator,
+        TypeGuardValidatorConstructorParams
     }
 }
 
@@ -157,6 +159,7 @@ declare namespace Converters {
         literal,
         delimitedString,
         validated,
+        isA,
         oneOf,
         arrayOf,
         extendedArrayOf,
@@ -477,10 +480,30 @@ export interface IResultLogger {
 }
 
 // @public
+function isA<T, TC = unknown>(description: string, guard: TypeGuardWithContext<T, TC>): Converter<T, TC>;
+
+// @public
+function isA_2<T, TC>(description: string, guard: TypeGuardWithContext<T, TC>, params?: Omit<TypeGuardValidatorConstructorParams<T, TC>, 'description' | 'guard'>): TypeGuardValidator<T, TC>;
+
+// @public
 export function isKeyOf<T extends object>(key: string | number | symbol, item: T): key is keyof T;
 
 // @public
 const isoDate: BaseConverter<Date, undefined>;
+
+// @public (undocumented)
+type JarFieldPicker<T extends JarRecord = JarRecord> = (record: T) => (keyof T)[];
+
+// @public
+type JarRecord = Record<string, string | string[]>;
+
+// @public
+interface JarRecordParserOptions {
+    // (undocumented)
+    readonly arrayFields?: string[] | JarFieldPicker;
+    // (undocumented)
+    readonly fixedContinuationSize?: number;
+}
 
 // @public
 interface KeyedConverterOptions<T extends string = string, TC = undefined> {
@@ -655,7 +678,7 @@ export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = str
 const optionalString: Converter<string | undefined, unknown>;
 
 // @public
-function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]>;
+function parseRecordJarLines(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]>;
 
 // @public
 export function populateObject<T>(initializers: FieldInitializers<T>, order?: (keyof T)[]): Result<T>;
@@ -711,19 +734,18 @@ function rangeTypeOf<T, RT extends RangeOf<T>, TC = unknown>(converter: Converte
 function readCsvFileSync(srcPath: string): Result<unknown>;
 
 // @public
-function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]>;
+function readRecordJarFileSync(srcPath: string, options?: JarRecordParserOptions): Result<JarRecord[]>;
 
 declare namespace RecordJar {
     export {
         parseRecordJarLines,
         readRecordJarFileSync,
-        recordJar
+        JarRecord,
+        JarFieldPicker,
+        JarRecordParserOptions
     }
 }
 export { RecordJar }
-
-// @public
-const recordJar: Converter<Record<string, string>[], unknown>;
 
 // @public
 function recordOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Record<TK, T>, TC>;
@@ -834,6 +856,29 @@ interface TransformObjectOptions<TSRC> {
 }
 
 // @public
+class TypeGuardValidator<T, TC = unknown> extends ValidatorBase<T, TC> {
+    constructor(params: TypeGuardValidatorConstructorParams<T, TC>);
+    // (undocumented)
+    readonly description: string;
+    // (undocumented)
+    protected readonly _guard: TypeGuardWithContext<T, TC>;
+    readonly options: ValidatorOptions<TC>;
+    // @internal
+    protected _validate(from: unknown, context?: TC): boolean | Failure<T>;
+}
+
+// @public
+interface TypeGuardValidatorConstructorParams<T, TC = unknown> extends ValidatorBaseConstructorParams<T, TC> {
+    // (undocumented)
+    description: string;
+    // (undocumented)
+    guard: TypeGuardWithContext<T, TC>;
+}
+
+// @public
+type TypeGuardWithContext<T, TC = unknown> = (from: unknown, context?: TC) => from is T;
+
+// @public
 function validated<T, TC = unknown>(validator: Validator<T, TC>): Converter<T, TC>;
 
 // @public
@@ -844,6 +889,7 @@ declare namespace Validation {
         Base,
         Classes,
         Validators,
+        TypeGuardWithContext,
         FunctionConstraintTrait,
         ConstraintTrait,
         ValidatorTraitValues,
@@ -882,6 +928,7 @@ declare namespace Validators {
     export {
         object_2 as object,
         arrayOf_2 as arrayOf,
+        isA_2 as isA,
         string_2 as string,
         number_2 as number,
         boolean_2 as boolean

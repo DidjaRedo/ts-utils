@@ -9,6 +9,7 @@
 |  Function | Description |
 |  --- | --- |
 |  [arrayOf(validateElement, params)](./ts-utils.validation.validators.arrayof.md) | Helper function to create a [ArrayValidator](./ts-utils.validation.classes.arrayvalidator.md) which validates an array in place. |
+|  [isA(description, guard, params)](./ts-utils.validation.validators.isa.md) | Helper function to create a [TypeGuardValidator](./ts-utils.validation.classes.typeguardvalidator.md) which validates a value or object in place. |
 |  [object(fields, params)](./ts-utils.validation.validators.object.md) | Helper function to create a [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md) which validates an object in place. |
 
 ## Variables
