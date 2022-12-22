@@ -130,6 +130,7 @@ export class StringConverter<T extends string = string, TC = unknown> extends Ba
      * {@label regexp}
      */
     public matching(match: RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
+
     /**
      * Concrete implementation of {@link Converters.StringConverter.(matching#string) | StringConverter.matching(string)},
      * {@link Converters.StringConverter.(matching#array) | StringConverter.matching(string[])},
