@@ -24,6 +24,9 @@ import { GenericValidator, GenericValidatorConstructorParams } from './genericVa
 
 import { Failure } from '../result';
 
+/**
+ * @internal
+ */
 export type ValidatorBaseConstructorParams<T, TC> = Omit<GenericValidatorConstructorParams<T, TC>, 'validator'>;
 
 /**

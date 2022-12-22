@@ -33,7 +33,8 @@ export interface ArrayValidatorConstructorParams<T, TC = unknown> extends Valida
 }
 
 /**
- * An in-place {@link Validation.Validator | Validator} for `number` values.
+ * An in-place {@link Validation.Validator | Validator} for arrays of validated
+ * values or objects.
  * @public
  */
 export class ArrayValidator<T, TC = unknown> extends ValidatorBase<T[], TC> {
@@ -61,6 +62,7 @@ export class ArrayValidator<T, TC = unknown> extends ValidatorBase<T[], TC> {
      * and that every element of the array can be validated by the supplied array
      * validator.
      * @param from - The `unknown` value to be tested.
+     * @param context - Optional validation context will be propagated to element validator.
      * @returns Returns `true` if `from` is an `array` of valid elements, or
      * {@link Failure} with an error message if not.
      */

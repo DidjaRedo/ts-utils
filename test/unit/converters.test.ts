@@ -297,6 +297,25 @@ describe('Converters module', () => {
         });
     });
 
+    describe('isA converter', () => {
+        test('validates with the supplied type guard', () => {
+            const converter = Converters.isA('number', (from): from is number => typeof from === 'number');
+            expect(converter.convert(10)).toSucceedWith(10);
+            expect(converter.convert({})).toFailWith(/invalid number/);
+        });
+
+        test('propagates context', () => {
+            const guard = (from: unknown, context?: number[]): from is number => {
+                return typeof from === 'number' && (context === undefined || context.includes(from));
+            };
+
+            const converter = Converters.isA('selected number', guard);
+            expect(converter.convert(100)).toSucceedWith(100);
+            expect(converter.convert(20, [10, 20, 30])).toSucceedWith(20);
+            expect(converter.convert(25, [10, 20, 30])).toFailWith(/invalid selected number/);
+        });
+    });
+
     describe('oneOf converter', () => {
         describe('with onError set to ignoreErrors', () => {
             const stringFirst = Converters.oneOf<string|number>([Converters.string, Converters.number]);
