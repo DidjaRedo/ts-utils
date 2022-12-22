@@ -17,7 +17,7 @@ protected _validate<T>(from: unknown, context?: TC): boolean | Failure<T>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
-|  context | TC | <i>(Optional)</i> |
+|  context | TC | <i>(Optional)</i> Optional validation context will be propagated to element validator. |
 
 <b>Returns:</b>
 

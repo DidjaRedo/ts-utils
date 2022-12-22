@@ -22,7 +22,7 @@
 
 import { ArrayValidator, ArrayValidatorConstructorParams } from './array';
 import { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams } from './object';
-import { TypeGuardValidator, TypeGuardValidatorConstructorParams } from './typeGuardValidator';
+import { TypeGuardValidator, TypeGuardValidatorConstructorParams } from './typeGuard';
 
 import { BooleanValidator } from './boolean';
 import { NumberValidator } from './number';

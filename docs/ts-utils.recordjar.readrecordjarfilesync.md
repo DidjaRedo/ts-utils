@@ -9,7 +9,7 @@ Reads a record-jar file from a supplied path.
 <b>Signature:</b>
 
 ```typescript
-export declare function readRecordJarFileSync(srcPath: string): Result<Record<string, string>[]>;
+export declare function readRecordJarFileSync(srcPath: string, options?: JarRecordParserOptions): Result<JarRecord[]>;
 ```
 
 ## Parameters
@@ -17,10 +17,11 @@ export declare function readRecordJarFileSync(srcPath: string): Result<Record<st
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  srcPath | string | Source path from which the file is read. |
+|  options | [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | <i>(Optional)</i> Optional parser configuration |
 
 <b>Returns:</b>
 
-[Result](./ts-utils.result.md)<!-- -->&lt;Record&lt;string, string&gt;\[\]&gt;
+[Result](./ts-utils.result.md)<!-- -->&lt;[JarRecord](./ts-utils.recordjar.jarrecord.md)<!-- -->\[\]&gt;
 
 The contents of the file as an array of `Record<string, string>`
 

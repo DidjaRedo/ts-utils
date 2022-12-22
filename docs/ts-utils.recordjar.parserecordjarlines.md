@@ -9,7 +9,7 @@ Reads a record-jar from an array of strings, each of which represents one line i
 <b>Signature:</b>
 
 ```typescript
-export declare function parseRecordJarLines(lines: string[]): Result<Record<string, string>[]>;
+export declare function parseRecordJarLines(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]>;
 ```
 
 ## Parameters
@@ -17,10 +17,11 @@ export declare function parseRecordJarLines(lines: string[]): Result<Record<stri
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  lines | string\[\] | the array of strings to be parsed |
+|  options | [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | <i>(Optional)</i> Optional parser configuration |
 
 <b>Returns:</b>
 
-[Result](./ts-utils.result.md)<!-- -->&lt;Record&lt;string, string&gt;\[\]&gt;
+[Result](./ts-utils.result.md)<!-- -->&lt;[JarRecord](./ts-utils.recordjar.jarrecord.md)<!-- -->\[\]&gt;
 
 a corresponding array of `Record<string, string>`
 

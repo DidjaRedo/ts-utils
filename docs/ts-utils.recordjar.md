@@ -8,12 +8,19 @@
 
 |  Function | Description |
 |  --- | --- |
-|  [parseRecordJarLines(lines)](./ts-utils.recordjar.parserecordjarlines.md) | Reads a record-jar from an array of strings, each of which represents one line in the source file. |
-|  [readRecordJarFileSync(srcPath)](./ts-utils.recordjar.readrecordjarfilesync.md) | Reads a record-jar file from a supplied path. |
+|  [parseRecordJarLines(lines, options)](./ts-utils.recordjar.parserecordjarlines.md) | Reads a record-jar from an array of strings, each of which represents one line in the source file. |
+|  [readRecordJarFileSync(srcPath, options)](./ts-utils.recordjar.readrecordjarfilesync.md) | Reads a record-jar file from a supplied path. |
 
-## Variables
+## Interfaces
 
-|  Variable | Description |
+|  Interface | Description |
 |  --- | --- |
-|  [recordJar](./ts-utils.recordjar.recordjar.md) | A [Converter](./ts-utils.converter.md) to an array of <code>Record&lt;string, string&gt;</code> from an array of strings. |
+|  [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | Options for a JAR record parser. |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [JarFieldPicker](./ts-utils.recordjar.jarfieldpicker.md) |  |
+|  [JarRecord](./ts-utils.recordjar.jarrecord.md) | Represents a single record in a JAR file |
 

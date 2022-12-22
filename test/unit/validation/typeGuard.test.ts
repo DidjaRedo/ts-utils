@@ -21,8 +21,8 @@
  */
 
 import '../../helpers/jest';
+import { TypeGuardValidator } from '../../../src/validation/typeGuard';
 import { Validators } from '../../../src/validation';
-import { TypeGuardValidator } from '../../../src/validation/typeGuardValidator';
 
 describe('type guard validator', () => {
     describe('constructor', () => {
