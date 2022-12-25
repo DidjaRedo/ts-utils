@@ -4,7 +4,7 @@
 
 ## FieldInitializers type
 
-String-keyed record of initialization functions to be passed to [populateObject()](./ts-utils.populateobject.md)<!-- -->.
+String-keyed record of initialization functions to be passed to .
 
 <b>Signature:</b>
 
