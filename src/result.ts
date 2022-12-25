@@ -720,18 +720,59 @@ export function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: 
 export type FieldInitializers<T> = { [ key in keyof T ]: (state: Partial<T>) => Result<T[key]> };
 
 /**
+ * Options for the {@link populateObject} function.
+ * @public
+ */
+export interface PopulateObjectOptions<T> {
+    /**
+     * If present, specifies the order in which property values should
+     * be evaluated.  Any keys not listed are evaluated after all listed
+     * keys in indeterminate order.  If 'order' is not present, keys
+     * are evaluated in indeterminate order.
+     */
+    order?: (keyof T)[];
+
+    /**
+     * Specify handling of `undefined` values.  By default, successful
+     * `undefined` results are written to the result object.  If this value
+     * is `true` then `undefined` results are suppressed for all properties.
+     * If this value is an array of property keys then `undefined` results
+     * are suppressed for those properties only.
+     */
+    suppressUndefined?: boolean | (keyof T)[];
+}
+
+/**
  * Populates an an object based on a prototype full of field initializers that return {@link Result | Result<T[key]>}.
  * Returns {@link Success} with the populated object if all initializers succeed, or {@link Failure} with a
  * concatenated list of all error messages.
  * @param initializers - An object with the shape of the target but with initializer functions for
  * each property.
+ * @param options {PopulateObjectOptions<T>} - An optional {@link PopulateObjectOptions | set of options} which
+ * modify the behavior of this call.
  * @public
  */
-export function populateObject<T>(initializers: FieldInitializers<T>, order?: (keyof T)[]): Result<T> {
+export function populateObject<T>(initializers: FieldInitializers<T>, options?: PopulateObjectOptions<T>): Result<T>;
+
+/**
+ * Populates an an object based on a prototype full of field initializers that return {@link Result | Result<T[key]>}.
+ * Returns {@link Success} with the populated object if all initializers succeed, or {@link Failure} with a
+ * concatenated list of all error messages.
+ * @param initializers - An object with the shape of the target but with initializer functions for
+ * each property.
+ * @param order {(keyof T)[]} - Optional order in which keys should be written.
+ * @public
+ * @deprecated
+ */
+export function populateObject<T>(initializers: FieldInitializers<T>, order: (keyof T)[]): Result<T>;
+export function populateObject<T>(initializers: FieldInitializers<T>, optionsOrOrder?: PopulateObjectOptions<T> | (keyof T)[]): Result<T> {
+    const options: PopulateObjectOptions<T> = optionsOrOrder
+        ? Array.isArray(optionsOrOrder) ? { order: optionsOrOrder } : optionsOrOrder
+        : {};
     const state = {} as { [key in keyof T]: T[key] };
     const errors: string[] = [];
-    const keys: (keyof T)[] = Array.from(order ?? []);
-    const foundKeys = new Set<keyof T>(order);
+    const keys: (keyof T)[] = Array.from(options.order ?? []);
+    const foundKeys = new Set<keyof T>(options.order);
 
     // start with the supplied order then append anything else we find
     for (const key in initializers) {
@@ -745,6 +786,12 @@ export function populateObject<T>(initializers: FieldInitializers<T>, order?: (k
         if (initializers[key]) {
             const result = initializers[key](state);
             if (result.isSuccess()) {
+                if (result.value === undefined) {
+                    if ((options.suppressUndefined === true)
+                        || Array.isArray(options.suppressUndefined) && options.suppressUndefined.includes(key)) {
+                        continue;
+                    }
+                }
                 state[key] = result.value;
             }
             else {
