@@ -39,7 +39,8 @@
 |  [optionalMapToRecord(src, factory)](./ts-utils.optionalmaptorecord.md) | Applies a factory method to convert an optional <code>Map&lt;string, TS&gt;</code> into a <code>Record&lt;string, TD&gt;</code> or <code>undefined</code>. |
 |  [optionalRecordToMap(src, factory)](./ts-utils.optionalrecordtomap.md) | Applies a factory method to convert an optional <code>Record&lt;TK, TS&gt;</code> into a <code>Map&lt;TK, TD&gt;</code>, or <code>undefined</code>. |
 |  [optionalRecordToPossiblyEmptyMap(src, factory)](./ts-utils.optionalrecordtopossiblyemptymap.md) | Applies a factory method to convert an optional <code>Record&lt;TK, TS&gt;</code> into a <code>Map&lt;TK, TD&gt;</code> |
-|  [populateObject(initializers, order)](./ts-utils.populateobject.md) | Populates an an object based on a prototype full of field initializers that return [Result&lt;T\[key\]&gt;](./ts-utils.result.md)<!-- -->. Returns [Success](./ts-utils.success.md) with the populated object if all initializers succeed, or [Failure](./ts-utils.failure.md) with a concatenated list of all error messages. |
+|  [populateObject(initializers, options)](./ts-utils.populateobject.md) | Populates an an object based on a prototype full of field initializers that return [Result&lt;T\[key\]&gt;](./ts-utils.result.md)<!-- -->. Returns [Success](./ts-utils.success.md) with the populated object if all initializers succeed, or [Failure](./ts-utils.failure.md) with a concatenated list of all error messages. |
+|  [populateObject(initializers, order)](./ts-utils.populateobject_1.md) | Populates an an object based on a prototype full of field initializers that return [Result&lt;T\[key\]&gt;](./ts-utils.result.md)<!-- -->. Returns [Success](./ts-utils.success.md) with the populated object if all initializers succeed, or [Failure](./ts-utils.failure.md) with a concatenated list of all error messages. |
 |  [propagateWithDetail(result, detail, successDetail)](./ts-utils.propagatewithdetail.md) | Propagates a [Success](./ts-utils.success.md) or [Failure](./ts-utils.failure.md) [Result](./ts-utils.result.md)<!-- -->, adding supplied event details as appropriate. |
 |  [recordToMap(src, factory)](./ts-utils.recordtomap.md) | Applies a factory method to convert a <code>Record&lt;TK, TS&gt;</code> into a <code>Map&lt;TK, TD&gt;</code>. |
 |  [succeed(value)](./ts-utils.succeed.md) | Returns [Success&lt;T&gt;](./ts-utils.success.md) with the supplied result value. |
@@ -55,6 +56,7 @@
 |  [Formattable](./ts-utils.formattable.md) | <b><i>(BETA)</i></b> Interface for an object that can be formatted. |
 |  [IResult](./ts-utils.iresult.md) | Represents the result of some operation of sequence of operations. |
 |  [IResultLogger](./ts-utils.iresultlogger.md) | Simple logger interface used by [IResult.getValueOrThrow()](./ts-utils.iresult.getvalueorthrow.md)<!-- -->. |
+|  [PopulateObjectOptions](./ts-utils.populateobjectoptions.md) | Options for the  function. |
 |  [RangeOfFormats](./ts-utils.rangeofformats.md) | Format strings (in mustache format) to use for both open-ended and complete [RangeOf&lt;T&gt;](./ts-utils.rangeof.md)<!-- -->. |
 |  [RangeOfProperties](./ts-utils.rangeofproperties.md) | Represents a generic range of some comparable type <code>&lt;T&gt;</code>. |
 
@@ -83,7 +85,7 @@
 |  [DetailedResult](./ts-utils.detailedresult.md) | <b><i>(BETA)</i></b> Type inference to determine the result type <code>T</code> of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->. |
 |  [DetailedSuccessContinuation](./ts-utils.detailedsuccesscontinuation.md) | Callback to be called when a [DetailedResult](./ts-utils.detailedresult.md) encounters success. |
 |  [FailureContinuation](./ts-utils.failurecontinuation.md) | Continuation callback to be called in the event that an [Result](./ts-utils.result.md) fails. |
-|  [FieldInitializers](./ts-utils.fieldinitializers.md) | String-keyed record of initialization functions to be passed to [populateObject()](./ts-utils.populateobject.md)<!-- -->. |
+|  [FieldInitializers](./ts-utils.fieldinitializers.md) | String-keyed record of initialization functions to be passed to . |
 |  [FormatTargets](./ts-utils.formattargets.md) | <b><i>(BETA)</i></b> Destination format for some formatted string. |
 |  [Formatter](./ts-utils.formatter.md) | <b><i>(BETA)</i></b> Type definition for a formatting function, which takes a <code>string</code> and an item and returns [Result&lt;string&gt;](./ts-utils.result.md)<!-- -->. |
 |  [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md) | <b><i>(BETA)</i></b> A collection of [formatters](./ts-utils.formatter.md) indexed by target name, to enable different format methods per output target. |

@@ -681,7 +681,16 @@ const optionalString: Converter<string | undefined, unknown>;
 function parseRecordJarLines(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]>;
 
 // @public
-export function populateObject<T>(initializers: FieldInitializers<T>, order?: (keyof T)[]): Result<T>;
+export function populateObject<T>(initializers: FieldInitializers<T>, options?: PopulateObjectOptions<T>): Result<T>;
+
+// @public @deprecated
+export function populateObject<T>(initializers: FieldInitializers<T>, order: (keyof T)[]): Result<T>;
+
+// @public
+export interface PopulateObjectOptions<T> {
+    order?: (keyof T)[];
+    suppressUndefined?: boolean | (keyof T)[];
+}
 
 // Warning: (ae-incompatible-release-tags) The symbol "propagateWithDetail" is marked as @public, but its signature references "DetailedResult" which is marked as @beta
 //

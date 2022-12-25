@@ -714,13 +714,13 @@ export function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: 
 }
 
 /**
- * String-keyed record of initialization functions to be passed to {@link populateObject}.
+ * String-keyed record of initialization functions to be passed to {@link populateObject.(:withOptions)}.
  * @public
  */
 export type FieldInitializers<T> = { [ key in keyof T ]: (state: Partial<T>) => Result<T[key]> };
 
 /**
- * Options for the {@link populateObject} function.
+ * Options for the {@link populateObject.(:withOptions)} function.
  * @public
  */
 export interface PopulateObjectOptions<T> {
@@ -748,9 +748,10 @@ export interface PopulateObjectOptions<T> {
  * concatenated list of all error messages.
  * @param initializers - An object with the shape of the target but with initializer functions for
  * each property.
- * @param options {PopulateObjectOptions<T>} - An optional {@link PopulateObjectOptions | set of options} which
+ * @param options - An optional {@link PopulateObjectOptions | set of options} which
  * modify the behavior of this call.
  * @public
+ * {@label withOptions}
  */
 export function populateObject<T>(initializers: FieldInitializers<T>, options?: PopulateObjectOptions<T>): Result<T>;
 
@@ -760,9 +761,10 @@ export function populateObject<T>(initializers: FieldInitializers<T>, options?: 
  * concatenated list of all error messages.
  * @param initializers - An object with the shape of the target but with initializer functions for
  * each property.
- * @param order {(keyof T)[]} - Optional order in which keys should be written.
+ * @param order - Optional order in which keys should be written.
  * @public
- * @deprecated
+ * {@label withOrder}
+ * @deprecated Pass {@link PopulateObjectOptions} instead.
  */
 export function populateObject<T>(initializers: FieldInitializers<T>, order: (keyof T)[]): Result<T>;
 export function populateObject<T>(initializers: FieldInitializers<T>, optionsOrOrder?: PopulateObjectOptions<T> | (keyof T)[]): Result<T> {
