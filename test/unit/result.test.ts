@@ -30,6 +30,7 @@ import {
     captureResult,
     fail,
     failWithDetail,
+    isKeyOf,
     mapDetailedResults,
     mapFailures,
     mapResults,
@@ -350,7 +351,7 @@ describe('Result module', () => {
                 expect(failWithDetail('oops', 10).withDetail('fred')).toFailWithDetail('oops', 'fred');
             });
 
-            test('reports failure with the default detail, everriding any original detail, even if success detail is supplied', () => {
+            test('reports failure with the default detail, overriding any original detail, even if success detail is supplied', () => {
                 expect(failWithDetail('oops', 10).withDetail('fred', 'wilma')).toFailWithDetail('oops', 'fred');
             });
         });
@@ -569,52 +570,127 @@ describe('Result module', () => {
             expect(good2).toHaveBeenCalled();
         });
 
-        test('invokes initializers in the specified order', () => {
-            expect(populateObject({
-                field1: (state) => {
-                    return (state.field2 === 'field2')
-                        ? succeed('field1')
-                        : fail('field 2 has not been correctly initialized');
-                },
-                field2: () => succeed('field2'),
-            }, ['field2', 'field1'])).toSucceedWith({
-                field1: 'field1',
-                field2: 'field2',
+        describe('with order (deprecated)', () => {
+            test('invokes initializers in the specified order', () => {
+                expect(populateObject({
+                    field1: (state) => {
+                        return (state.field2 === 'field2')
+                            ? succeed('field1')
+                            : fail('field 2 has not been correctly initialized');
+                    },
+                    field2: () => succeed('field2'),
+                }, ['field2', 'field1'])).toSucceedWith({
+                    field1: 'field1',
+                    field2: 'field2',
+                });
             });
         });
 
-        test('invokes unlisted initializers after listed initializers', () => {
-            expect(populateObject({
-                field3: (state) => succeed(`[${state.field1}, ${state.field2}]`),
-                field1: (state) => {
-                    return (state.field2 === 'field2')
-                        ? succeed('field1')
-                        : fail('field 2 has not been correctly initialized');
-                },
-                field2: () => succeed('field2'),
-            }, ['field2', 'field1'])).toSucceedWith({
-                field1: 'field1',
-                field2: 'field2',
-                field3: '[field1, field2]',
+        describe('with options', () => {
+            test('invokes initializers in the specified order', () => {
+                expect(populateObject({
+                    field1: (state) => {
+                        return (state.field2 === 'field2')
+                            ? succeed('field1')
+                            : fail('field 2 has not been correctly initialized');
+                    },
+                    field2: () => succeed('field2'),
+                }, { order: ['field2', 'field1'] })).toSucceedWith({
+                    field1: 'field1',
+                    field2: 'field2',
+                });
             });
-        });
 
-        test('fails if order lists a property that has no initializer', () => {
-            interface Thing {
-                field1?: string;
-                field2?: string;
-                field3?: string;
-                field4?: string;
-            }
-            expect(populateObject<Thing>({
-                field3: (state) => succeed(`[${state.field1}, ${state.field2}]`),
-                field1: (state) => {
-                    return (state.field2 === 'field2')
-                        ? succeed('field1')
-                        : fail('field 2 has not been correctly initialized');
-                },
-                field2: () => succeed('field2'),
-            }, ['field2', 'field1', 'field4'])).toFailWith(/is present but/i);
+            test('invokes unlisted initializers after listed initializers', () => {
+                expect(populateObject({
+                    field3: (state) => succeed(`[${state.field1}, ${state.field2}]`),
+                    field1: (state) => {
+                        return (state.field2 === 'field2')
+                            ? succeed('field1')
+                            : fail('field 2 has not been correctly initialized');
+                    },
+                    field2: () => succeed('field2'),
+                }, { order: ['field2', 'field1'] })).toSucceedWith({
+                    field1: 'field1',
+                    field2: 'field2',
+                    field3: '[field1, field2]',
+                });
+            });
+
+            test('fails if order lists a property that has no initializer', () => {
+                interface Thing {
+                    field1?: string;
+                    field2?: string;
+                    field3?: string;
+                    field4?: string;
+                }
+                expect(populateObject<Thing>({
+                    field3: (state) => succeed(`[${state.field1}, ${state.field2}]`),
+                    field1: (state) => {
+                        return (state.field2 === 'field2')
+                            ? succeed('field1')
+                            : fail('field 2 has not been correctly initialized');
+                    },
+                    field2: () => succeed('field2'),
+                }, { order: ['field2', 'field1', 'field4'] })).toFailWith(/is present but/i);
+            });
+
+            test('propagates undefined results by default', () => {
+                interface Thing {
+                    field1: string;
+                    field2?: string;
+                    field3?: string;
+                }
+                expect(populateObject<Thing>({
+                    field1: () => succeed('value1'),
+                    field2: () => succeed(undefined),
+                    field3: () => succeed(undefined),
+                })).toSucceedAndSatisfy((thing: Thing) => {
+                    expect(thing.field1).toBe('value1');
+                    expect(thing.field2).toBeUndefined();
+                    expect(thing.field3).toBeUndefined();
+                    expect(isKeyOf('field2', thing)).toBe(true);
+                    expect(isKeyOf('field3', thing)).toBe(true);
+                });
+            });
+
+            test('does not propagate undefined results if suppressUndefined is true.', () => {
+                interface Thing {
+                    field1: string;
+                    field2?: string;
+                    field3?: string;
+                }
+                expect(populateObject<Thing>({
+                    field1: () => succeed('value1'),
+                    field2: () => succeed(undefined),
+                    field3: () => succeed(undefined),
+                }, { suppressUndefined: true })).toSucceedAndSatisfy((thing: Thing) => {
+                    expect(thing.field1).toBe('value1');
+                    expect(thing.field2).toBeUndefined();
+                    expect(thing.field3).toBeUndefined();
+                    expect(isKeyOf('field2', thing)).toBe(false);
+                    expect(isKeyOf('field3', thing)).toBe(false);
+                });
+            });
+
+            test('does not propagate undefined results for properties listed in suppressUndefined.', () => {
+                interface Thing {
+                    field1: string;
+                    field2?: string;
+                    field3?: string;
+                }
+                expect(populateObject<Thing>({
+                    field1: () => succeed('value1'),
+                    field2: () => succeed(undefined),
+                    field3: () => succeed(undefined),
+                }, { suppressUndefined: ['field2'] })).toSucceedAndSatisfy((thing: Thing) => {
+                    expect(thing.field1).toBe('value1');
+                    expect(thing.field2).toBeUndefined();
+                    expect(thing.field3).toBeUndefined();
+                    expect(isKeyOf('field2', thing)).toBe(false);
+                    expect(isKeyOf('field3', thing)).toBe(true);
+                });
+            });
         });
     });
 });
