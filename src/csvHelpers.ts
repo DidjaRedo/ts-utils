@@ -26,16 +26,25 @@ import { Result, captureResult } from './result';
 import { parse } from 'csv-parse/sync';
 
 /**
+ * Options for {@link readCsvFileSync}
+ */
+export interface CsvOptions {
+    delimiter?: string;
+}
+
+/**
  * Reads a CSV file from a supplied path.
  * @param srcPath - Source path from which the file is read.
+ * @param options - optional parameters to control the processing
  * @returns The contents of the file.
  * @beta
  */
-export function readCsvFileSync(srcPath: string): Result<unknown> {
+export function readCsvFileSync(srcPath: string, options?: CsvOptions): Result<unknown> {
     return captureResult(() => {
         const fullPath = path.resolve(srcPath);
         const body = fs.readFileSync(fullPath, 'utf8').toString();
+        options = options ?? {};
         // eslint-disable-next-line
-        return parse(body, { trim: true, from_line: 2});
+        return parse(body, { trim: true, from_line: 2, ...options });
     });
 }

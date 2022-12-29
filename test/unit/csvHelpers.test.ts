@@ -65,5 +65,18 @@ describe('csvHelpers module', () => {
             expect(readCsvFileSync(path)).toFailWith(/mock error/i);
             spy.mockRestore();
         });
+
+        test('accepts delimiter as an option', () => {
+            const spy = jest.spyOn(fs, 'readFileSync').mockImplementation((gotPath: unknown) => {
+                if (typeof gotPath !== 'string') {
+                    throw new Error('Mock implementation only accepts string');
+                }
+                expect(gotPath).toContain(path);
+                return stringPayload.replace(/,/g, ';');
+            });
+
+            expect(readCsvFileSync(path, { delimiter: ';' })).toSucceedWith(csvPayload);
+            spy.mockRestore();
+        });
     });
 });
