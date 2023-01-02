@@ -4,7 +4,7 @@
 
 ## IResultLogger interface
 
-Simple logger interface used by [IResult.getValueOrThrow()](./ts-utils.iresult.getvalueorthrow.md)<!-- -->.
+Simple logger interface used by [IResult.orThrow()](./ts-utils.iresult.orthrow.md)<!-- -->.
 
 <b>Signature:</b>
 

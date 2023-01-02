@@ -380,8 +380,8 @@ describe('BaseConverter class', () => {
         test('brands string types', () => {
             const str1Converter = Converters.string.withBrand('STRING1');
             const str2Converter = Converters.string.withBrand('STRING2');
-            const str1 = str1Converter.convert('test').getValueOrThrow();
-            const str2 = str2Converter.convert('test').getValueOrThrow();
+            const str1 = str1Converter.convert('test').orThrow();
+            const str2 = str2Converter.convert('test').orThrow();
             // Uncomment the following to get a type error and see branded types in action
             // expect(str1 === str2).toBe(true);
 

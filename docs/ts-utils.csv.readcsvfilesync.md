@@ -12,7 +12,7 @@ Reads a CSV file from a supplied path.
 <b>Signature:</b>
 
 ```typescript
-export declare function readCsvFileSync(srcPath: string): Result<unknown>;
+export declare function readCsvFileSync(srcPath: string, options?: CsvOptions): Result<unknown>;
 ```
 
 ## Parameters
@@ -20,6 +20,7 @@ export declare function readCsvFileSync(srcPath: string): Result<unknown>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  srcPath | string | Source path from which the file is read. |
+|  options | [CsvOptions](./ts-utils.csv.csvoptions.md) | <i>(Optional)</i> optional parameters to control the processing |
 
 <b>Returns:</b>
 

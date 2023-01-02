@@ -27,6 +27,7 @@ import { parse } from 'csv-parse/sync';
 
 /**
  * Options for {@link readCsvFileSync}
+ * @beta
  */
 export interface CsvOptions {
     delimiter?: string;

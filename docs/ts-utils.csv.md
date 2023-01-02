@@ -8,5 +8,11 @@
 
 |  Function | Description |
 |  --- | --- |
-|  [readCsvFileSync(srcPath)](./ts-utils.csv.readcsvfilesync.md) | <b><i>(BETA)</i></b> Reads a CSV file from a supplied path. |
+|  [readCsvFileSync(srcPath, options)](./ts-utils.csv.readcsvfilesync.md) | <b><i>(BETA)</i></b> Reads a CSV file from a supplied path. |
+
+## Interfaces
+
+|  Interface | Description |
+|  --- | --- |
+|  [CsvOptions](./ts-utils.csv.csvoptions.md) | <b><i>(BETA)</i></b> Options for  |
 

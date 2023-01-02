@@ -38,7 +38,7 @@ Also includes a few other much less-developed odds-and-ends borrowed from one pr
 
 With npm:
 ```sh
-npm install ts-utils
+npm install @fgv/ts-utils
 ```
 
 ## API Documentation
@@ -71,20 +71,20 @@ function thisFunctionFails(): number {
 }
 ```
 
-Use *getValueOrDefault* when a failure can be safely ignored:
+Use *orDefault* when a failure can be safely ignored:
 ```ts
 // returns undefined on failure
-const value1: string|undefined = functionReturningResult('whatever').getValueOrDefault();
+const value1: string|undefined = functionReturningResult('whatever').orDefault();
 
 // returns 'oops' on failure
-const value2: string = functionReturningResult('whatever').getValueOrDefault('oops');
+const value2: string = functionReturningResult('whatever').orDefault('oops');
 ```
 
-The *getValueOrThrow* method converts a failure result to an exception, for use in contexts (such as constructors) in which an exception is the most appropriate way to handle errors.
+The *orThrow* method converts a failure result to an exception, for use in contexts (such as constructors) in which an exception is the most appropriate way to handle errors.
 
 ```ts
 constructor(param: string) {
-    this._param = validateReturnsResult(param).getValueOrThrow();
+    this._param = validateReturnsResult(param).orThrow();
 }
 ```
 
@@ -128,7 +128,7 @@ const thingConverter = Converters.object<Thing>({
 });
 
 // gets a Thing or throws an error
-const thing: Things = thingConverter.convert(json).getValueOrThrow();
+const thing: Things = thingConverter.convert(json).orThrow();
 ```
 
 Everything is strongly-typed, so Intellisense will autocomplete properties and highlight errors in the object supplied to *Converters.object*.

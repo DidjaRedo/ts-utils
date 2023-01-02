@@ -44,11 +44,16 @@ import { InMemoryLogger } from '../../src/logger';
 
 describe('Result module', () => {
     describe('Success class', () => {
-        describe('getValueOrThrow method', () => {
+        describe('orThrow method', () => {
             test('returns the value and not throw', () => {
                 const value = 'hello';
                 const s = new Success(value);
                 let gotValue: string|undefined;
+
+                expect(() => {
+                    gotValue = s.orThrow();
+                }).not.toThrow();
+                expect(gotValue).toEqual(value);
 
                 expect(() => {
                     gotValue = s.getValueOrThrow();
@@ -59,17 +64,27 @@ describe('Result module', () => {
             test('does not invoke a logger if supplied', () => {
                 const logger = { error: jest.fn() };
                 expect(() => {
+                    succeed('hello').orThrow(logger);
+                }).not.toThrow();
+                expect(logger.error).not.toHaveBeenCalled();
+
+                expect(() => {
                     succeed('hello').getValueOrThrow(logger);
                 }).not.toThrow();
                 expect(logger.error).not.toHaveBeenCalled();
             });
         });
 
-        describe('getValueOrDefault method', () => {
+        describe('orDefault method', () => {
             test('returns the value and not throw', () => {
                 const value = 'hello';
                 const s = new Success(value);
                 let gotValue: string|undefined;
+
+                expect(() => {
+                    gotValue = s.orDefault();
+                }).not.toThrow();
+                expect(gotValue).toEqual(value);
 
                 expect(() => {
                     gotValue = s.getValueOrDefault();
@@ -82,6 +97,12 @@ describe('Result module', () => {
                     const dflt = 'default value';
                     const s = new Success<string|undefined>(undefined);
                     let gotValue: string|undefined;
+
+                    expect(() => {
+                        gotValue = s.orDefault(dflt);
+                    }).not.toThrow();
+                    expect(gotValue).toEqual(dflt);
+
                     expect(() => {
                         gotValue = s.getValueOrDefault(dflt);
                     }).not.toThrow();
@@ -142,15 +163,25 @@ describe('Result module', () => {
     });
 
     describe('Failure class', () => {
-        describe('getValueOrThrow method', () => {
+        describe('orThrow method', () => {
             test('throws the message', () => {
                 const errorMessage = 'this is an error message';
                 const f = new Failure(errorMessage);
 
+                expect(() => f.orThrow()).toThrowError(errorMessage);
                 expect(() => f.getValueOrThrow()).toThrowError(errorMessage);
             });
 
             test('calls logger if supplied', () => {
+                const logger = { error: jest.fn() };
+                const errorMessage = 'this is an error message';
+                const f = new Failure(errorMessage);
+
+                expect(() => f.orThrow(logger)).toThrowError(errorMessage);
+                expect(logger.error).toHaveBeenCalledWith(errorMessage);
+            });
+
+            test('getValueOrThrow calls logger if supplied', () => {
                 const logger = { error: jest.fn() };
                 const errorMessage = 'this is an error message';
                 const f = new Failure(errorMessage);
@@ -164,15 +195,20 @@ describe('Result module', () => {
                 const errorMessage = 'this is an error message';
                 const f = new Failure(errorMessage);
 
-                expect(() => f.getValueOrThrow(logger)).toThrowError(errorMessage);
+                expect(() => f.orThrow(logger)).toThrowError(errorMessage);
                 expect(logger.messages).toEqual([errorMessage]);
             });
         });
 
-        describe('getValueOrDefault method', () => {
+        describe('orDefault method', () => {
             test('returns undefined if default is omitted', () => {
                 const f = new Failure<string>('this is an error message');
                 let gotValue: string|undefined;
+
+                expect(() => {
+                    gotValue = f.orDefault();
+                }).not.toThrow();
+                expect(gotValue).toBeUndefined();
 
                 expect(() => {
                     gotValue = f.getValueOrDefault();
@@ -185,7 +221,7 @@ describe('Result module', () => {
                 const f = new Failure<string>('this is an error message');
                 let gotValue: string|undefined;
                 expect(() => {
-                    gotValue = f.getValueOrDefault(dflt);
+                    gotValue = f.orDefault(dflt);
                 }).not.toThrow();
                 expect(gotValue).toEqual(dflt);
             });
