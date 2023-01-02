@@ -103,7 +103,7 @@ export class Normalizer {
             .sort((e1, e2) => this._compareKeys(e1[0], e2[0]))
             .map((e) => [e[0], this.normalize(e[1])] as ResultEntry<T>)
             .filter((e) => e[1].isSuccess())
-            .map((e) => [e[0], e[1].getValueOrThrow()]);
+            .map((e) => [e[0], e[1].orThrow()]);
     }
 
     protected _normalizeArray(from: unknown[]): Result<unknown[]> {

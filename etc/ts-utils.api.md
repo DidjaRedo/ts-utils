@@ -211,10 +211,17 @@ export interface ConverterTraits {
 
 declare namespace Csv {
     export {
-        readCsvFileSync
+        readCsvFileSync,
+        CsvOptions
     }
 }
 export { Csv }
+
+// @beta
+interface CsvOptions {
+    // (undocumented)
+    delimiter?: string;
+}
 
 // @public
 export const DEFAULT_RANGEOF_FORMATS: {
@@ -309,6 +316,8 @@ export class Failure<T> implements IResult<T> {
     get message(): string;
     onFailure(cb: FailureContinuation<T>): Result<T>;
     onSuccess<TN>(_: SuccessContinuation<T, TN>): Result<TN>;
+    orDefault(dflt?: T): T | undefined;
+    orThrow(logger?: IResultLogger): never;
     readonly success = false;
     toString(): string;
     // Warning: (ae-incompatible-release-tags) The symbol "withDetail" is marked as @public, but its signature references "DetailedResult" which is marked as @beta
@@ -467,6 +476,8 @@ export interface IResult<T> {
     isSuccess(): this is Success<T>;
     onFailure(cb: FailureContinuation<T>): Result<T>;
     onSuccess<TN>(cb: SuccessContinuation<T, TN>): Result<TN>;
+    orDefault(dflt?: T): T | undefined;
+    orThrow(logger?: IResultLogger): T;
     readonly success: boolean;
     // Warning: (ae-incompatible-release-tags) The symbol "withDetail" is marked as @public, but its signature references "DetailedResult" which is marked as @beta
     withDetail<TD>(detail: TD, successDetail?: TD): DetailedResult<T, TD>;
@@ -740,7 +751,7 @@ export interface RangeOfProperties<T> {
 function rangeTypeOf<T, RT extends RangeOf<T>, TC = unknown>(converter: Converter<T, TC>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT, TC>;
 
 // @beta
-function readCsvFileSync(srcPath: string): Result<unknown>;
+function readCsvFileSync(srcPath: string, options?: CsvOptions): Result<unknown>;
 
 // @public
 function readRecordJarFileSync(srcPath: string, options?: JarRecordParserOptions): Result<JarRecord[]>;
@@ -837,6 +848,8 @@ export class Success<T> implements IResult<T> {
     isSuccess(): this is Success<T>;
     onFailure(_: FailureContinuation<T>): Result<T>;
     onSuccess<TN>(cb: SuccessContinuation<T, TN>): Result<TN>;
+    orDefault(dflt?: T): T | undefined;
+    orThrow(_logger?: IResultLogger): T;
     readonly success = true;
     get value(): T;
     // Warning: (ae-incompatible-release-tags) The symbol "withDetail" is marked as @public, but its signature references "DetailedResult" which is marked as @beta

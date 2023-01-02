@@ -48,7 +48,7 @@ export type FailureContinuation<T> = (message: string) => Result<T>;
 export type ResultValueType<T> = T extends Result<infer TV> ? TV : never;
 
 /**
- * Simple logger interface used by {@link IResult.getValueOrThrow}.
+ * Simple logger interface used by {@link IResult.orThrow}.
  * @public
  */
 export interface IResultLogger {
@@ -87,7 +87,11 @@ export interface IResult<T> {
     /**
      * Gets the value associated with a successful {@link IResult | result},
      * or throws the error message if the corresponding operation failed.
-     * @param logger - An optional {@link IResultLogger | logger} to which the
+     *
+     * Note that `getValueOrThrow` is being superseded by `orThrow` and
+     * will eventually be deprecated.  Please use orDefault instead.
+     *
+    * @param logger - An optional {@link IResultLogger | logger} to which the
      * error will also be reported.
      * @returns The return value, if the operation was successful.
      * @throws The error message if the operation failed.
@@ -99,10 +103,34 @@ export interface IResult<T> {
      * or a default value if the corresponding operation failed.
      * @param dflt - The value to be returned if the operation failed (default is
      * `undefined`).
+     *
+     * Note that `getValueOrDefault` is being superseded by `orDefault` and
+     * will eventually be deprecated.  Please use orDefault instead.
+     *
      * @returns The return value, if the operation was successful.  Returns
      * the supplied default value or `undefined` if no default is supplied.
      */
     getValueOrDefault(dflt?: T): T|undefined;
+
+    /**
+     * Gets the value associated with a successful {@link IResult | result},
+     * or throws the error message if the corresponding operation failed.
+     * @param logger - An optional {@link IResultLogger | logger} to which the
+     * error will also be reported.
+     * @returns The return value, if the operation was successful.
+     * @throws The error message if the operation failed.
+     */
+    orThrow(logger?: IResultLogger): T;
+
+    /**
+     * Gets the value associated with a successful {@link IResult | result},
+     * or a default value if the corresponding operation failed.
+     * @param dflt - The value to be returned if the operation failed (default is
+     * `undefined`).
+     * @returns The return value, if the operation was successful.  Returns
+     * the supplied default value or `undefined` if no default is supplied.
+     */
+    orDefault(dflt?: T): T|undefined;
 
     /**
      * Calls a supplied {@link SuccessContinuation | success continuation} if
@@ -199,6 +227,20 @@ export class Success<T> implements IResult<T> {
     }
 
     /**
+     * {@inheritdoc IResult.orThrow}
+     */
+    public orThrow(_logger?: IResultLogger): T {
+        return this._value;
+    }
+
+    /**
+     * {@inheritdoc IResult.orDefault}
+     */
+    public orDefault(dflt?: T): T|undefined {
+        return this._value ?? dflt;
+    }
+
+    /**
      * {@inheritdoc IResult.getValueOrThrow}
      */
     public getValueOrThrow(_logger?: IResultLogger): T {
@@ -283,6 +325,23 @@ export class Failure<T> implements IResult<T> {
      */
     public isFailure(): this is Failure<T> {
         return true;
+    }
+
+    /**
+     * {@inheritdoc IResult.orThrow}
+     */
+    public orThrow(logger?: IResultLogger): never {
+        if (logger !== undefined) {
+            logger.error(this._message);
+        }
+        throw new Error(this._message);
+    }
+
+    /**
+     * {@inheritdoc IResult.orDefault}
+     */
+    public orDefault(dflt?: T): T|undefined {
+        return dflt;
     }
 
     /**

@@ -31,11 +31,13 @@ export declare class Failure<T> implements IResult<T>
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [getValueOrDefault(dflt)](./ts-utils.failure.getvalueordefault.md) |  | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or a default value if the corresponding operation failed. |
-|  [getValueOrThrow(logger)](./ts-utils.failure.getvalueorthrow.md) |  | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed. |
+|  [getValueOrThrow(logger)](./ts-utils.failure.getvalueorthrow.md) |  | <p>Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed.</p><p>Note that <code>getValueOrThrow</code> is being superseded by <code>orThrow</code> and will eventually be deprecated. Please use orDefault instead.</p> |
 |  [isFailure()](./ts-utils.failure.isfailure.md) |  | Indicates whether this operation failed. Functions as a type guard for [Failure&lt;T&gt;](./ts-utils.failure.md)<!-- -->. |
 |  [isSuccess()](./ts-utils.failure.issuccess.md) |  | Indicates whether this operation was successful. Functions as a type guard for [Success&lt;T&gt;](./ts-utils.success.md)<!-- -->. |
 |  [onFailure(cb)](./ts-utils.failure.onfailure.md) |  | Calls a supplied [failed continuation](./ts-utils.failurecontinuation.md) if the operation failed. |
 |  [onSuccess(\_)](./ts-utils.failure.onsuccess.md) |  | Calls a supplied [success continuation](./ts-utils.successcontinuation.md) if the operation was a success. |
+|  [orDefault(dflt)](./ts-utils.failure.ordefault.md) |  | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or a default value if the corresponding operation failed. |
+|  [orThrow(logger)](./ts-utils.failure.orthrow.md) |  | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed. |
 |  [toString()](./ts-utils.failure.tostring.md) |  | Get a 'friendly' string representation of this object. |
 |  [withDetail(detail, \_successDetail)](./ts-utils.failure.withdetail.md) |  | Converts a [IResult&lt;T&gt;](./ts-utils.iresult.md) to a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, adding supplied details. |
 |  [withFailureDetail(detail)](./ts-utils.failure.withfailuredetail.md) |  | Converts a [IResult&lt;T&gt;](./ts-utils.iresult.md) to a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, adding a supplied detail if the operation failed. |

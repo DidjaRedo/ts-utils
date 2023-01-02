@@ -293,8 +293,8 @@ describe('GenericValidator class', () => {
             const bv1 = tv.withBrand('BRAND1');
             const bv2 = tv.withBrand('BRAND2');
 
-            const str1 = bv1.validate('test').getValueOrThrow();
-            const str2 = bv2.validate('test').getValueOrThrow();
+            const str1 = bv1.validate('test').orThrow();
+            const str2 = bv2.validate('test').orThrow();
 
             // Uncomment the following to get a type error and see branded types in action
             // expect(str1 === str2).toBe(true);

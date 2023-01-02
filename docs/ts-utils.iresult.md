@@ -27,11 +27,13 @@ This common contract enables commingled discriminated usage of [Success&lt;T&gt;
 |  Method | Description |
 |  --- | --- |
 |  [getValueOrDefault(dflt)](./ts-utils.iresult.getvalueordefault.md) | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or a default value if the corresponding operation failed. |
-|  [getValueOrThrow(logger)](./ts-utils.iresult.getvalueorthrow.md) | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed. |
+|  [getValueOrThrow(logger)](./ts-utils.iresult.getvalueorthrow.md) | <p>Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed.</p><p>Note that <code>getValueOrThrow</code> is being superseded by <code>orThrow</code> and will eventually be deprecated. Please use orDefault instead.</p> |
 |  [isFailure()](./ts-utils.iresult.isfailure.md) | Indicates whether this operation failed. Functions as a type guard for [Failure&lt;T&gt;](./ts-utils.failure.md)<!-- -->. |
 |  [isSuccess()](./ts-utils.iresult.issuccess.md) | Indicates whether this operation was successful. Functions as a type guard for [Success&lt;T&gt;](./ts-utils.success.md)<!-- -->. |
 |  [onFailure(cb)](./ts-utils.iresult.onfailure.md) | Calls a supplied [failed continuation](./ts-utils.failurecontinuation.md) if the operation failed. |
 |  [onSuccess(cb)](./ts-utils.iresult.onsuccess.md) | Calls a supplied [success continuation](./ts-utils.successcontinuation.md) if the operation was a success. |
+|  [orDefault(dflt)](./ts-utils.iresult.ordefault.md) | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or a default value if the corresponding operation failed. |
+|  [orThrow(logger)](./ts-utils.iresult.orthrow.md) | Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed. |
 |  [withDetail(detail, successDetail)](./ts-utils.iresult.withdetail.md) | Converts a [IResult&lt;T&gt;](./ts-utils.iresult.md) to a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, adding supplied details. |
 |  [withFailureDetail(detail)](./ts-utils.iresult.withfailuredetail.md) | Converts a [IResult&lt;T&gt;](./ts-utils.iresult.md) to a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, adding a supplied detail if the operation failed. |
 
