@@ -508,7 +508,7 @@ export const stringArray = arrayOf(string);
 export const numberArray = arrayOf(number);
 
 /**
- * Options for {@link Converters.(recordOf:withOptions)} and {@link Converters.(mapOf:withOptions)}
+ * Options for {@link Converters.recordOf.(:withOptions)} and {@link Converters.mapOf.(:withOptions)}
  * helper functions.
  * @public
  */
@@ -1032,7 +1032,7 @@ export function object<T>(properties: FieldConverters<T>, options?: ObjectConver
  * {@label withKeys}
  * @returns A new {@link Converters.ObjectConverter | ObjectConverter} which applies the specified conversions.
  * @public
- * @deprecated Use {@link Converters.(object:withOptions) | Converters.object(fields, options)} instead.
+ * @deprecated Use {@link Converters.object.(:withOptions) | Converters.object(fields, options)} instead.
  */
 
 export function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
@@ -1046,7 +1046,7 @@ export function object<T>(properties: FieldConverters<T>, options?: (keyof T)[]|
 }
 
 /**
- * Options for the {@link Converters.(strictObject:withOptions)} helper function.
+ * Options for the {@link Converters.strictObject.(:withOptions)} helper function.
  * @public
  */
 export type StrictObjectConverterOptions<T> = Omit<ObjectConverterOptions<T>, 'strict'>;
@@ -1087,12 +1087,13 @@ export function strictObject<T>(properties: FieldConverters<T>, options?: Strict
  * @param optional - An array of `keyof T` containing keys to be considered optional.
  * @returns A new {@link Converters.ObjectConverter | ObjectConverter} which applies the specified conversions.
  * {@label withKeys}
- * @deprecated Use {@link Converters.(strictObject:withOptions) | Converters.strictObject(options)} instead.
+ * @deprecated Use {@link Converters.strictObject(:withOptions) | Converters.strictObject(options)} instead.
  * @public
  */
 export function strictObject<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
+
 /**
- * Concrete implementation for {@link Converters.(strictObject:withOptions) | Converters.strictObject(fields, options)}
+ * Concrete implementation for {@link Converters.strictObject(:withOptions) | Converters.strictObject(fields, options)}
  * and {@link Converters.(strictObject:withKeys) | Converters.strictObject(fields, optional)}.
  * @internal
  */

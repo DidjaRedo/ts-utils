@@ -14,5 +14,5 @@
 
 |  Interface | Description |
 |  --- | --- |
-|  [CsvOptions](./ts-utils.csv.csvoptions.md) | <b><i>(BETA)</i></b> Options for  |
+|  [CsvOptions](./ts-utils.csv.csvoptions.md) | <b><i>(BETA)</i></b> Options for [Csv.readCsvFileSync()](./ts-utils.csv.readcsvfilesync.md) |
 
