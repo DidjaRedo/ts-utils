@@ -26,7 +26,7 @@ import { Result, captureResult } from './result';
 import { parse } from 'csv-parse/sync';
 
 /**
- * Options for {@link readCsvFileSync}
+ * Options for {@link Csv.readCsvFileSync}
  * @beta
  */
 export interface CsvOptions {
