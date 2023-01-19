@@ -659,6 +659,9 @@ interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC> {
 }
 
 // @public
+export function omit<T extends object, K extends keyof T>(from: T, exclude: K[]): Omit<T, K>;
+
+// @public
 function oneOf<T, TC = unknown>(converters: Array<Converter<T, TC>>, onError?: OnError_2): Converter<T, TC>;
 
 // @public
@@ -690,6 +693,9 @@ const optionalString: Converter<string | undefined, unknown>;
 
 // @public
 function parseRecordJarLines(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]>;
+
+// @public
+export function pick<T extends object, K extends keyof T>(from: T, include: K[]): Pick<T, K>;
 
 // @public
 export function populateObject<T>(initializers: FieldInitializers<T>, options?: PopulateObjectOptions<T>): Result<T>;
