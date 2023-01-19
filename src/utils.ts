@@ -35,6 +35,43 @@ export function isKeyOf<T extends object>(key: string|number|symbol, item: T): k
     return item.hasOwnProperty(key);
 }
 
+
+/**
+ * Simple implicit pick function, which picks a set of properties from a supplied
+ * object.  Ignores picked properties that do not exist regardless of type signature.
+ * @param from - The object from which keys are to be picked.
+ * @param include - The keys of the properties to be picked from `from`.
+ * @returns A new object containing the requested properties from `from`, where present.
+ * @public
+ */
+export function pick<T extends object, K extends keyof T>(from: T, include: K[]): Pick<T, K> {
+    const rtrn: Partial<Pick<T, K>> = {};
+    for (const key of include) {
+        if (key in from) {
+            rtrn[key] = from[key];
+        }
+    }
+    return rtrn as Pick<T, K>;
+}
+
+/**
+ * Simple implicit omit function, which picks all of the properties from a supplied
+ * object except those specified for exclusion.
+ * @param from - The object from which keys are to be picked.
+ * @param exclude - The keys of the properties to be excluded from the returned object.
+ * @returns A new object containing all of the properties from `from` that were not
+ * explicitly excluded.
+ * @public
+ */
+export function omit<T extends object, K extends keyof T>(from: T, exclude: K[]): Omit<T, K> {
+    const rtrn: Partial<Omit<T, K>> = {};
+    for (const entry of Object.entries(from).filter((e) => !exclude.includes(e[0] as keyof T as K))) {
+        rtrn[entry[0] as unknown as keyof Omit<T, K>] = entry[1];
+    }
+
+    return rtrn as Omit<T, K>;
+}
+
 /**
  * Gets the value of a property specified by key from an arbitrary object,
  * or a default value if the property does not exist.
