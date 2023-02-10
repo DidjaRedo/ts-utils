@@ -9,10 +9,10 @@
 
 Type inference to determine the detail type `TD` of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type ResultDetailType<T> = T extends DetailedResult<unknown, infer TD> ? TD : never;
 ```
-<b>References:</b> [DetailedResult](./ts-utils.detailedresult.md)
+**References:** [DetailedResult](./ts-utils.detailedresult.md)
 

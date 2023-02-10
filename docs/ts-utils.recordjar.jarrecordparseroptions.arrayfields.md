@@ -4,7 +4,7 @@
 
 ## RecordJar.JarRecordParserOptions.arrayFields property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly arrayFields?: string[] | JarFieldPicker;

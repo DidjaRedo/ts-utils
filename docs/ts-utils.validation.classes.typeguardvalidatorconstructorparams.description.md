@@ -4,7 +4,7 @@
 
 ## Validation.Classes.TypeGuardValidatorConstructorParams.description property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 description: string;

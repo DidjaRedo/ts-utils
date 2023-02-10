@@ -6,7 +6,7 @@
 
 Returns the brand for a branded type.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly brand?: string;

@@ -9,7 +9,7 @@
 
 Type guard to determine if some arbitrary array is an [ExtendedArray](./ts-utils.extendedarray.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static isExtendedArray<T>(a?: T[]): a is ExtendedArray<T>;
@@ -19,9 +19,9 @@ static isExtendedArray<T>(a?: T[]): a is ExtendedArray<T>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  a | T\[\] | <i>(Optional)</i> The <code>Array</code> to be tested. |
+|  a | T\[\] | _(Optional)_ The <code>Array</code> to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 a is [ExtendedArray](./ts-utils.extendedarray.md)<!-- -->&lt;T&gt;
 

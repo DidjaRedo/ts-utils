@@ -6,7 +6,7 @@
 
 Creates an [in-place validator](./ts-utils.validation.validator.md) which is derived from this one but which applies additional constraints.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T, TC>;
@@ -17,9 +17,9 @@ withConstraint(constraint: Constraint<T>, trait?: ConstraintTrait): Validator<T,
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  constraint | [Constraint](./ts-utils.validation.constraint.md)<!-- -->&lt;T&gt; | the constraint to be applied |
-|  trait | [ConstraintTrait](./ts-utils.validation.constrainttrait.md) | <i>(Optional)</i> As optional [ConstraintTrait](./ts-utils.validation.constrainttrait.md) to be applied to the resulting [Validator](./ts-utils.validation.validator.md)<!-- -->. |
+|  trait | [ConstraintTrait](./ts-utils.validation.constrainttrait.md) | _(Optional)_ As optional [ConstraintTrait](./ts-utils.validation.constrainttrait.md) to be applied to the resulting [Validator](./ts-utils.validation.validator.md)<!-- -->. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T, TC&gt;
 

@@ -6,10 +6,10 @@
 
 Continuation callback to be called in the event that an [Result](./ts-utils.result.md) is successful.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type SuccessContinuation<T, TN> = (value: T) => Result<TN>;
 ```
-<b>References:</b> [Result](./ts-utils.result.md)
+**References:** [Result](./ts-utils.result.md)
 

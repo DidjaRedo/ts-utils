@@ -6,7 +6,7 @@
 
 A [NumberValidator](./ts-utils.validation.classes.numbervalidator.md) which validates a number in place.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 number: NumberValidator<number, unknown>

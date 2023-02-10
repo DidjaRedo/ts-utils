@@ -6,10 +6,10 @@
 
 Type for a validation function, which validates that a supplied `unknown` value is a valid value of type `<T>`<!-- -->, possibly as influenced by an optionally-supplied validation context of type `<TC>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type ValidatorFunc<T, TC> = (from: unknown, context?: TC) => boolean | Failure<T>;
 ```
-<b>References:</b> [Failure](./ts-utils.failure.md)
+**References:** [Failure](./ts-utils.failure.md)
 

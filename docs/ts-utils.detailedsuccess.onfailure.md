@@ -6,7 +6,7 @@
 
 Propagates this [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onFailure(_cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD>;
@@ -18,7 +18,7 @@ onFailure(_cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD>;
 |  --- | --- | --- |
 |  \_cb | [DetailedFailureContinuation](./ts-utils.detailedfailurecontinuation.md)<!-- -->&lt;T, TD&gt; | [Failure callback](./ts-utils.detailedfailurecontinuation.md) to be called on a [DetailedResult](./ts-utils.detailedresult.md) in case of failure (ignored). |
 
-<b>Returns:</b>
+**Returns:**
 
 [DetailedResult](./ts-utils.detailedresult.md)<!-- -->&lt;T, TD&gt;
 

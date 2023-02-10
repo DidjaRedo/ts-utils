@@ -6,12 +6,12 @@
 
 An in-place [Validator](./ts-utils.validation.validator.md) for `boolean` values.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class BooleanValidator<TC = unknown> extends GenericValidator<boolean, TC> 
 ```
-<b>Extends:</b> [GenericValidator](./ts-utils.validation.base.genericvalidator.md)<!-- -->&lt;boolean, TC&gt;
+**Extends:** [GenericValidator](./ts-utils.validation.base.genericvalidator.md)<!-- -->&lt;boolean, TC&gt;
 
 ## Constructors
 

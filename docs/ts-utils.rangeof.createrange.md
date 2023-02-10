@@ -6,7 +6,7 @@
 
 Static constructor for a [RangeOf&lt;T&gt;](./ts-utils.rangeof.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static createRange<T>(init?: RangeOfProperties<T>): Result<RangeOf<T>>;
@@ -16,9 +16,9 @@ static createRange<T>(init?: RangeOfProperties<T>): Result<RangeOf<T>>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  init | [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> [Range initializer](./ts-utils.rangeofproperties.md)<!-- -->. |
+|  init | [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt; | _(Optional)_ [Range initializer](./ts-utils.rangeofproperties.md)<!-- -->. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;[RangeOf](./ts-utils.rangeof.md)<!-- -->&lt;T&gt;&gt;
 

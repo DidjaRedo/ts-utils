@@ -6,14 +6,14 @@
 
 Per-property converters for each of the properties in type T.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FieldConverters<T, TC = unknown> = {
     [key in keyof T]: Converter<T[key], TC>;
 };
 ```
-<b>References:</b> [Converter](./ts-utils.converter.md)
+**References:** [Converter](./ts-utils.converter.md)
 
 ## Remarks
 

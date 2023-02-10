@@ -6,7 +6,7 @@
 
 Helper function to create a [Converter](./ts-utils.converter.md) which converts `unknown` to some supplied literal value. Succeeds with the supplied value if an identity comparison succeeds, fails otherwise.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function literal<T>(value: T): Converter<T, unknown>;
@@ -18,7 +18,7 @@ export declare function literal<T>(value: T): Converter<T, unknown>;
 |  --- | --- | --- |
 |  value | T | The value to be compared. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, unknown&gt;
 

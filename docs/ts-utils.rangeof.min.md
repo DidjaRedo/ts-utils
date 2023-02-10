@@ -6,7 +6,7 @@
 
 Minimum extent of the range.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly min?: T;

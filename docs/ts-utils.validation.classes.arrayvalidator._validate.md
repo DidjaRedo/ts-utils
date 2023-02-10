@@ -6,7 +6,7 @@
 
 Static method which validates that a supplied `unknown` value is a `array` and that every element of the array can be validated by the supplied array validator.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected _validate<T>(from: unknown, context?: TC): boolean | Failure<T>;
@@ -17,9 +17,9 @@ protected _validate<T>(from: unknown, context?: TC): boolean | Failure<T>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
-|  context | TC | <i>(Optional)</i> Optional validation context will be propagated to element validator. |
+|  context | TC | _(Optional)_ Optional validation context will be propagated to element validator. |
 
-<b>Returns:</b>
+**Returns:**
 
 boolean \| [Failure](./ts-utils.failure.md)<!-- -->&lt;T&gt;
 

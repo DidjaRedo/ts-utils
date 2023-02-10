@@ -5,10 +5,10 @@
 ## RecordJar.JarFieldPicker type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type JarFieldPicker<T extends JarRecord = JarRecord> = (record: T) => (keyof T)[];
 ```
-<b>References:</b> [JarRecord](./ts-utils.recordjar.jarrecord.md)
+**References:** [JarRecord](./ts-utils.recordjar.jarrecord.md)
 

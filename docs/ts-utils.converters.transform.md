@@ -6,7 +6,7 @@
 
 Helper to create a [Converter](./ts-utils.converter.md) which converts a source object to a new object with a different shape.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function transform<T, TC = unknown>(properties: FieldConverters<T, TC>): Converter<T, TC>;
@@ -18,7 +18,7 @@ export declare function transform<T, TC = unknown>(properties: FieldConverters<T
 |  --- | --- | --- |
 |  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T, TC&gt; | An object with key names that correspond to the target object and an appropriate [FieldConverter](./ts-utils.converters.fieldconverters.md) which extracts and converts a single filed from the source object. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

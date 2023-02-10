@@ -11,7 +11,7 @@
 
 Helper function to create a [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, given a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and a set of optional properties.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function object<T>(properties: FieldConverters<T>, optional: (keyof T)[]): ObjectConverter<T>;
@@ -24,7 +24,7 @@ export declare function object<T>(properties: FieldConverters<T>, optional: (key
 |  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | An [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) defining the shape of the source object and [converters](./ts-utils.converter.md) to be applied to each properties. |
 |  optional | (keyof T)\[\] | An array of <code>(keyof T)</code> listing the keys to be considered optional.  |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;T&gt;
 

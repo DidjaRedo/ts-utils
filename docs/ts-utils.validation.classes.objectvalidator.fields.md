@@ -6,7 +6,7 @@
 
 A [FieldValidators](./ts-utils.validation.classes.fieldvalidators.md) object specifying a [Validator](./ts-utils.validation.validator.md) for each of the expected properties
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly fields: FieldValidators<T>;

@@ -6,7 +6,7 @@
 
 If present, lists optional fields. Missing non-optional fields cause an error.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 optionalFields?: (keyof T)[];

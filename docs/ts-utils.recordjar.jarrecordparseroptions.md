@@ -6,7 +6,7 @@
 
 Options for a JAR record parser.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface JarRecordParserOptions 
@@ -16,6 +16,6 @@ export interface JarRecordParserOptions
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [arrayFields?](./ts-utils.recordjar.jarrecordparseroptions.arrayfields.md) | <code>readonly</code> | string\[\] \| [JarFieldPicker](./ts-utils.recordjar.jarfieldpicker.md) | <i>(Optional)</i> |
-|  [fixedContinuationSize?](./ts-utils.recordjar.jarrecordparseroptions.fixedcontinuationsize.md) | <code>readonly</code> | number | <i>(Optional)</i> |
+|  [arrayFields?](./ts-utils.recordjar.jarrecordparseroptions.arrayfields.md) | <code>readonly</code> | string\[\] \| [JarFieldPicker](./ts-utils.recordjar.jarfieldpicker.md) | _(Optional)_ |
+|  [fixedContinuationSize?](./ts-utils.recordjar.jarrecordparseroptions.fixedcontinuationsize.md) | <code>readonly</code> | number | _(Optional)_ |
 

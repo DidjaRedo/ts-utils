@@ -6,10 +6,10 @@
 
 A [Constraint&lt;T&gt;](./ts-utils.validation.constraint.md) function returns `true` if the supplied value meets the constraint. Can return [Failure](./ts-utils.failure.md) with an error message or simply return `false` for a default message.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Constraint<T> = (val: T) => boolean | Failure<T>;
 ```
-<b>References:</b> [Failure](./ts-utils.failure.md)
+**References:** [Failure](./ts-utils.failure.md)
 

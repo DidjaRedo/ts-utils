@@ -6,7 +6,7 @@
 
 Constructs a new [ValidatorTraits](./ts-utils.validation.validatortraits.md) optionally initialized with the supplied base and initial values.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(init?: Partial<ValidatorTraitValues>, base?: ValidatorTraitValues);
@@ -16,8 +16,8 @@ constructor(init?: Partial<ValidatorTraitValues>, base?: ValidatorTraitValues);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  init | Partial&lt;[ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md)<!-- -->&gt; | <i>(Optional)</i> Partial initial values to be set in the resulting [Validator](./ts-utils.validation.validator.md)<!-- -->. |
-|  base | [ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md) | <i>(Optional)</i> Base values to be used when no initial values are present. |
+|  init | Partial&lt;[ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md)<!-- -->&gt; | _(Optional)_ Partial initial values to be set in the resulting [Validator](./ts-utils.validation.validator.md)<!-- -->. |
+|  base | [ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md) | _(Optional)_ Base values to be used when no initial values are present. |
 
 ## Remarks
 

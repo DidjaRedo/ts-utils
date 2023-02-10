@@ -4,7 +4,7 @@
 
 ## Validation.Classes.TypeGuardValidatorConstructorParams.guard property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 guard: TypeGuardWithContext<T, TC>;

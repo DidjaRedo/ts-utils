@@ -6,12 +6,12 @@
 
 String-keyed record of initialization functions to be passed to .
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FieldInitializers<T> = {
     [key in keyof T]: (state: Partial<T>) => Result<T[key]>;
 };
 ```
-<b>References:</b> [Result](./ts-utils.result.md)
+**References:** [Result](./ts-utils.result.md)
 

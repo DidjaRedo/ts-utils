@@ -6,7 +6,7 @@
 
 A [ConstraintTrait](./ts-utils.validation.constrainttrait.md) indicating that a [Constraint&lt;T&gt;](./ts-utils.validation.constraint.md) function provides an additional constraint implementation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface FunctionConstraintTrait 

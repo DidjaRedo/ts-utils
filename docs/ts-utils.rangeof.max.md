@@ -6,7 +6,7 @@
 
 Maximum extent of the range.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly max?: T;

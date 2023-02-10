@@ -6,7 +6,7 @@
 
 Converts from `unknown` to `<T>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 convert(from: unknown, context?: TC): Result<T>;
@@ -17,9 +17,9 @@ convert(from: unknown, context?: TC): Result<T>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> to be converted |
-|  context | TC | <i>(Optional)</i> An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
+|  context | TC | _(Optional)_ An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

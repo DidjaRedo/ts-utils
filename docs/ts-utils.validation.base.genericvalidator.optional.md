@@ -6,12 +6,12 @@
 
 Creates an [in-place validator](./ts-utils.validation.validator.md) which is derived from this one but which also matches `undefined`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 optional(): Validator<T | undefined, TC>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T \| undefined, TC&gt;
 

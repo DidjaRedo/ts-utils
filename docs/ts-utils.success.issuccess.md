@@ -6,12 +6,12 @@
 
 Indicates whether this operation was successful. Functions as a type guard for [Success&lt;T&gt;](./ts-utils.success.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isSuccess(): this is Success<T>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 this is [Success](./ts-utils.success.md)<!-- -->&lt;T&gt;
 

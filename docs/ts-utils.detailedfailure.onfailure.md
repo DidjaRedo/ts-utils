@@ -6,7 +6,7 @@
 
 Invokes the supplied [failure callback](./ts-utils.detailedfailurecontinuation.md) and propagates its returned [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onFailure(cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD>;
@@ -18,7 +18,7 @@ onFailure(cb: DetailedFailureContinuation<T, TD>): DetailedResult<T, TD>;
 |  --- | --- | --- |
 |  cb | [DetailedFailureContinuation](./ts-utils.detailedfailurecontinuation.md)<!-- -->&lt;T, TD&gt; | The [failure callback](./ts-utils.detailedfailurecontinuation.md) to be invoked. |
 
-<b>Returns:</b>
+**Returns:**
 
 [DetailedResult](./ts-utils.detailedresult.md)<!-- -->&lt;T, TD&gt;
 

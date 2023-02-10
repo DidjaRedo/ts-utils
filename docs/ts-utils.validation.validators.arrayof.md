@@ -6,7 +6,7 @@
 
 Helper function to create a [ArrayValidator](./ts-utils.validation.classes.arrayvalidator.md) which validates an array in place.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function arrayOf<T, TC>(validateElement: Validator<T, TC>, params?: Omit<ArrayValidatorConstructorParams<T, TC>, 'validateElement'>): ArrayValidator<T, TC>;
@@ -17,9 +17,9 @@ export declare function arrayOf<T, TC>(validateElement: Validator<T, TC>, params
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  validateElement | [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T, TC&gt; | A [validator](./ts-utils.validation.validator.md) which validates each element. |
-|  params | Omit&lt;[ArrayValidatorConstructorParams](./ts-utils.validation.classes.arrayvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt;, 'validateElement'&gt; | <i>(Optional)</i> |
+|  params | Omit&lt;[ArrayValidatorConstructorParams](./ts-utils.validation.classes.arrayvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt;, 'validateElement'&gt; | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 [ArrayValidator](./ts-utils.validation.classes.arrayvalidator.md)<!-- -->&lt;T, TC&gt;
 

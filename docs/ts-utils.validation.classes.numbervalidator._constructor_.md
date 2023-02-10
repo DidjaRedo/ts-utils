@@ -6,7 +6,7 @@
 
 Constructs a new [NumberValidator](./ts-utils.validation.classes.numbervalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params?: NumberValidatorConstructorParams<T, TC>);
@@ -16,5 +16,5 @@ constructor(params?: NumberValidatorConstructorParams<T, TC>);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  params | [NumberValidatorConstructorParams](./ts-utils.validation.classes.numbervalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> Optional [init params](./ts-utils.validation.classes.numbervalidatorconstructorparams.md) for the new [NumberValidator](./ts-utils.validation.classes.numbervalidator.md)<!-- -->. |
+|  params | [NumberValidatorConstructorParams](./ts-utils.validation.classes.numbervalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; | _(Optional)_ Optional [init params](./ts-utils.validation.classes.numbervalidatorconstructorparams.md) for the new [NumberValidator](./ts-utils.validation.classes.numbervalidator.md)<!-- -->. |
 

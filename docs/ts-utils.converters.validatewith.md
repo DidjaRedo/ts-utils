@@ -6,7 +6,7 @@
 
 Helper function to create a [Converter](./ts-utils.converter.md) which validates that a supplied value is of a type validated by a supplied validator function and returns it.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function validateWith<T, TC = undefined>(validator: (from: unknown) => from is T, description?: string): Converter<T, TC>;
@@ -17,9 +17,9 @@ export declare function validateWith<T, TC = undefined>(validator: (from: unknow
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  validator | (from: unknown) =&gt; from is T | A validator function to determine if the converted value is valid. |
-|  description | string | <i>(Optional)</i> A description of the validated type for use in error messages. |
+|  description | string | _(Optional)_ A description of the validated type for use in error messages. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

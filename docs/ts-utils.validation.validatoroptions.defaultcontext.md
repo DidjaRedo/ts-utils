@@ -4,7 +4,7 @@
 
 ## Validation.ValidatorOptions.defaultContext property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 defaultContext?: TC;

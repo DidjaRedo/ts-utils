@@ -6,7 +6,7 @@
 
 Normalizes the supplied value
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 normalize<T>(from: T): Result<T>;
@@ -18,7 +18,7 @@ normalize<T>(from: T): Result<T>;
 |  --- | --- | --- |
 |  from | T | The value to be normalized |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

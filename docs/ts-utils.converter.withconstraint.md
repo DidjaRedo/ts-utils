@@ -6,7 +6,7 @@
 
 Creates a [Converter](./ts-utils.converter.md) which applies an optional constraint to the result of this conversion. If this [Converter](./ts-utils.converter.md) (the base converter) succeeds, the new converter calls a supplied constraint evaluation function with the conversion, which fails the entire conversion if the constraint function returns either `false` or [Failure&lt;T&gt;](./ts-utils.failure.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withConstraint(constraint: (val: T) => boolean | Result<T>, options?: ConstraintOptions): Converter<T, TC>;
@@ -17,9 +17,9 @@ withConstraint(constraint: (val: T) => boolean | Result<T>, options?: Constraint
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  constraint | (val: T) =&gt; boolean \| [Result](./ts-utils.result.md)<!-- -->&lt;T&gt; | Constraint evaluation function. |
-|  options | [ConstraintOptions](./ts-utils.constraintoptions.md) | <i>(Optional)</i> [Options](./ts-utils.constraintoptions.md) for constraint evaluation. |
+|  options | [ConstraintOptions](./ts-utils.constraintoptions.md) | _(Optional)_ [Options](./ts-utils.constraintoptions.md) for constraint evaluation. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

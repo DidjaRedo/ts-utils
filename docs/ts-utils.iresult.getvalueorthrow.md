@@ -8,7 +8,7 @@ Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- 
 
 Note that `getValueOrThrow` is being superseded by `orThrow` and will eventually be deprecated. Please use orDefault instead.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getValueOrThrow(logger?: IResultLogger): T;
@@ -18,9 +18,9 @@ getValueOrThrow(logger?: IResultLogger): T;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  logger | [IResultLogger](./ts-utils.iresultlogger.md) | <i>(Optional)</i> An optional [logger](./ts-utils.iresultlogger.md) to which the error will also be reported. |
+|  logger | [IResultLogger](./ts-utils.iresultlogger.md) | _(Optional)_ An optional [logger](./ts-utils.iresultlogger.md) to which the error will also be reported. |
 
-<b>Returns:</b>
+**Returns:**
 
 T
 

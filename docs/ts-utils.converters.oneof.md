@@ -6,7 +6,7 @@
 
 A helper function to create a [Converter](./ts-utils.converter.md) for polymorphic values. Returns a converter which Invokes the wrapped converters in sequence, returning the first successful result. Returns an error if none of the supplied converters can convert the value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function oneOf<T, TC = unknown>(converters: Array<Converter<T, TC>>, onError?: OnError): Converter<T, TC>;
@@ -17,9 +17,9 @@ export declare function oneOf<T, TC = unknown>(converters: Array<Converter<T, TC
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  converters | Array&lt;[Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;&gt; | An ordered list of [converters](./ts-utils.converter.md) to be considered. |
-|  onError | OnError | <i>(Optional)</i> Specifies treatment of unconvertible elements. |
+|  onError | OnError | _(Optional)_ Specifies treatment of unconvertible elements. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

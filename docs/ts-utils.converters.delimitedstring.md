@@ -6,7 +6,7 @@
 
 Helper function to create a [Converter](./ts-utils.converter.md) which converts any `string` into an array of `string`<!-- -->, by separating at a supplied delimiter.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function delimitedString(delimiter: string, options?: 'filtered' | 'all'): Converter<string[], string>;
@@ -17,9 +17,9 @@ export declare function delimitedString(delimiter: string, options?: 'filtered' 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  delimiter | string | The delimiter at which to split. |
-|  options | 'filtered' \| 'all' | <i>(Optional)</i> |
+|  options | 'filtered' \| 'all' | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;string\[\], string&gt;
 

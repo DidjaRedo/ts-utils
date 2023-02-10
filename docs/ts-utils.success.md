@@ -6,12 +6,12 @@
 
 Reports a successful [result](./ts-utils.iresult.md) from some operation and the corresponding value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Success<T> implements IResult<T> 
 ```
-<b>Implements:</b> [IResult](./ts-utils.iresult.md)<!-- -->&lt;T&gt;
+**Implements:** [IResult](./ts-utils.iresult.md)<!-- -->&lt;T&gt;
 
 ## Constructors
 

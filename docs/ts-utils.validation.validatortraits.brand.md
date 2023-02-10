@@ -6,7 +6,7 @@
 
 If present, indicates that the result will be branded with the corresponding brand.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly brand?: string;

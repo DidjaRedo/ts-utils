@@ -6,7 +6,7 @@
 
 [Options](./ts-utils.validation.validatoroptions.md) which apply to this validator.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly options: ValidatorOptions<TC>;

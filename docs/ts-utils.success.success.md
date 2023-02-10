@@ -6,7 +6,7 @@
 
 Indicates whether the operation was successful.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly success = true;

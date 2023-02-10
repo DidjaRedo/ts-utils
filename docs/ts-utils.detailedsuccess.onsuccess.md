@@ -6,7 +6,7 @@
 
 Invokes the supplied [success callback](./ts-utils.detailedsuccesscontinuation.md) and propagates its returned [DetailedResult&lt;TN, TD&gt;](./ts-utils.detailedresult.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onSuccess<TN>(cb: DetailedSuccessContinuation<T, TD, TN>): DetailedResult<TN, TD>;
@@ -18,7 +18,7 @@ onSuccess<TN>(cb: DetailedSuccessContinuation<T, TD, TN>): DetailedResult<TN, TD
 |  --- | --- | --- |
 |  cb | [DetailedSuccessContinuation](./ts-utils.detailedsuccesscontinuation.md)<!-- -->&lt;T, TD, TN&gt; | The [success callback](./ts-utils.detailedsuccesscontinuation.md) to be invoked. |
 
-<b>Returns:</b>
+**Returns:**
 
 [DetailedResult](./ts-utils.detailedresult.md)<!-- -->&lt;TN, TD&gt;
 

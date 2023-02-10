@@ -6,12 +6,12 @@
 
 Parameters used to construct a [ArrayValidator](./ts-utils.validation.classes.arrayvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ArrayValidatorConstructorParams<T, TC = unknown> extends ValidatorBaseConstructorParams<T[], TC> 
 ```
-<b>Extends:</b> ValidatorBaseConstructorParams&lt;T\[\], TC&gt;
+**Extends:** ValidatorBaseConstructorParams&lt;T\[\], TC&gt;
 
 ## Properties
 

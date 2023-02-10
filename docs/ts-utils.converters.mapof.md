@@ -6,7 +6,7 @@
 
 A helper function to create a [Converter](./ts-utils.converter.md) which converts the `string`<!-- -->-keyed properties using a supplied [Converter&lt;T&gt;](./ts-utils.converter.md) to produce a `Map<string, T>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function mapOf<T, TC = undefined, TK extends string = string>(converter: Converter<T, TC>): Converter<Map<TK, T>, TC>;
@@ -18,7 +18,7 @@ export declare function mapOf<T, TC = undefined, TK extends string = string>(con
 |  --- | --- | --- |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert each item in the source object. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;Map&lt;TK, T&gt;, TC&gt;
 

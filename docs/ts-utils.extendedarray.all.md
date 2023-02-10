@@ -9,12 +9,12 @@
 
 Gets a new (non-extended) `Array` containing all of the elements from this [ExtendedArray](./ts-utils.extendedarray.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 all(): T[];
 ```
-<b>Returns:</b>
+**Returns:**
 
 T\[\]
 

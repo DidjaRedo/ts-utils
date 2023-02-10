@@ -6,7 +6,7 @@
 
 A [Converter](./ts-utils.converter.md) which converts an optional `string` value. Values of type `string` are returned. Anything else returns [Success](./ts-utils.success.md) with value `undefined`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 optionalString: Converter<string | undefined, unknown>

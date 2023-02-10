@@ -6,7 +6,7 @@
 
 Creates a [Converter](./ts-utils.converter.md) which applies an additional supplied converter to the result of this converter.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC>;
@@ -18,7 +18,7 @@ mapConvert<T2>(mapConverter: Converter<T2>): Converter<T2, TC>;
 |  --- | --- | --- |
 |  mapConverter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T2&gt; | The [Converter](./ts-utils.converter.md) to be applied to the converted result from this [Converter](./ts-utils.converter.md)<!-- -->. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T2, TC&gt;
 

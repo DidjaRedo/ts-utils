@@ -6,7 +6,7 @@
 
 Creates a new [in-place validator](./ts-utils.validation.validator.md) which is derived from this one but which matches a branded result.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
@@ -18,7 +18,7 @@ withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
 |  --- | --- | --- |
 |  brand | B | The brand to be applied. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;[Brand](./ts-utils.brand.md)<!-- -->&lt;T, B&gt;, TC&gt;
 

@@ -6,12 +6,12 @@
 
 A [DetailedSuccess](./ts-utils.detailedsuccess.md) extends [Success](./ts-utils.success.md) to report optional success details in addition to the error message.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class DetailedSuccess<T, TD> extends Success<T> 
 ```
-<b>Extends:</b> [Success](./ts-utils.success.md)<!-- -->&lt;T&gt;
+**Extends:** [Success](./ts-utils.success.md)<!-- -->&lt;T&gt;
 
 ## Constructors
 

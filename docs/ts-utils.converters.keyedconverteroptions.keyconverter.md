@@ -6,7 +6,7 @@
 
 If present, `keyConverter` is used to convert the source object property names to keys in the resulting map or record.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 keyConverter?: Converter<T, TC>;

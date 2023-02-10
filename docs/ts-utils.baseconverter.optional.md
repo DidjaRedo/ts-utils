@@ -6,7 +6,7 @@
 
 Creates a [Converter](./ts-utils.converter.md) for an optional value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 optional(onError?: OnError): Converter<T | undefined, TC>;
@@ -16,9 +16,9 @@ optional(onError?: OnError): Converter<T | undefined, TC>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  onError | OnError | <i>(Optional)</i> Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
+|  onError | OnError | _(Optional)_ Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T \| undefined, TC&gt;
 

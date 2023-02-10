@@ -6,7 +6,7 @@
 
 Options used to initialize this [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly options: ObjectConverterOptions<T>;

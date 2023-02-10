@@ -6,7 +6,7 @@
 
 Calls a supplied [success continuation](./ts-utils.successcontinuation.md) if the operation was a success.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onSuccess<TN>(_: SuccessContinuation<T, TN>): Result<TN>;
@@ -18,7 +18,7 @@ onSuccess<TN>(_: SuccessContinuation<T, TN>): Result<TN>;
 |  --- | --- | --- |
 |  \_ | [SuccessContinuation](./ts-utils.successcontinuation.md)<!-- -->&lt;T, TN&gt; |  |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;TN&gt;
 

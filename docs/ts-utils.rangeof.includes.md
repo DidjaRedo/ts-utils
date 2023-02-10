@@ -6,7 +6,7 @@
 
 Determines if a supplied value is within this range.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 includes(t: T): boolean;
@@ -18,7 +18,7 @@ includes(t: T): boolean;
 |  --- | --- | --- |
 |  t | T | The value to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 boolean
 

@@ -9,7 +9,7 @@
 
 Constructs an [ExtendedArray](./ts-utils.extendedarray.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(itemDescription: string, ...items: T[]);

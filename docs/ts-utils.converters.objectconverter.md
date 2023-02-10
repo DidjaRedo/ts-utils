@@ -6,12 +6,12 @@
 
 A [Converter](./ts-utils.converter.md) which converts an object of type `<T>` without changing shape, given a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) for the fields in the object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class ObjectConverter<T, TC = unknown> extends BaseConverter<T, TC> 
 ```
-<b>Extends:</b> [BaseConverter](./ts-utils.baseconverter.md)<!-- -->&lt;T, TC&gt;
+**Extends:** [BaseConverter](./ts-utils.baseconverter.md)<!-- -->&lt;T, TC&gt;
 
 ## Remarks
 

@@ -6,7 +6,7 @@
 
 Applies a factory method to convert an optional `Record<TK, TS>` into a `Map<TK, TD>`<!-- -->, or `undefined`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function optionalRecordToMap<TS, TD, TK extends string = string>(src: Record<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD> | undefined>;
@@ -19,7 +19,7 @@ export declare function optionalRecordToMap<TS, TD, TK extends string = string>(
 |  src | Record&lt;TK, TS&gt; \| undefined | The <code>Record</code> to be converted, or undefined. |
 |  factory | KeyedThingFactory&lt;TS, TD, TK&gt; | The factory method used to convert elements. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;Map&lt;TK, TD&gt; \| undefined&gt;
 

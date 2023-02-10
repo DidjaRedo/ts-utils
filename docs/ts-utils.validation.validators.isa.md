@@ -6,7 +6,7 @@
 
 Helper function to create a [TypeGuardValidator](./ts-utils.validation.classes.typeguardvalidator.md) which validates a value or object in place.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function isA<T, TC>(description: string, guard: TypeGuardWithContext<T, TC>, params?: Omit<TypeGuardValidatorConstructorParams<T, TC>, 'description' | 'guard'>): TypeGuardValidator<T, TC>;
@@ -18,9 +18,9 @@ export declare function isA<T, TC>(description: string, guard: TypeGuardWithCont
 |  --- | --- | --- |
 |  description | string | a description of the thing to be validated for use in error messages |
 |  guard | [TypeGuardWithContext](./ts-utils.validation.typeguardwithcontext.md)<!-- -->&lt;T, TC&gt; | a [Validation.TypeGuardWithContext](./ts-utils.validation.typeguardwithcontext.md) which performs the validation. |
-|  params | Omit&lt;[TypeGuardValidatorConstructorParams](./ts-utils.validation.classes.typeguardvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt;, 'description' \| 'guard'&gt; | <i>(Optional)</i> |
+|  params | Omit&lt;[TypeGuardValidatorConstructorParams](./ts-utils.validation.classes.typeguardvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt;, 'description' \| 'guard'&gt; | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 [TypeGuardValidator](./ts-utils.validation.classes.typeguardvalidator.md)<!-- -->&lt;T, TC&gt;
 

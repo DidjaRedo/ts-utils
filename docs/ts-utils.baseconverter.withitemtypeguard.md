@@ -6,7 +6,7 @@
 
 Creates a [Converter](./ts-utils.converter.md) which applies a supplied type guard to each member of the conversion result from this converter.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): Converter<TI[], TC>;
@@ -17,9 +17,9 @@ withItemTypeGuard<TI>(guard: (from: unknown) => from is TI, message?: string): C
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  guard | (from: unknown) =&gt; from is TI | The type guard function to apply to each element. |
-|  message | string | <i>(Optional)</i> Optional message to be reported if the type guard fails. |
+|  message | string | _(Optional)_ Optional message to be reported if the type guard fails. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;TI\[\], TC&gt;
 

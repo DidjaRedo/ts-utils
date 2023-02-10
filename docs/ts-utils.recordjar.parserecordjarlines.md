@@ -6,7 +6,7 @@
 
 Reads a record-jar from an array of strings, each of which represents one line in the source file.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function parseRecordJarLines(lines: string[], options?: JarRecordParserOptions): Result<JarRecord[]>;
@@ -17,9 +17,9 @@ export declare function parseRecordJarLines(lines: string[], options?: JarRecord
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  lines | string\[\] | the array of strings to be parsed |
-|  options | [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | <i>(Optional)</i> Optional parser configuration |
+|  options | [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | _(Optional)_ Optional parser configuration |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;[JarRecord](./ts-utils.recordjar.jarrecord.md)<!-- -->\[\]&gt;
 

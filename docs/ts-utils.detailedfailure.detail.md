@@ -6,7 +6,7 @@
 
 The error detail associated with this [DetailedFailure](./ts-utils.detailedfailure.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get detail(): TD;

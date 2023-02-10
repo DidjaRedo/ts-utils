@@ -6,17 +6,17 @@
 
 Options for an [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ObjectValidatorOptions<T, TC> extends ValidatorOptions<TC> 
 ```
-<b>Extends:</b> [ValidatorOptions](./ts-utils.validation.validatoroptions.md)<!-- -->&lt;TC&gt;
+**Extends:** [ValidatorOptions](./ts-utils.validation.validatoroptions.md)<!-- -->&lt;TC&gt;
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [optionalFields?](./ts-utils.validation.classes.objectvalidatoroptions.optionalfields.md) |  | (keyof T)\[\] | <i>(Optional)</i> If present, lists optional fields. Missing non-optional fields cause an error. |
-|  [strict?](./ts-utils.validation.classes.objectvalidatoroptions.strict.md) |  | boolean | <i>(Optional)</i> If true, unrecognized fields yield an error. If false or undefined (default), unrecognized fields are ignored. |
+|  [optionalFields?](./ts-utils.validation.classes.objectvalidatoroptions.optionalfields.md) |  | (keyof T)\[\] | _(Optional)_ If present, lists optional fields. Missing non-optional fields cause an error. |
+|  [strict?](./ts-utils.validation.classes.objectvalidatoroptions.strict.md) |  | boolean | _(Optional)_ If true, unrecognized fields yield an error. If false or undefined (default), unrecognized fields are ignored. |
 

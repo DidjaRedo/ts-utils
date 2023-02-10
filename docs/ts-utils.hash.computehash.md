@@ -6,7 +6,7 @@
 
 Computes an md5 hash from an array of strings. Not secure and not intended to be secure.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function computeHash(parts: string[]): string;
@@ -18,7 +18,7 @@ export declare function computeHash(parts: string[]): string;
 |  --- | --- | --- |
 |  parts | string\[\] | The strings to be hashed |
 
-<b>Returns:</b>
+**Returns:**
 
 string
 

@@ -6,7 +6,7 @@
 
 Simple implicit pick function, which picks a set of properties from a supplied object. Ignores picked properties that do not exist regardless of type signature.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function pick<T extends object, K extends keyof T>(from: T, include: K[]): Pick<T, K>;
@@ -19,7 +19,7 @@ export declare function pick<T extends object, K extends keyof T>(from: T, inclu
 |  from | T | The object from which keys are to be picked. |
 |  include | K\[\] | The keys of the properties to be picked from <code>from</code>. |
 
-<b>Returns:</b>
+**Returns:**
 
 Pick&lt;T, K&gt;
 

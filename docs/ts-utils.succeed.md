@@ -6,7 +6,7 @@
 
 Returns [Success&lt;T&gt;](./ts-utils.success.md) with the supplied result value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function succeed<T>(value: T): Success<T>;
@@ -18,7 +18,7 @@ export declare function succeed<T>(value: T): Success<T>;
 |  --- | --- | --- |
 |  value | T | The successful result value to be returned |
 
-<b>Returns:</b>
+**Returns:**
 
 [Success](./ts-utils.success.md)<!-- -->&lt;T&gt;
 

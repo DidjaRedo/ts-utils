@@ -9,7 +9,7 @@
 
 Interface for an object that can be formatted.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Formattable 
@@ -19,5 +19,5 @@ export interface Formattable
 
 |  Method | Description |
 |  --- | --- |
-|  [format(format)](./ts-utils.formattable.format.md) | <b><i>(BETA)</i></b> Formats an object using the supplied mustache template. |
+|  [format(format)](./ts-utils.formattable.format.md) | **_(BETA)_** Formats an object using the supplied mustache template. |
 

@@ -6,7 +6,7 @@
 
 Format strings (in mustache format) to use for both open-ended and complete [RangeOf&lt;T&gt;](./ts-utils.rangeof.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface RangeOfFormats 

@@ -6,7 +6,7 @@
 
 Indicates whether the validator accepts `undefined` as a valid value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly isOptional: boolean;

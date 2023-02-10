@@ -6,7 +6,7 @@
 
 Gets the type of a property specified by key from an arbitrary object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function getTypeOfProperty<T extends object>(key: string | number | symbol, item: T): 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'undefined' | 'object' | 'function' | undefined;
@@ -19,7 +19,7 @@ export declare function getTypeOfProperty<T extends object>(key: string | number
 |  key | string \| number \| symbol | The key specifying the property to be tested. |
 |  item | T | The object from which the property is to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 'string' \| 'number' \| 'bigint' \| 'boolean' \| 'symbol' \| 'undefined' \| 'undefined' \| 'object' \| 'function' \| undefined
 

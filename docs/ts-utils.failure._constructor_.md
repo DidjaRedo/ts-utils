@@ -6,7 +6,7 @@
 
 Constructs a [Failure](./ts-utils.failure.md) with the supplied message.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(message: string);

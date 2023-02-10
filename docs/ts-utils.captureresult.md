@@ -6,7 +6,7 @@
 
 Wraps a function which might throw to convert exception results to [Failure](./ts-utils.failure.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function captureResult<T>(func: () => T): Result<T>;
@@ -18,7 +18,7 @@ export declare function captureResult<T>(func: () => T): Result<T>;
 |  --- | --- | --- |
 |  func | () =&gt; T | The function to be captured. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

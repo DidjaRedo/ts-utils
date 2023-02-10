@@ -11,7 +11,7 @@
 
 Populates an an object based on a prototype full of field initializers that return [Result&lt;T\[key\]&gt;](./ts-utils.result.md)<!-- -->. Returns [Success](./ts-utils.success.md) with the populated object if all initializers succeed, or [Failure](./ts-utils.failure.md) with a concatenated list of all error messages.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function populateObject<T>(initializers: FieldInitializers<T>, order: (keyof T)[]): Result<T>;
@@ -24,7 +24,7 @@ export declare function populateObject<T>(initializers: FieldInitializers<T>, or
 |  initializers | [FieldInitializers](./ts-utils.fieldinitializers.md)<!-- -->&lt;T&gt; | An object with the shape of the target but with initializer functions for each property. |
 |  order | (keyof T)\[\] | <p>Optional order in which keys should be written.</p> |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

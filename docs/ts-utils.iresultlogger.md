@@ -6,7 +6,7 @@
 
 Simple logger interface used by [IResult.orThrow()](./ts-utils.iresult.orthrow.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface IResultLogger 

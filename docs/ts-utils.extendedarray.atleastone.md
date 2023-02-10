@@ -9,7 +9,7 @@
 
 Returns an array containing all elements of an [ExtendedArray](./ts-utils.extendedarray.md)<!-- -->. Fails with an error message if the array is empty.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 atLeastOne(failMessage?: string): Result<T[]>;
@@ -19,9 +19,9 @@ atLeastOne(failMessage?: string): Result<T[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  failMessage | string | <i>(Optional)</i> Optional message to be displayed in the event of failure. |
+|  failMessage | string | _(Optional)_ Optional message to be displayed in the event of failure. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T\[\]&gt;
 

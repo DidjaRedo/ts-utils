@@ -6,12 +6,12 @@
 
 Generic base implementation for an in-place [Validator](./ts-utils.validation.validator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class GenericValidator<T, TC = undefined> implements Validator<T, TC> 
 ```
-<b>Implements:</b> [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T, TC&gt;
+**Implements:** [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;T, TC&gt;
 
 ## Constructors
 

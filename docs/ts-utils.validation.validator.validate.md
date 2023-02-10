@@ -6,7 +6,7 @@
 
 Tests to see if a supplied `unknown` value matches this validation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 validate(from: unknown, context?: TC): Result<T>;
@@ -17,9 +17,9 @@ validate(from: unknown, context?: TC): Result<T>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
-|  context | TC | <i>(Optional)</i> Optional validation context. |
+|  context | TC | _(Optional)_ Optional validation context. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

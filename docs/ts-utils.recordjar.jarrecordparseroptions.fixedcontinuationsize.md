@@ -4,7 +4,7 @@
 
 ## RecordJar.JarRecordParserOptions.fixedContinuationSize property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly fixedContinuationSize?: number;

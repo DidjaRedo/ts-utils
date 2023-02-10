@@ -6,7 +6,7 @@
 
 Constructs a new [TypeGuardValidator](./ts-utils.validation.classes.typeguardvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params: TypeGuardValidatorConstructorParams<T, TC>);

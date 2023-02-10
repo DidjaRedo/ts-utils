@@ -9,7 +9,7 @@
 
 Formats an object using the supplied mustache template.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 format(format: string): Result<string>;
@@ -21,7 +21,7 @@ format(format: string): Result<string>;
 |  --- | --- | --- |
 |  format | string | A mustache template used to format the object. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;string&gt;
 

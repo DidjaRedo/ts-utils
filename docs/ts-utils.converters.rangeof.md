@@ -6,7 +6,7 @@
 
 A helper wrapper to construct a [Converter](./ts-utils.converter.md) which converts to [RangeOf&lt;T&gt;](./ts-utils.rangeof.md) where `<T>` is some comparable type.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function rangeOf<T, TC = unknown>(converter: Converter<T, TC>): Converter<RangeOf<T>, TC>;
@@ -18,7 +18,7 @@ export declare function rangeOf<T, TC = unknown>(converter: Converter<T, TC>): C
 |  --- | --- | --- |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert <code>min</code> and <code>max</code> extent of the range. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;[RangeOf](./ts-utils.rangeof.md)<!-- -->&lt;T&gt;, TC&gt;
 

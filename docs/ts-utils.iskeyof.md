@@ -6,7 +6,7 @@
 
 Helper type-guard function to report whether a specified key is present in a supplied object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function isKeyOf<T extends object>(key: string | number | symbol, item: T): key is keyof T;
@@ -19,7 +19,7 @@ export declare function isKeyOf<T extends object>(key: string | number | symbol,
 |  key | string \| number \| symbol | The key to be tested. |
 |  item | T | The object to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 key is keyof T
 

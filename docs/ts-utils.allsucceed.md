@@ -6,7 +6,7 @@
 
 Determines if an iterable collection of [Result&lt;T&gt;](./ts-utils.result.md) were all successful.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function allSucceed<T>(results: Iterable<Result<unknown>>, successValue: T): Result<T>;
@@ -19,7 +19,7 @@ export declare function allSucceed<T>(results: Iterable<Result<unknown>>, succes
 |  results | Iterable&lt;[Result](./ts-utils.result.md)<!-- -->&lt;unknown&gt;&gt; | The collection of [Result&lt;T&gt;](./ts-utils.result.md) to be tested. |
 |  successValue | T |  |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

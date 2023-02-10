@@ -6,7 +6,7 @@
 
 The success detail associated with this [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->, or `undefined` if no detail was supplied.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get detail(): TD | undefined;

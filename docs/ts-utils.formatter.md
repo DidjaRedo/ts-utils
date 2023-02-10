@@ -9,10 +9,10 @@
 
 Type definition for a formatting function, which takes a `string` and an item and returns [Result&lt;string&gt;](./ts-utils.result.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Formatter<T> = (format: string, item: T) => Result<string>;
 ```
-<b>References:</b> [Result](./ts-utils.result.md)
+**References:** [Result](./ts-utils.result.md)
 

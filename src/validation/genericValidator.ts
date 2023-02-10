@@ -141,7 +141,7 @@ export class GenericValidator<T, TC = undefined> implements Validator<T, TC> {
                     if (typeof constraintResult === 'boolean') {
                         return constraintResult
                             ? true
-                            : fail(`Value ${JSON.stringify(from)} does not meet constraint.`);
+                            : fail(`Invalid value "${JSON.stringify(from)}":  does not meet constraint.`);
                     }
                     return constraintResult;
                 }

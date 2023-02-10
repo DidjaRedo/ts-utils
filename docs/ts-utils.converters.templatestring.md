@@ -6,7 +6,7 @@
 
 Helper function to create a [StringConverter](./ts-utils.converters.stringconverter.md) which converts `unknown` to `string`<!-- -->, applying template conversions supplied at construction time or at runtime as context.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function templateString(defaultContext?: unknown): StringConverter<string, unknown>;
@@ -16,9 +16,9 @@ export declare function templateString(defaultContext?: unknown): StringConverte
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  defaultContext | unknown | <i>(Optional)</i> Optional default context to use for template values. |
+|  defaultContext | unknown | _(Optional)_ Optional default context to use for template values. |
 
-<b>Returns:</b>
+**Returns:**
 
 [StringConverter](./ts-utils.converters.stringconverter.md)<!-- -->&lt;string, unknown&gt;
 

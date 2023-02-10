@@ -6,12 +6,12 @@
 
 Base templated wrapper to simplify creation of new [Converter](./ts-utils.converter.md)<!-- -->s.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class BaseConverter<T, TC = undefined> implements Converter<T, TC> 
 ```
-<b>Implements:</b> [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
+**Implements:** [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 
 ## Constructors
 

@@ -6,7 +6,7 @@
 
 Returns a [StringConverter](./ts-utils.converters.stringconverter.md) which constrains the result to match a supplied regular expression.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 matching(match: RegExp, options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
@@ -17,9 +17,9 @@ matching(match: RegExp, options?: Partial<StringMatchOptions>): StringConverter<
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  match | RegExp | The regular expression to be used as a constraint. |
-|  options | Partial&lt;[StringMatchOptions](./ts-utils.converters.stringmatchoptions.md)<!-- -->&gt; | <i>(Optional)</i> Optional [Converters.StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) for this conversion |
+|  options | Partial&lt;[StringMatchOptions](./ts-utils.converters.stringmatchoptions.md)<!-- -->&gt; | _(Optional)_ Optional [Converters.StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) for this conversion |
 
-<b>Returns:</b>
+**Returns:**
 
 [StringConverter](./ts-utils.converters.stringconverter.md)<!-- -->&lt;T, TC&gt;
 

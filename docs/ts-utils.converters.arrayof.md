@@ -6,7 +6,7 @@
 
 A helper function to create a [Converter](./ts-utils.converter.md) which converts `unknown` to an array of `<T>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function arrayOf<T, TC = undefined>(converter: Converter<T, TC>, onError?: OnError): Converter<T[], TC>;
@@ -17,9 +17,9 @@ export declare function arrayOf<T, TC = undefined>(converter: Converter<T, TC>, 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert each item in the array. |
-|  onError | OnError | <i>(Optional)</i> |
+|  onError | OnError | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T\[\], TC&gt;
 

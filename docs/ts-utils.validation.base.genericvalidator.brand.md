@@ -6,7 +6,7 @@
 
 The brand for a branded type.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get brand(): string | undefined;

@@ -6,7 +6,7 @@
 
 Gets a formatted description of a [RangeOfProperties&lt;T&gt;](./ts-utils.rangeofproperties.md) given an optional set of formats and 'empty' value to use.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static propertiesToString<T>(range: RangeOfProperties<T>, formats?: RangeOfFormats, emptyValue?: T): string | undefined;
@@ -17,10 +17,10 @@ static propertiesToString<T>(range: RangeOfProperties<T>, formats?: RangeOfForma
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  range | [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt; | The [RangeOfProperties&lt;T&gt;](./ts-utils.rangeofproperties.md) to be formatted. |
-|  formats | [RangeOfFormats](./ts-utils.rangeofformats.md) | <i>(Optional)</i> Optionas [formats](./ts-utils.rangeofformats.md) to use. Default is [DEFAULT\_RANGEOF\_FORMATS](./ts-utils.default_rangeof_formats.md)<!-- -->. |
-|  emptyValue | T | <i>(Optional)</i> Value which represents unbounded minimum or maximum for this range. Default is <code>undefined</code>. |
+|  formats | [RangeOfFormats](./ts-utils.rangeofformats.md) | _(Optional)_ Optionas [formats](./ts-utils.rangeofformats.md) to use. Default is [DEFAULT\_RANGEOF\_FORMATS](./ts-utils.default_rangeof_formats.md)<!-- -->. |
+|  emptyValue | T | _(Optional)_ Value which represents unbounded minimum or maximum for this range. Default is <code>undefined</code>. |
 
-<b>Returns:</b>
+**Returns:**
 
 string \| undefined
 

@@ -6,7 +6,7 @@
 
 Helper function to create a [Converter](./ts-utils.converter.md) which converts `unknown` to one of a set of supplied enumerated values. Anything else fails.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function enumeratedValue<T>(values: T[]): Converter<T, T[]>;
@@ -18,7 +18,7 @@ export declare function enumeratedValue<T>(values: T[]): Converter<T, T[]>;
 |  --- | --- | --- |
 |  values | T\[\] | Array of allowed values. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, T\[\]&gt;
 

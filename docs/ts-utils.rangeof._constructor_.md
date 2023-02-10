@@ -6,7 +6,7 @@
 
 Creates a new [RangeOf&lt;T&gt;](./ts-utils.rangeof.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(min?: T, max?: T);
@@ -16,6 +16,6 @@ constructor(min?: T, max?: T);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  min | T | <i>(Optional)</i> Optional mininum extent of the range. |
-|  max | T | <i>(Optional)</i> Optional maximum extent of the range. |
+|  min | T | _(Optional)_ Optional mininum extent of the range. |
+|  max | T | _(Optional)_ Optional maximum extent of the range. |
 

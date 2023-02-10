@@ -6,7 +6,7 @@
 
 [Converter](./ts-utils.converter.md) to convert an `unknown` to an array of `string`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 stringArray: Converter<string[], unknown>

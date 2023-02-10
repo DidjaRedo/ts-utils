@@ -9,10 +9,10 @@
 
 A collection of [formatters](./ts-utils.formatter.md) indexed by target name, to enable different format methods per output target.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FormattersByExtendedTarget<TFT extends FormatTargets, T> = Record<TFT, Formatter<T>>;
 ```
-<b>References:</b> [FormatTargets](./ts-utils.formattargets.md)<!-- -->, [Formatter](./ts-utils.formatter.md)
+**References:** [FormatTargets](./ts-utils.formattargets.md)<!-- -->, [Formatter](./ts-utils.formatter.md)
 

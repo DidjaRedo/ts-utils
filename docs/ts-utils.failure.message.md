@@ -6,7 +6,7 @@
 
 Gets the error message associated with this error.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get message(): string;

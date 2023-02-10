@@ -6,7 +6,7 @@
 
 Returns a [StringConverter](./ts-utils.converters.stringconverter.md) which constrains the result to match one of a supplied array of strings.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 matching(match: string[], options?: Partial<StringMatchOptions>): StringConverter<T, TC>;
@@ -17,9 +17,9 @@ matching(match: string[], options?: Partial<StringMatchOptions>): StringConverte
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  match | string\[\] | The array of allowed strings. |
-|  options | Partial&lt;[StringMatchOptions](./ts-utils.converters.stringmatchoptions.md)<!-- -->&gt; | <i>(Optional)</i> Optional [Converters.StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) for this conversion. |
+|  options | Partial&lt;[StringMatchOptions](./ts-utils.converters.stringmatchoptions.md)<!-- -->&gt; | _(Optional)_ Optional [Converters.StringMatchOptions](./ts-utils.converters.stringmatchoptions.md) for this conversion. |
 
-<b>Returns:</b>
+**Returns:**
 
 [StringConverter](./ts-utils.converters.stringconverter.md)<!-- -->&lt;T, TC&gt;
 

@@ -4,7 +4,7 @@
 
 ## Validation.Base.GenericValidatorConstructorParams.options property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 options?: ValidatorOptions<TC>;

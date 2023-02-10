@@ -6,12 +6,12 @@
 
 Indicates whether this operation failed. Functions as a type guard for [Failure&lt;T&gt;](./ts-utils.failure.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isFailure(): this is Failure<T>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 this is [Failure](./ts-utils.failure.md)<!-- -->&lt;T&gt;
 

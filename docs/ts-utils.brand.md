@@ -6,7 +6,7 @@
 
 Helper type to brand a simple type to prevent inappropriate use
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Brand<T, B> = T & {

@@ -6,7 +6,7 @@
 
 Static method which validates that a supplied `unknown` value is a `boolean`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static validateBoolean(from: unknown): boolean | Failure<boolean>;
@@ -18,7 +18,7 @@ static validateBoolean(from: unknown): boolean | Failure<boolean>;
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 boolean \| [Failure](./ts-utils.failure.md)<!-- -->&lt;boolean&gt;
 

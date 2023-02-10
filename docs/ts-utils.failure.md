@@ -6,12 +6,12 @@
 
 Reports a failed [result](./ts-utils.iresult.md) from some operation, with an error message.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Failure<T> implements IResult<T> 
 ```
-<b>Implements:</b> [IResult](./ts-utils.iresult.md)<!-- -->&lt;T&gt;
+**Implements:** [IResult](./ts-utils.iresult.md)<!-- -->&lt;T&gt;
 
 ## Constructors
 

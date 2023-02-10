@@ -6,7 +6,7 @@
 
 A helper function to create a [Converter](./ts-utils.converter.md) which extracts and convert a property specified by name from an object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function optionalField<T, TC = undefined>(name: string, converter: Converter<T, TC>): Converter<T | undefined, TC>;
@@ -19,7 +19,7 @@ export declare function optionalField<T, TC = undefined>(name: string, converter
 |  name | string | The name of the field to be extracted. |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert the extracted field. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T \| undefined, TC&gt;
 

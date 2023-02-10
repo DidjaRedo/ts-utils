@@ -6,7 +6,7 @@
 
 Constructs a new [DetailedFailure&lt;T, TD&gt;](./ts-utils.detailedfailure.md) with the supplied message and detail.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(message: string, detail: TD);

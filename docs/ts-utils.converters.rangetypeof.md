@@ -6,7 +6,7 @@
 
 A helper wrapper to construct a [Converter](./ts-utils.converter.md) which converts to an arbitrary strongly-typed range of some comparable type.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function rangeTypeOf<T, RT extends RangeOf<T>, TC = unknown>(converter: Converter<T, TC>, constructor: (init: RangeOfProperties<T>) => Result<RT>): Converter<RT, TC>;
@@ -19,7 +19,7 @@ export declare function rangeTypeOf<T, RT extends RangeOf<T>, TC = unknown>(conv
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert <code>min</code> and <code>max</code> extent of the range. |
 |  constructor | (init: [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt;) =&gt; [Result](./ts-utils.result.md)<!-- -->&lt;RT&gt; | Static constructor to instantiate the object. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;RT, TC&gt;
 

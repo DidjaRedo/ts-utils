@@ -9,7 +9,7 @@
 
 Base class which adds common formatting.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class FormattableBase 
@@ -19,5 +19,5 @@ export declare class FormattableBase
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [format(template)](./ts-utils.formattablebase.format.md) |  | <b><i>(BETA)</i></b> Formats an object using the supplied mustache template. |
+|  [format(template)](./ts-utils.formattablebase.format.md) |  | **_(BETA)_** Formats an object using the supplied mustache template. |
 

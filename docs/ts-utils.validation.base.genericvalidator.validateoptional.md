@@ -6,7 +6,7 @@
 
 Tests to see if a supplied `unknown` value matches this validation. Accepts `undefined`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 validateOptional(from: unknown, context?: TC): Result<T | undefined>;
@@ -17,9 +17,9 @@ validateOptional(from: unknown, context?: TC): Result<T | undefined>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
-|  context | TC | <i>(Optional)</i> Optional validation context. |
+|  context | TC | _(Optional)_ Optional validation context. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T \| undefined&gt;
 

@@ -6,7 +6,7 @@
 
 [Traits](./ts-utils.validation.validatortraits.md) describing this validation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly traits: ValidatorTraits;

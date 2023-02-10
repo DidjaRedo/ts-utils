@@ -6,7 +6,7 @@
 
 A [Converter](./ts-utils.converter.md) which converts `unknown` to a `number`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 number: BaseConverter<number, undefined>

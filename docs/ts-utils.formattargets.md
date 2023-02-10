@@ -9,7 +9,7 @@
 
 Destination format for some formatted string.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FormatTargets = 'text' | 'markdown' | 'embed';
