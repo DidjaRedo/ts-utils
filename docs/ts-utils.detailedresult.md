@@ -9,10 +9,10 @@
 
 Type inference to determine the result type `T` of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type DetailedResult<T, TD> = DetailedSuccess<T, TD> | DetailedFailure<T, TD>;
 ```
-<b>References:</b> [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->, [DetailedFailure](./ts-utils.detailedfailure.md)
+**References:** [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->, [DetailedFailure](./ts-utils.detailedfailure.md)
 

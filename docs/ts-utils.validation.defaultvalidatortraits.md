@@ -6,7 +6,7 @@
 
 Default [validation traits](./ts-utils.validation.validatortraitvalues.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 defaultValidatorTraits: ValidatorTraitValues

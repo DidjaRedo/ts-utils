@@ -9,7 +9,7 @@
 
 Formats a list of items using the supplied template and formatter, one result per output line.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function formatList<T>(format: string, items: T[], itemFormatter: Formatter<T>): Result<string>;
@@ -23,7 +23,7 @@ export declare function formatList<T>(format: string, items: T[], itemFormatter:
 |  items | T\[\] | The items to be formatted. |
 |  itemFormatter | [Formatter](./ts-utils.formatter.md)<!-- -->&lt;T&gt; | The [Formatter&lt;T&gt;](./ts-utils.formatter.md) used to format each item. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;string&gt;
 

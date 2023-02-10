@@ -6,7 +6,7 @@
 
 Represents a single record in a JAR file
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type JarRecord = Record<string, string | string[]>;

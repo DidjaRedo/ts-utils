@@ -4,7 +4,7 @@
 
 ## Validation.Classes.ArrayValidatorConstructorParams.validateElement property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 validateElement: Validator<T, TC>;

@@ -6,7 +6,7 @@
 
 Constructs a new [StringValidator](./ts-utils.validation.classes.stringvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params?: StringValidatorConstructorParams<T, TC>);
@@ -16,5 +16,5 @@ constructor(params?: StringValidatorConstructorParams<T, TC>);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  params | [StringValidatorConstructorParams](./ts-utils.validation.classes.stringvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> Optional [init params](./ts-utils.validation.classes.stringvalidatorconstructorparams.md) for the new [StringValidator](./ts-utils.validation.classes.stringvalidator.md)<!-- -->. |
+|  params | [StringValidatorConstructorParams](./ts-utils.validation.classes.stringvalidatorconstructorparams.md)<!-- -->&lt;T, TC&gt; | _(Optional)_ Optional [init params](./ts-utils.validation.classes.stringvalidatorconstructorparams.md) for the new [StringValidator](./ts-utils.validation.classes.stringvalidator.md)<!-- -->. |
 

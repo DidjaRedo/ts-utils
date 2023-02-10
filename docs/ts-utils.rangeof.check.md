@@ -6,7 +6,7 @@
 
 Checks if a supplied value is within this range.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 check(t: T): 'less' | 'included' | 'greater';
@@ -18,7 +18,7 @@ check(t: T): 'less' | 'included' | 'greater';
 |  --- | --- | --- |
 |  t | T | The value to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 'less' \| 'included' \| 'greater'
 

@@ -4,7 +4,7 @@
 
 ## RangeOfFormats.minOnly property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 minOnly: string;

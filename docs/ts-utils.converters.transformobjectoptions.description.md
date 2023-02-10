@@ -6,7 +6,7 @@
 
 An optional description of this transform to be used for error messages.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 description?: string;

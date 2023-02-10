@@ -6,7 +6,7 @@
 
 A [StringValidator](./ts-utils.validation.classes.stringvalidator.md) which validates a string in place.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 string: StringValidator<string, unknown>

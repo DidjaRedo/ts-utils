@@ -6,7 +6,7 @@
 
 If true, unrecognized fields yield an error. If false or undefined (default), unrecognized fields are ignored.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 strict?: boolean;

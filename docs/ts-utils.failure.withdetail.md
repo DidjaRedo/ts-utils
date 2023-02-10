@@ -6,7 +6,7 @@
 
 Converts a [IResult&lt;T&gt;](./ts-utils.iresult.md) to a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, adding supplied details.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withDetail<TD>(detail: TD, _successDetail?: TD): DetailedResult<T, TD>;
@@ -17,9 +17,9 @@ withDetail<TD>(detail: TD, _successDetail?: TD): DetailedResult<T, TD>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  detail | TD | The default detail to be added to the new [DetailedResult](./ts-utils.detailedresult.md)<!-- -->. |
-|  \_successDetail | TD | <i>(Optional)</i> |
+|  \_successDetail | TD | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 [DetailedResult](./ts-utils.detailedresult.md)<!-- -->&lt;T, TD&gt;
 

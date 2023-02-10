@@ -6,7 +6,7 @@
 
 An optional list of source properties to be ignored when strict mode is enabled.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 ignore?: (keyof TSRC)[];

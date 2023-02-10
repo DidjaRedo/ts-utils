@@ -6,7 +6,7 @@
 
 Interface describing the supported validator traits.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ValidatorTraitValues 
@@ -16,7 +16,7 @@ export interface ValidatorTraitValues
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand?](./ts-utils.validation.validatortraitvalues.brand.md) | <code>readonly</code> | string | <i>(Optional)</i> If present, indicates that the result will be branded with the corresponding brand. |
+|  [brand?](./ts-utils.validation.validatortraitvalues.brand.md) | <code>readonly</code> | string | _(Optional)_ If present, indicates that the result will be branded with the corresponding brand. |
 |  [constraints](./ts-utils.validation.validatortraitvalues.constraints.md) | <code>readonly</code> | [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->\[\] | Zero or more additional [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->s describing additional constraints applied by this [Validator](./ts-utils.validation.validator.md)<!-- -->. |
 |  [isOptional](./ts-utils.validation.validatortraitvalues.isoptional.md) | <code>readonly</code> | boolean | Indicates whether the validator accepts <code>undefined</code> as a valid value. |
 

@@ -6,12 +6,12 @@
 
 Callback to be called when a [DetailedResult](./ts-utils.detailedresult.md) encounters success.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type DetailedSuccessContinuation<T, TD, TN> = (value: T, detail?: TD) => DetailedResult<TN, TD>;
 ```
-<b>References:</b> [DetailedResult](./ts-utils.detailedresult.md)
+**References:** [DetailedResult](./ts-utils.detailedresult.md)
 
 ## Remarks
 

@@ -6,12 +6,12 @@
 
 An in-place [Validator](./ts-utils.validation.validator.md) for `string` values.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class StringValidator<T extends string = string, TC = unknown> extends GenericValidator<T, TC> 
 ```
-<b>Extends:</b> [GenericValidator](./ts-utils.validation.base.genericvalidator.md)<!-- -->&lt;T, TC&gt;
+**Extends:** [GenericValidator](./ts-utils.validation.base.genericvalidator.md)<!-- -->&lt;T, TC&gt;
 
 ## Constructors
 

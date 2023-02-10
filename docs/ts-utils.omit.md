@@ -6,7 +6,7 @@
 
 Simple implicit omit function, which picks all of the properties from a supplied object except those specified for exclusion.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function omit<T extends object, K extends keyof T>(from: T, exclude: K[]): Omit<T, K>;
@@ -19,7 +19,7 @@ export declare function omit<T extends object, K extends keyof T>(from: T, exclu
 |  from | T | The object from which keys are to be picked. |
 |  exclude | K\[\] | The keys of the properties to be excluded from the returned object. |
 
-<b>Returns:</b>
+**Returns:**
 
 Omit&lt;T, K&gt;
 

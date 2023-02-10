@@ -6,7 +6,7 @@
 
 Helper to create a strongly-typed [Converter](./ts-utils.converter.md) which converts a source object to a new object with a different shape.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function transformObject<TSRC, TDEST, TC = unknown>(destinationFields: FieldTransformers<TSRC, TDEST, TC>, options?: TransformObjectOptions<TSRC>): Converter<TDEST, TC>;
@@ -17,9 +17,9 @@ export declare function transformObject<TSRC, TDEST, TC = unknown>(destinationFi
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  destinationFields | [FieldTransformers](./ts-utils.converters.fieldtransformers.md)<!-- -->&lt;TSRC, TDEST, TC&gt; | An object with key names that correspond to the target object and an appropriate [FieldTransformers](./ts-utils.converters.fieldtransformers.md) which specifies the name of the corresponding property in the source object, the converter used to convert the source property and any configuration to guide the conversion. |
-|  options | [TransformObjectOptions](./ts-utils.converters.transformobjectoptions.md)<!-- -->&lt;TSRC&gt; | <i>(Optional)</i> Options which affect the transformation. |
+|  options | [TransformObjectOptions](./ts-utils.converters.transformobjectoptions.md)<!-- -->&lt;TSRC&gt; | _(Optional)_ Options which affect the transformation. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;TDEST, TC&gt;
 

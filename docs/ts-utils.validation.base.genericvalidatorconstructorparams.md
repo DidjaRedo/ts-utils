@@ -6,7 +6,7 @@
 
 Options used to initialize a [GenericValidator](./ts-utils.validation.base.genericvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface GenericValidatorConstructorParams<T, TC> 
@@ -16,7 +16,7 @@ export interface GenericValidatorConstructorParams<T, TC>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [options?](./ts-utils.validation.base.genericvalidatorconstructorparams.options.md) |  | [ValidatorOptions](./ts-utils.validation.validatoroptions.md)<!-- -->&lt;TC&gt; | <i>(Optional)</i> |
-|  [traits?](./ts-utils.validation.base.genericvalidatorconstructorparams.traits.md) |  | Partial&lt;[ValidatorTraits](./ts-utils.validation.validatortraits.md)<!-- -->&gt; | <i>(Optional)</i> |
-|  [validator?](./ts-utils.validation.base.genericvalidatorconstructorparams.validator.md) |  | [ValidatorFunc](./ts-utils.validation.base.validatorfunc.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> |
+|  [options?](./ts-utils.validation.base.genericvalidatorconstructorparams.options.md) |  | [ValidatorOptions](./ts-utils.validation.validatoroptions.md)<!-- -->&lt;TC&gt; | _(Optional)_ |
+|  [traits?](./ts-utils.validation.base.genericvalidatorconstructorparams.traits.md) |  | Partial&lt;[ValidatorTraits](./ts-utils.validation.validatortraits.md)<!-- -->&gt; | _(Optional)_ |
+|  [validator?](./ts-utils.validation.base.genericvalidatorconstructorparams.validator.md) |  | [ValidatorFunc](./ts-utils.validation.base.validatorfunc.md)<!-- -->&lt;T, TC&gt; | _(Optional)_ |
 

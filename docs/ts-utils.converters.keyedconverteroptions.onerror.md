@@ -6,7 +6,7 @@
 
 if `onError` is `'fail'` (default), then the entire conversion fails if any key or element cannot be converted. If `onError` is `'ignore'`<!-- -->, failing elements are silently ignored.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onError?: 'fail' | 'ignore';

@@ -6,7 +6,7 @@
 
 Aggregates successful results from a a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function mapSuccess<T>(results: Iterable<Result<T>>): Result<T[]>;
@@ -18,7 +18,7 @@ export declare function mapSuccess<T>(results: Iterable<Result<T>>): Result<T[]>
 |  --- | --- | --- |
 |  results | Iterable&lt;[Result](./ts-utils.result.md)<!-- -->&lt;T&gt;&gt; | An <code>Iterable</code> of [Result&lt;T&gt;](./ts-utils.result.md) from which success results are to be aggregated. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T\[\]&gt;
 

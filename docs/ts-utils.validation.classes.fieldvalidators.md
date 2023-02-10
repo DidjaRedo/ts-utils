@@ -6,12 +6,12 @@
 
 Per-property [validators](./ts-utils.validation.validator.md) for each of the properties in `<T>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FieldValidators<T, TC = unknown> = {
     [key in keyof T]: Validator<T[key], TC>;
 };
 ```
-<b>References:</b> [Validator](./ts-utils.validation.validator.md)
+**References:** [Validator](./ts-utils.validation.validator.md)
 

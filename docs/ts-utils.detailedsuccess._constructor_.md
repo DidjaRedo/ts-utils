@@ -6,7 +6,7 @@
 
 Constructs a new [DetailedSuccess&lt;T, TD&gt;](./ts-utils.detailedsuccess.md) with the supplied value and detail.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(value: T, detail?: TD);
@@ -17,5 +17,5 @@ constructor(value: T, detail?: TD);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  value | T | The value to be returned. |
-|  detail | TD | <i>(Optional)</i> An optional successful detail to be returned. If omitted, detail will be <code>undefined</code>. |
+|  detail | TD | _(Optional)_ An optional successful detail to be returned. If omitted, detail will be <code>undefined</code>. |
 

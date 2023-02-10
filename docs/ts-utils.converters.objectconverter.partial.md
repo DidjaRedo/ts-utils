@@ -6,7 +6,7 @@
 
 Creates a new [ObjectConverter](./ts-utils.converters.objectconverter.md) derived from this one but with new optional properties as specified by a supplied [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 partial(options: ObjectConverterOptions<T>): ObjectConverter<Partial<T>, TC>;
@@ -18,7 +18,7 @@ partial(options: ObjectConverterOptions<T>): ObjectConverter<Partial<T>, TC>;
 |  --- | --- | --- |
 |  options | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | The [options](./ts-utils.converters.objectconverteroptions.md) to be applied to the new converter. |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 

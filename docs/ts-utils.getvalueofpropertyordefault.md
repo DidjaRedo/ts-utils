@@ -6,7 +6,7 @@
 
 Gets the value of a property specified by key from an arbitrary object, or a default value if the property does not exist.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function getValueOfPropertyOrDefault<T extends object>(key: string | number | symbol, item: T, defaultValue?: unknown): unknown | undefined;
@@ -18,9 +18,9 @@ export declare function getValueOfPropertyOrDefault<T extends object>(key: strin
 |  --- | --- | --- |
 |  key | string \| number \| symbol | The key specifying the property to be retrieved. |
 |  item | T | The object from which the property is to be retrieved. |
-|  defaultValue | unknown | <i>(Optional)</i> An optional default value to be returned if the property is not present (default <code>undefined</code>). |
+|  defaultValue | unknown | _(Optional)_ An optional default value to be returned if the property is not present (default <code>undefined</code>). |
 
-<b>Returns:</b>
+**Returns:**
 
 unknown \| undefined
 

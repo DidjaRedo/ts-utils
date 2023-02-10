@@ -6,7 +6,7 @@
 
 Constructs a new [GenericValidator&lt;T&gt;](./ts-utils.validation.base.genericvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params: Partial<GenericValidatorConstructorParams<T, TC>>);

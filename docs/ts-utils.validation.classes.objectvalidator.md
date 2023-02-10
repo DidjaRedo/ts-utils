@@ -6,12 +6,12 @@
 
 In-place [Validator](./ts-utils.validation.validator.md) for an object of type `<T>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class ObjectValidator<T, TC = unknown> extends ValidatorBase<T, TC> 
 ```
-<b>Extends:</b> ValidatorBase&lt;T, TC&gt;
+**Extends:** ValidatorBase&lt;T, TC&gt;
 
 ## Remarks
 

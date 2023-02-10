@@ -6,7 +6,7 @@
 
 Optional description for error messages when constraint function returns false.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly description: string;

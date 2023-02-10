@@ -6,7 +6,7 @@
 
 Returns [DetailedSuccess&lt;T, TD&gt;](./ts-utils.detailedsuccess.md) with a supplied value and optional detail.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function succeedWithDetail<T, TD>(value: T, detail?: TD): DetailedSuccess<T, TD>;
@@ -17,9 +17,9 @@ export declare function succeedWithDetail<T, TD>(value: T, detail?: TD): Detaile
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  value | T | The value of type <code>&lt;T&gt;</code> to be returned. |
-|  detail | TD | <i>(Optional)</i> An optional detail of type <code>&lt;TD&gt;</code> to be returned. |
+|  detail | TD | _(Optional)_ An optional detail of type <code>&lt;TD&gt;</code> to be returned. |
 
-<b>Returns:</b>
+**Returns:**
 
 [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->&lt;T, TD&gt;
 

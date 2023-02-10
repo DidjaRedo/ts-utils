@@ -6,7 +6,7 @@
 
 Formats this range using the supplied format function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 format(format: (value: T) => string | undefined, formats?: RangeOfFormats): string | undefined;
@@ -17,9 +17,9 @@ format(format: (value: T) => string | undefined, formats?: RangeOfFormats): stri
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  format | (value: T) =&gt; string \| undefined | Format function used to format minimum and maxiumum extent values. |
-|  formats | [RangeOfFormats](./ts-utils.rangeofformats.md) | <i>(Optional)</i> The [format strings](./ts-utils.rangeofformats.md) used to format the range (default [DEFAULT\_RANGEOF\_FORMATS](./ts-utils.default_rangeof_formats.md)<!-- -->). |
+|  formats | [RangeOfFormats](./ts-utils.rangeofformats.md) | _(Optional)_ The [format strings](./ts-utils.rangeofformats.md) used to format the range (default [DEFAULT\_RANGEOF\_FORMATS](./ts-utils.default_rangeof_formats.md)<!-- -->). |
 
-<b>Returns:</b>
+**Returns:**
 
 string \| undefined
 

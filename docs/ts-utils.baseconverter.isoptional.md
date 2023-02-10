@@ -6,7 +6,7 @@
 
 Indicates whether this element is explicitly optional.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get isOptional(): boolean;

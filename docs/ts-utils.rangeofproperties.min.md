@@ -4,7 +4,7 @@
 
 ## RangeOfProperties.min property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly min?: T;

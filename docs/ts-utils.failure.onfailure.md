@@ -6,7 +6,7 @@
 
 Calls a supplied [failed continuation](./ts-utils.failurecontinuation.md) if the operation failed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onFailure(cb: FailureContinuation<T>): Result<T>;
@@ -18,7 +18,7 @@ onFailure(cb: FailureContinuation<T>): Result<T>;
 |  --- | --- | --- |
 |  cb | [FailureContinuation](./ts-utils.failurecontinuation.md)<!-- -->&lt;T&gt; | The [failure continuation](./ts-utils.failurecontinuation.md) to be called in the event of failure. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

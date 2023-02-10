@@ -6,7 +6,7 @@
 
 In-place validation that a supplied unknown matches some required characteristics (type, values, etc).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Validator<T, TC = undefined> 

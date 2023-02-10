@@ -6,12 +6,12 @@
 
 Reports that this [DetailedSuccess](./ts-utils.detailedsuccess.md) is a success.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isSuccess(): this is DetailedSuccess<T, TD>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 this is [DetailedSuccess](./ts-utils.detailedsuccess.md)<!-- -->&lt;T, TD&gt;
 

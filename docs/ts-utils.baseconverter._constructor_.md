@@ -6,7 +6,7 @@
 
 Constructs a new [Converter](./ts-utils.converter.md) which uses the supplied function to perform the conversion.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => Result<T>, defaultContext?: TC, traits?: ConverterTraits);
@@ -17,6 +17,6 @@ constructor(converter: (from: unknown, self: Converter<T, TC>, context?: TC) => 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  converter | (from: unknown, self: [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;, context?: TC) =&gt; [Result](./ts-utils.result.md)<!-- -->&lt;T&gt; | The conversion function to be applied. |
-|  defaultContext | TC | <i>(Optional)</i> Optional conversion context to be used by default. |
-|  traits | [ConverterTraits](./ts-utils.convertertraits.md) | <i>(Optional)</i> Optional [traits](./ts-utils.convertertraits.md) to be assigned to the resulting converter. |
+|  defaultContext | TC | _(Optional)_ Optional conversion context to be used by default. |
+|  traits | [ConverterTraits](./ts-utils.convertertraits.md) | _(Optional)_ Optional [traits](./ts-utils.convertertraits.md) to be assigned to the resulting converter. |
 

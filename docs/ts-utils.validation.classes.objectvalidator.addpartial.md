@@ -6,7 +6,7 @@
 
 Creates a new [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md) derived from this one but with new optional properties as specified by a supplied array of `keyof T`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 addPartial(addOptionalFields: (keyof T)[]): ObjectValidator<Partial<T>, TC>;
@@ -18,7 +18,7 @@ addPartial(addOptionalFields: (keyof T)[]): ObjectValidator<Partial<T>, TC>;
 |  --- | --- | --- |
 |  addOptionalFields | (keyof T)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 

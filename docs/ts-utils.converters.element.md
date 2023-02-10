@@ -6,7 +6,7 @@
 
 A helper function to create a [Converter](./ts-utils.converter.md) which extracts and converts an element from an array.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function element<T, TC = undefined>(index: number, converter: Converter<T, TC>): Converter<T, TC>;
@@ -19,7 +19,7 @@ export declare function element<T, TC = undefined>(index: number, converter: Con
 |  index | number | The index of the element to be extracted. |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | A [Converter](./ts-utils.converter.md) used to convert the extracted element. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

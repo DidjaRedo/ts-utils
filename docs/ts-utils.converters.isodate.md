@@ -6,7 +6,7 @@
 
 A [Converter](./ts-utils.converter.md) which converts an iso formatted string, a number or a `Date` object to a `Date` object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isoDate: BaseConverter<Date, undefined>

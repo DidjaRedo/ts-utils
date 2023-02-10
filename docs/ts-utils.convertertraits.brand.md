@@ -4,7 +4,7 @@
 
 ## ConverterTraits.brand property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly brand?: string;

@@ -4,7 +4,7 @@
 
 ## Validation.Classes.TypeGuardValidator.\_guard property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected readonly _guard: TypeGuardWithContext<T, TC>;

@@ -6,12 +6,12 @@
 
 Simple implementation of a possibly open-ended range of some comparable type `<T>` with test and formatting.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class RangeOf<T> implements RangeOfProperties<T> 
 ```
-<b>Implements:</b> [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt;
+**Implements:** [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;T&gt;
 
 ## Constructors
 
@@ -23,8 +23,8 @@ export declare class RangeOf<T> implements RangeOfProperties<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [max?](./ts-utils.rangeof.max.md) | <code>readonly</code> | T | <i>(Optional)</i> Maximum extent of the range. |
-|  [min?](./ts-utils.rangeof.min.md) | <code>readonly</code> | T | <i>(Optional)</i> Minimum extent of the range. |
+|  [max?](./ts-utils.rangeof.max.md) | <code>readonly</code> | T | _(Optional)_ Maximum extent of the range. |
+|  [min?](./ts-utils.rangeof.min.md) | <code>readonly</code> | T | _(Optional)_ Minimum extent of the range. |
 
 ## Methods
 

@@ -6,7 +6,7 @@
 
 Options for [Converter.withConstraint()](./ts-utils.converter.withconstraint.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ConstraintOptions 

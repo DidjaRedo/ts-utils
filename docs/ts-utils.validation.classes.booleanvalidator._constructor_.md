@@ -6,7 +6,7 @@
 
 Constructs a new [BooleanValidator](./ts-utils.validation.classes.booleanvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params?: BooleanValidatorConstructorParams<TC>);
@@ -16,5 +16,5 @@ constructor(params?: BooleanValidatorConstructorParams<TC>);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  params | [BooleanValidatorConstructorParams](./ts-utils.validation.classes.booleanvalidatorconstructorparams.md)<!-- -->&lt;TC&gt; | <i>(Optional)</i> Optional [init params](./ts-utils.validation.classes.booleanvalidatorconstructorparams.md) for the new [BooleanValidator](./ts-utils.validation.classes.booleanvalidator.md)<!-- -->. |
+|  params | [BooleanValidatorConstructorParams](./ts-utils.validation.classes.booleanvalidatorconstructorparams.md)<!-- -->&lt;TC&gt; | _(Optional)_ Optional [init params](./ts-utils.validation.classes.booleanvalidatorconstructorparams.md) for the new [BooleanValidator](./ts-utils.validation.classes.booleanvalidator.md)<!-- -->. |
 

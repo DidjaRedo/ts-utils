@@ -6,7 +6,7 @@
 
 Options for [StringConverter](./ts-utils.converters.stringconverter.md) matching method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface StringMatchOptions 
@@ -16,5 +16,5 @@ export interface StringMatchOptions
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [message?](./ts-utils.converters.stringmatchoptions.message.md) |  | string | <i>(Optional)</i> An optional message to be displayed if a non-matching string is encountered. |
+|  [message?](./ts-utils.converters.stringmatchoptions.message.md) |  | string | _(Optional)_ An optional message to be displayed if a non-matching string is encountered. |
 

@@ -6,7 +6,7 @@
 
 A converter to convert unknown to string. Values of type string succeed. Anything else fails.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 string: StringConverter<string, unknown>

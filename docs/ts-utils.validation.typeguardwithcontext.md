@@ -6,7 +6,7 @@
 
 A type guard function which validates a specific type, with an optional context that can be used to shape the validation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type TypeGuardWithContext<T, TC = unknown> = (from: unknown, context?: TC) => from is T;

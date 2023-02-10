@@ -6,12 +6,12 @@
 
 Represents the [result](./ts-utils.iresult.md) of some operation or sequence of operations.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Result<T> = Success<T> | Failure<T>;
 ```
-<b>References:</b> [Success](./ts-utils.success.md)<!-- -->, [Failure](./ts-utils.failure.md)
+**References:** [Success](./ts-utils.success.md)<!-- -->, [Failure](./ts-utils.failure.md)
 
 ## Remarks
 

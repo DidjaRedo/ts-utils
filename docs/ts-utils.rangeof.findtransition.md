@@ -6,7 +6,7 @@
 
 Finds the transition value that would bring a supplied value `t` into range.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 findTransition(t: T): T | undefined;
@@ -18,7 +18,7 @@ findTransition(t: T): T | undefined;
 |  --- | --- | --- |
 |  t | T | The value to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 T \| undefined
 

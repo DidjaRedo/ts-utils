@@ -6,7 +6,7 @@
 
 Constructs a new [ArrayValidator](./ts-utils.validation.classes.arrayvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params: ArrayValidatorConstructorParams<T, TC>);

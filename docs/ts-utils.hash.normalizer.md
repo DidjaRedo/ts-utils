@@ -6,7 +6,7 @@
 
 Computes a normalized hash for an arbitrary javascript value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Normalizer 

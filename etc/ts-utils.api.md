@@ -287,6 +287,9 @@ function element<T, TC = undefined>(index: number, converter: Converter<T, TC>):
 // @public
 function enumeratedValue<T>(values: T[]): Converter<T, T[]>;
 
+// @public
+function enumeratedValue_2<T extends string>(values: T[]): Validator<T, T[]>;
+
 // @beta
 export class ExtendedArray<T> extends Array<T> {
     constructor(itemDescription: string, ...items: T[]);
@@ -524,6 +527,9 @@ interface KeyedConverterOptions<T extends string = string, TC = undefined> {
 
 // @public
 function literal<T>(value: T): Converter<T, unknown>;
+
+// @public
+function literal_2<T extends string | number | boolean | symbol | null | undefined>(value: T): Validator<T>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "mapDetailedResults" is marked as @public, but its signature references "DetailedResult" which is marked as @beta
 //
@@ -956,6 +962,8 @@ declare namespace Validators {
     export {
         object_2 as object,
         arrayOf_2 as arrayOf,
+        enumeratedValue_2 as enumeratedValue,
+        literal_2 as literal,
         isA_2 as isA,
         string_2 as string,
         number_2 as number,

@@ -6,7 +6,7 @@
 
 Helper function to create a [Converter](./ts-utils.converter.md) from a supplied type guard function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function isA<T, TC = unknown>(description: string, guard: TypeGuardWithContext<T, TC>): Converter<T, TC>;
@@ -19,7 +19,7 @@ export declare function isA<T, TC = unknown>(description: string, guard: TypeGua
 |  description | string | a description of the thing to be validated for use in error messages |
 |  guard | [TypeGuardWithContext](./ts-utils.validation.typeguardwithcontext.md)<!-- -->&lt;T, TC&gt; | a [Validation.TypeGuardWithContext](./ts-utils.validation.typeguardwithcontext.md) which performs the validation. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

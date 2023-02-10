@@ -4,7 +4,7 @@
 
 ## Normalizer.\_normalizeArray() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected _normalizeArray(from: unknown[]): Result<unknown[]>;
@@ -16,7 +16,7 @@ protected _normalizeArray(from: unknown[]): Result<unknown[]>;
 |  --- | --- | --- |
 |  from | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;unknown\[\]&gt;
 

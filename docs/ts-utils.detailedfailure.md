@@ -6,12 +6,12 @@
 
 A [DetailedFailure](./ts-utils.detailedfailure.md) extends [Failure](./ts-utils.failure.md) to report optional failure details in addition to the error message.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class DetailedFailure<T, TD> extends Failure<T> 
 ```
-<b>Extends:</b> [Failure](./ts-utils.failure.md)<!-- -->&lt;T&gt;
+**Extends:** [Failure](./ts-utils.failure.md)<!-- -->&lt;T&gt;
 
 ## Constructors
 

@@ -4,7 +4,7 @@
 
 ## Validation.Base.GenericValidatorConstructorParams.traits property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 traits?: Partial<ValidatorTraits>;

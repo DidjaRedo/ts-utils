@@ -6,7 +6,7 @@
 
 Reads a record-jar file from a supplied path.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function readRecordJarFileSync(srcPath: string, options?: JarRecordParserOptions): Result<JarRecord[]>;
@@ -17,9 +17,9 @@ export declare function readRecordJarFileSync(srcPath: string, options?: JarReco
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  srcPath | string | Source path from which the file is read. |
-|  options | [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | <i>(Optional)</i> Optional parser configuration |
+|  options | [JarRecordParserOptions](./ts-utils.recordjar.jarrecordparseroptions.md) | _(Optional)_ Optional parser configuration |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;[JarRecord](./ts-utils.recordjar.jarrecord.md)<!-- -->\[\]&gt;
 

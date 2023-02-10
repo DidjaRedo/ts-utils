@@ -6,7 +6,7 @@
 
 Helper function to create a [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, given a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and an optional [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md) to further refine conversion behavior.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function object<T>(properties: FieldConverters<T>, options?: ObjectConverterOptions<T>): ObjectConverter<T>;
@@ -17,9 +17,9 @@ export declare function object<T>(properties: FieldConverters<T>, options?: Obje
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | An [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) defining the shape of the source object and [converters](./ts-utils.converter.md) to be applied to each properties. |
-|  options | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> An [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md) containing options for the object converter. |
+|  options | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | _(Optional)_ An [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md) containing options for the object converter. |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;T&gt;
 

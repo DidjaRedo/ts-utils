@@ -6,7 +6,7 @@
 
 A [BooleanValidator](./ts-utils.validation.classes.booleanvalidator.md) which validates a boolean in place.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 boolean: BooleanValidator<unknown>

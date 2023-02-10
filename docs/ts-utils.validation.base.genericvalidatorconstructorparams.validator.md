@@ -4,7 +4,7 @@
 
 ## Validation.Base.GenericValidatorConstructorParams.validator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 validator?: ValidatorFunc<T, TC>;

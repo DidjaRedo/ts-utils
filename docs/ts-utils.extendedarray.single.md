@@ -9,7 +9,7 @@
 
 Determines if this array contains exactly one element which matches a supplied predicate.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 single(predicate?: (item: T) => boolean): Result<T>;
@@ -19,9 +19,9 @@ single(predicate?: (item: T) => boolean): Result<T>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  predicate | (item: T) =&gt; boolean | <i>(Optional)</i> The predicate function to be applied. |
+|  predicate | (item: T) =&gt; boolean | _(Optional)_ The predicate function to be applied. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

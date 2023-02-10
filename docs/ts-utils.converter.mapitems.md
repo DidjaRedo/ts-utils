@@ -6,7 +6,7 @@
 
 Creates a [Converter](./ts-utils.converter.md) which maps the individual items of a collection resulting from this [Converter](./ts-utils.converter.md) using the supplied map function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mapItems<TI>(mapper: (from: unknown) => Result<TI>): Converter<TI[], TC>;
@@ -18,7 +18,7 @@ mapItems<TI>(mapper: (from: unknown) => Result<TI>): Converter<TI[], TC>;
 |  --- | --- | --- |
 |  mapper | (from: unknown) =&gt; [Result](./ts-utils.result.md)<!-- -->&lt;TI&gt; | The map function to be applied to each element of the result of this [Converter](./ts-utils.converter.md)<!-- -->. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;TI\[\], TC&gt;
 

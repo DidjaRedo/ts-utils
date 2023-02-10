@@ -6,7 +6,7 @@
 
 Represents a generic range of some comparable type `<T>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface RangeOfProperties<T> 
@@ -16,6 +16,6 @@ export interface RangeOfProperties<T>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [max?](./ts-utils.rangeofproperties.max.md) | <code>readonly</code> | T | <i>(Optional)</i> |
-|  [min?](./ts-utils.rangeofproperties.min.md) | <code>readonly</code> | T | <i>(Optional)</i> |
+|  [max?](./ts-utils.rangeofproperties.max.md) | <code>readonly</code> | T | _(Optional)_ |
+|  [min?](./ts-utils.rangeofproperties.min.md) | <code>readonly</code> | T | _(Optional)_ |
 

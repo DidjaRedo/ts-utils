@@ -8,7 +8,7 @@ Computes a normalized md5 hash from an arbitrary supplied object. Not secure and
 
 Normalization just sorts Maps, Sets and object keys by hash so that differences in order do not affect the hash.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 computeHash(from: unknown): Result<string>;
@@ -20,7 +20,7 @@ computeHash(from: unknown): Result<string>;
 |  --- | --- | --- |
 |  from | unknown | The arbitrary <code>unknown</code> to be hashed. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;string&gt;
 

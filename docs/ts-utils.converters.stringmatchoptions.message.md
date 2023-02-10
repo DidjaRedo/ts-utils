@@ -6,7 +6,7 @@
 
 An optional message to be displayed if a non-matching string is encountered.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 message?: string;

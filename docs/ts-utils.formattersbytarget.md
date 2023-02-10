@@ -9,10 +9,10 @@
 
 A collection of [formatters](./ts-utils.formatter.md) indexed by the [default supported target formats](./ts-utils.formattargets.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FormattersByTarget<T> = FormattersByExtendedTarget<FormatTargets, T>;
 ```
-<b>References:</b> [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md)<!-- -->, [FormatTargets](./ts-utils.formattargets.md)
+**References:** [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md)<!-- -->, [FormatTargets](./ts-utils.formattargets.md)
 

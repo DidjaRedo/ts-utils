@@ -6,7 +6,7 @@
 
 The brand for a branded type.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
@@ -18,7 +18,7 @@ withBrand<B extends string>(brand: B): Validator<Brand<T, B>, TC>;
 |  --- | --- | --- |
 |  brand | B |  |
 
-<b>Returns:</b>
+**Returns:**
 
 [Validator](./ts-utils.validation.validator.md)<!-- -->&lt;[Brand](./ts-utils.brand.md)<!-- -->&lt;T, B&gt;, TC&gt;
 

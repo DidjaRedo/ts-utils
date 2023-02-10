@@ -6,7 +6,7 @@
 
 Optional additional [ValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md) to configure validation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 options?: ObjectValidatorOptions<T, TC>;

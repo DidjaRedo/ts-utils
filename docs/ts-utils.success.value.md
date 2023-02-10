@@ -6,7 +6,7 @@
 
 The result value returned by the successful operation.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get value(): T;

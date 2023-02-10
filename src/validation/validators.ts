@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Erik Fortune
+ * Copyright (c) 2023 Erik Fortune
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,12 @@
  */
 
 import { ArrayValidator, ArrayValidatorConstructorParams } from './array';
+import { Failure, fail } from '../result';
 import { FieldValidators, ObjectValidator, ObjectValidatorConstructorParams } from './object';
 import { TypeGuardValidator, TypeGuardValidatorConstructorParams } from './typeGuard';
 
 import { BooleanValidator } from './boolean';
+import { GenericValidator } from './genericValidator';
 import { NumberValidator } from './number';
 import { StringValidator } from './string';
 import { TypeGuardWithContext } from './common';
@@ -79,6 +81,37 @@ export function arrayOf<T, TC>(
     params?: Omit<ArrayValidatorConstructorParams<T, TC>, 'validateElement'>
 ): ArrayValidator<T, TC> {
     return new ArrayValidator({ validateElement, ...(params ?? {}) });
+}
+
+/**
+ * Helper function to create a {@link Validation.Validator} which validates an enumerated
+ * value in place.
+ * @public
+ */
+export function enumeratedValue<T extends string>(values: T[]): Validator<T, T[]> {
+    return new GenericValidator({
+        validator: (from: unknown, context?: T[]): boolean | Failure<T> => {
+            if (typeof from === 'string') {
+                const v = context ?? values;
+                const index = v.indexOf(from as T);
+                return index >= 0 ? true : fail(`Invalid enumerated value "${from}"  - expected: (${v.join(', ')})`);
+            }
+            return fail(`Not a string: "${JSON.stringify(from, undefined, 2)}`);
+        },
+    });
+}
+
+/**
+ * Helper function to create a {@link Validation.Validator} which validates a literal value.
+ * @param value - the literal value to be validated
+ * @public
+ */
+export function literal<T extends string | number | boolean | symbol | null | undefined>(value: T): Validator<T> {
+    return new GenericValidator({
+        validator: (from: unknown): boolean | Failure<T> => {
+            return from === value ? true : fail(`Expected literal ${String(value)}, found "${JSON.stringify(from, undefined, 2)}`);
+        },
+    });
 }
 
 /**

@@ -6,7 +6,7 @@
 
 Creates a new [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md) derived from this one but with new optional properties as specified by a supplied [ObjectValidatorOptions&lt;T&gt;](./ts-utils.validation.classes.objectvalidatoroptions.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 partial(options?: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC>;
@@ -16,9 +16,9 @@ partial(options?: ObjectValidatorOptions<T, TC>): ObjectValidator<Partial<T>, TC
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  options | [ObjectValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md)<!-- -->&lt;T, TC&gt; | <i>(Optional)</i> The [options](./ts-utils.validation.classes.objectvalidatoroptions.md) to be applied to the new [validator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->. |
+|  options | [ObjectValidatorOptions](./ts-utils.validation.classes.objectvalidatoroptions.md)<!-- -->&lt;T, TC&gt; | _(Optional)_ The [options](./ts-utils.validation.classes.objectvalidatoroptions.md) to be applied to the new [validator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->. |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectValidator](./ts-utils.validation.classes.objectvalidator.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 

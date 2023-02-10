@@ -6,7 +6,7 @@
 
 Populates an an object based on a prototype full of field initializers that return [Result&lt;T\[key\]&gt;](./ts-utils.result.md)<!-- -->. Returns [Success](./ts-utils.success.md) with the populated object if all initializers succeed, or [Failure](./ts-utils.failure.md) with a concatenated list of all error messages.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function populateObject<T>(initializers: FieldInitializers<T>, options?: PopulateObjectOptions<T>): Result<T>;
@@ -17,9 +17,9 @@ export declare function populateObject<T>(initializers: FieldInitializers<T>, op
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  initializers | [FieldInitializers](./ts-utils.fieldinitializers.md)<!-- -->&lt;T&gt; | An object with the shape of the target but with initializer functions for each property. |
-|  options | [PopulateObjectOptions](./ts-utils.populateobjectoptions.md)<!-- -->&lt;T&gt; | <p><i>(Optional)</i> An optional [set of options](./ts-utils.populateobjectoptions.md) which modify the behavior of this call.</p> |
+|  options | [PopulateObjectOptions](./ts-utils.populateobjectoptions.md)<!-- -->&lt;T&gt; | <p>_(Optional)_ An optional [set of options](./ts-utils.populateobjectoptions.md) which modify the behavior of this call.</p> |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T&gt;
 

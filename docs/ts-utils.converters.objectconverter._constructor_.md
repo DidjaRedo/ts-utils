@@ -6,7 +6,7 @@
 
 Constructs a new [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) using options supplied in a [ObjectConverterOptions&lt;T&gt;](./ts-utils.converters.objectconverteroptions.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(fields: FieldConverters<T, TC>, options?: ObjectConverterOptions<T>);
@@ -17,5 +17,5 @@ constructor(fields: FieldConverters<T, TC>, options?: ObjectConverterOptions<T>)
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  fields | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T, TC&gt; | A [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) containing a [Converter](./ts-utils.converter.md) for each field |
-|  options | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> An optional |
+|  options | [ObjectConverterOptions](./ts-utils.converters.objectconverteroptions.md)<!-- -->&lt;T&gt; | _(Optional)_ An optional |
 

@@ -6,7 +6,7 @@
 
 Represents the result of some operation of sequence of operations.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface IResult<T> 

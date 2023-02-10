@@ -6,7 +6,7 @@
 
 Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or throws the error message if the corresponding operation failed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 orThrow(logger?: IResultLogger): never;
@@ -16,9 +16,9 @@ orThrow(logger?: IResultLogger): never;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  logger | [IResultLogger](./ts-utils.iresultlogger.md) | <i>(Optional)</i> An optional [logger](./ts-utils.iresultlogger.md) to which the error will also be reported. |
+|  logger | [IResultLogger](./ts-utils.iresultlogger.md) | _(Optional)_ An optional [logger](./ts-utils.iresultlogger.md) to which the error will also be reported. |
 
-<b>Returns:</b>
+**Returns:**
 
 never
 

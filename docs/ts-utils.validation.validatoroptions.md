@@ -6,7 +6,7 @@
 
 Options that apply to any [Validator](./ts-utils.validation.validator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ValidatorOptions<TC> 
@@ -16,5 +16,5 @@ export interface ValidatorOptions<TC>
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [defaultContext?](./ts-utils.validation.validatoroptions.defaultcontext.md) |  | TC | <i>(Optional)</i> |
+|  [defaultContext?](./ts-utils.validation.validatoroptions.defaultcontext.md) |  | TC | _(Optional)_ |
 

@@ -4,7 +4,7 @@
 
 ## RangeOfProperties.max property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly max?: T;

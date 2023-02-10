@@ -6,7 +6,7 @@
 
 Optional description to be included in error messages.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 description?: string;

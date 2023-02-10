@@ -6,7 +6,7 @@
 
 Normalizes an arbitrary JSON object
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Normalizer 

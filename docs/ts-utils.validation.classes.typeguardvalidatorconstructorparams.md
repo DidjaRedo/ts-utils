@@ -6,12 +6,12 @@
 
 Parameters used to construct a [Validation.Classes.TypeGuardValidator](./ts-utils.validation.classes.typeguardvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface TypeGuardValidatorConstructorParams<T, TC = unknown> extends ValidatorBaseConstructorParams<T, TC> 
 ```
-<b>Extends:</b> ValidatorBaseConstructorParams&lt;T, TC&gt;
+**Extends:** ValidatorBaseConstructorParams&lt;T, TC&gt;
 
 ## Properties
 

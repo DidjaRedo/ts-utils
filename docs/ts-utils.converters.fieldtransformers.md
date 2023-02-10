@@ -6,7 +6,7 @@
 
 Per-property converters and configuration for each field in the destination object of a [Converters.transformObject()](./ts-utils.converters.transformobject.md) call.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type FieldTransformers<TSRC, TDEST, TC = unknown> = {
@@ -17,5 +17,5 @@ export type FieldTransformers<TSRC, TDEST, TC = unknown> = {
     };
 };
 ```
-<b>References:</b> [Converter](./ts-utils.converter.md)
+**References:** [Converter](./ts-utils.converter.md)
 

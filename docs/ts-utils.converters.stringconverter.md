@@ -6,12 +6,12 @@
 
 The [StringConverter](./ts-utils.converters.stringconverter.md) class extends [BaseConverter](./ts-utils.baseconverter.md) to provide string-specific helper methods.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class StringConverter<T extends string = string, TC = unknown> extends BaseConverter<T, TC> 
 ```
-<b>Extends:</b> [BaseConverter](./ts-utils.baseconverter.md)<!-- -->&lt;T, TC&gt;
+**Extends:** [BaseConverter](./ts-utils.baseconverter.md)<!-- -->&lt;T, TC&gt;
 
 ## Constructors
 

@@ -6,7 +6,7 @@
 
 Converts from `unknown` to `<T>` or `undefined`<!-- -->, as appropriate.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 convertOptional(from: unknown, context?: TC, onError?: OnError): Result<T | undefined>;
@@ -17,10 +17,10 @@ convertOptional(from: unknown, context?: TC, onError?: OnError): Result<T | unde
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> to be converted |
-|  context | TC | <i>(Optional)</i> An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
-|  onError | OnError | <i>(Optional)</i> Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
+|  context | TC | _(Optional)_ An optional conversion context of type <code>&lt;TC&gt;</code> to be used in the conversion. |
+|  onError | OnError | _(Optional)_ Specifies handling of values that cannot be converted (default <code>ignoreErrors</code>). |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T \| undefined&gt;
 

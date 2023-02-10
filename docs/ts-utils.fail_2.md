@@ -6,7 +6,7 @@
 
 Returns [Failure&lt;T&gt;](./ts-utils.failure.md) with the supplied error message.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function fail<T>(message: string): Failure<T>;
@@ -18,7 +18,7 @@ export declare function fail<T>(message: string): Failure<T>;
 |  --- | --- | --- |
 |  message | string | Error message to be returned. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Failure](./ts-utils.failure.md)<!-- -->&lt;T&gt;
 

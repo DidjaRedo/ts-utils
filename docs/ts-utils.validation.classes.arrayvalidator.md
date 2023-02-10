@@ -6,12 +6,12 @@
 
 An in-place [Validator](./ts-utils.validation.validator.md) for arrays of validated values or objects.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class ArrayValidator<T, TC = unknown> extends ValidatorBase<T[], TC> 
 ```
-<b>Extends:</b> ValidatorBase&lt;T\[\], TC&gt;
+**Extends:** ValidatorBase&lt;T\[\], TC&gt;
 
 ## Constructors
 

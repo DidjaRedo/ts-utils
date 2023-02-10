@@ -6,7 +6,7 @@
 
 If `strict` is `true` then unused properties in the source object cause an error, otherwise they are ignored.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 strict: true;

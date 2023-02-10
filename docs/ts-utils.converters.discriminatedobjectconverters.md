@@ -6,10 +6,10 @@
 
 A string-keyed `Record<string, Converter>` which maps specific [converters](./ts-utils.converter.md) to the value of a discriminator property.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type DiscriminatedObjectConverters<T, TD extends string = string, TC = unknown> = Record<TD, Converter<T, TC>>;
 ```
-<b>References:</b> [Converter](./ts-utils.converter.md)
+**References:** [Converter](./ts-utils.converter.md)
 

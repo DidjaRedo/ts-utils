@@ -6,7 +6,7 @@
 
 Aggregates error messages from a collection of [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function mapFailures<T>(results: Iterable<Result<T>>): string[];
@@ -18,7 +18,7 @@ export declare function mapFailures<T>(results: Iterable<Result<T>>): string[];
 |  --- | --- | --- |
 |  results | Iterable&lt;[Result](./ts-utils.result.md)<!-- -->&lt;T&gt;&gt; | An iterable collection of [Result&lt;T&gt;](./ts-utils.result.md) for which error messages are aggregated. |
 
-<b>Returns:</b>
+**Returns:**
 
 string\[\]
 

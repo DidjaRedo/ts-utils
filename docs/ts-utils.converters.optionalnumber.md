@@ -6,7 +6,7 @@
 
 A [Converter](./ts-utils.converter.md) which converts an optional `number` value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 optionalNumber: Converter<number | undefined, undefined>

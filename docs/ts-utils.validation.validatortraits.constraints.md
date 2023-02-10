@@ -6,7 +6,7 @@
 
 Zero or more additional [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->s describing additional constraints applied by this [Validator](./ts-utils.validation.validator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly constraints: ConstraintTrait[];

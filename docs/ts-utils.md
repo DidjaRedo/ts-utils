@@ -11,9 +11,9 @@
 |  [BaseConverter](./ts-utils.baseconverter.md) | Base templated wrapper to simplify creation of new [Converter](./ts-utils.converter.md)<!-- -->s. |
 |  [DetailedFailure](./ts-utils.detailedfailure.md) | A [DetailedFailure](./ts-utils.detailedfailure.md) extends [Failure](./ts-utils.failure.md) to report optional failure details in addition to the error message. |
 |  [DetailedSuccess](./ts-utils.detailedsuccess.md) | A [DetailedSuccess](./ts-utils.detailedsuccess.md) extends [Success](./ts-utils.success.md) to report optional success details in addition to the error message. |
-|  [ExtendedArray](./ts-utils.extendedarray.md) | <b><i>(BETA)</i></b> An experimental array template which extend built-in <code>Array</code> to include a handful of predicates which return [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
+|  [ExtendedArray](./ts-utils.extendedarray.md) | **_(BETA)_** An experimental array template which extend built-in <code>Array</code> to include a handful of predicates which return [Result&lt;T&gt;](./ts-utils.result.md)<!-- -->. |
 |  [Failure](./ts-utils.failure.md) | Reports a failed [result](./ts-utils.iresult.md) from some operation, with an error message. |
-|  [FormattableBase](./ts-utils.formattablebase.md) | <b><i>(BETA)</i></b> Base class which adds common formatting. |
+|  [FormattableBase](./ts-utils.formattablebase.md) | **_(BETA)_** Base class which adds common formatting. |
 |  [Normalizer](./ts-utils.normalizer.md) | Normalizes an arbitrary JSON object |
 |  [RangeOf](./ts-utils.rangeof.md) | Simple implementation of a possibly open-ended range of some comparable type <code>&lt;T&gt;</code> with test and formatting. |
 |  [Success](./ts-utils.success.md) | Reports a successful [result](./ts-utils.iresult.md) from some operation and the corresponding value. |
@@ -26,7 +26,7 @@
 |  [captureResult(func)](./ts-utils.captureresult.md) | Wraps a function which might throw to convert exception results to [Failure](./ts-utils.failure.md)<!-- -->. |
 |  [fail\_2(message)](./ts-utils.fail_2.md) | Returns [Failure&lt;T&gt;](./ts-utils.failure.md) with the supplied error message. |
 |  [failWithDetail(message, detail)](./ts-utils.failwithdetail.md) | Returns [DetailedFailure&lt;T, TD&gt;](./ts-utils.detailedfailure.md) with a supplied error message and detail. |
-|  [formatList(format, items, itemFormatter)](./ts-utils.formatlist.md) | <b><i>(BETA)</i></b> Formats a list of items using the supplied template and formatter, one result per output line. |
+|  [formatList(format, items, itemFormatter)](./ts-utils.formatlist.md) | **_(BETA)_** Formats a list of items using the supplied template and formatter, one result per output line. |
 |  [getTypeOfProperty(key, item)](./ts-utils.gettypeofproperty.md) | Gets the type of a property specified by key from an arbitrary object. |
 |  [getValueOfPropertyOrDefault(key, item, defaultValue)](./ts-utils.getvalueofpropertyordefault.md) | Gets the value of a property specified by key from an arbitrary object, or a default value if the property does not exist. |
 |  [isKeyOf(key, item)](./ts-utils.iskeyof.md) | Helper type-guard function to report whether a specified key is present in a supplied object. |
@@ -55,7 +55,7 @@
 |  [ConstraintOptions](./ts-utils.constraintoptions.md) | Options for [Converter.withConstraint()](./ts-utils.converter.withconstraint.md)<!-- -->. |
 |  [Converter](./ts-utils.converter.md) | Generic converter to convert unknown to a templated type <code>&lt;T&gt;</code>, using intrinsic rules or as modified by an optional conversion context of optional templated type <code>&lt;TC&gt;</code> (default <code>undefined</code>). |
 |  [ConverterTraits](./ts-utils.convertertraits.md) | Converter traits. |
-|  [Formattable](./ts-utils.formattable.md) | <b><i>(BETA)</i></b> Interface for an object that can be formatted. |
+|  [Formattable](./ts-utils.formattable.md) | **_(BETA)_** Interface for an object that can be formatted. |
 |  [IResult](./ts-utils.iresult.md) | Represents the result of some operation of sequence of operations. |
 |  [IResultLogger](./ts-utils.iresultlogger.md) | Simple logger interface used by [IResult.orThrow()](./ts-utils.iresult.orthrow.md)<!-- -->. |
 |  [PopulateObjectOptions](./ts-utils.populateobjectoptions.md) | Options for the  function. |
@@ -84,17 +84,17 @@
 |  --- | --- |
 |  [Brand](./ts-utils.brand.md) | Helper type to brand a simple type to prevent inappropriate use |
 |  [DetailedFailureContinuation](./ts-utils.detailedfailurecontinuation.md) | Callback to be called when a [DetailedResult](./ts-utils.detailedresult.md) encounters a failure. |
-|  [DetailedResult](./ts-utils.detailedresult.md) | <b><i>(BETA)</i></b> Type inference to determine the result type <code>T</code> of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->. |
+|  [DetailedResult](./ts-utils.detailedresult.md) | **_(BETA)_** Type inference to determine the result type <code>T</code> of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->. |
 |  [DetailedSuccessContinuation](./ts-utils.detailedsuccesscontinuation.md) | Callback to be called when a [DetailedResult](./ts-utils.detailedresult.md) encounters success. |
 |  [FailureContinuation](./ts-utils.failurecontinuation.md) | Continuation callback to be called in the event that an [Result](./ts-utils.result.md) fails. |
 |  [FieldInitializers](./ts-utils.fieldinitializers.md) | String-keyed record of initialization functions to be passed to . |
-|  [FormatTargets](./ts-utils.formattargets.md) | <b><i>(BETA)</i></b> Destination format for some formatted string. |
-|  [Formatter](./ts-utils.formatter.md) | <b><i>(BETA)</i></b> Type definition for a formatting function, which takes a <code>string</code> and an item and returns [Result&lt;string&gt;](./ts-utils.result.md)<!-- -->. |
-|  [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md) | <b><i>(BETA)</i></b> A collection of [formatters](./ts-utils.formatter.md) indexed by target name, to enable different format methods per output target. |
-|  [FormattersByTarget](./ts-utils.formattersbytarget.md) | <b><i>(BETA)</i></b> A collection of [formatters](./ts-utils.formatter.md) indexed by the [default supported target formats](./ts-utils.formattargets.md)<!-- -->. |
-|  [Infer](./ts-utils.infer.md) | <b><i>(BETA)</i></b> Infers the type that will be returned by an instantiated converter. Works for complex as well as simple types. |
+|  [FormatTargets](./ts-utils.formattargets.md) | **_(BETA)_** Destination format for some formatted string. |
+|  [Formatter](./ts-utils.formatter.md) | **_(BETA)_** Type definition for a formatting function, which takes a <code>string</code> and an item and returns [Result&lt;string&gt;](./ts-utils.result.md)<!-- -->. |
+|  [FormattersByExtendedTarget](./ts-utils.formattersbyextendedtarget.md) | **_(BETA)_** A collection of [formatters](./ts-utils.formatter.md) indexed by target name, to enable different format methods per output target. |
+|  [FormattersByTarget](./ts-utils.formattersbytarget.md) | **_(BETA)_** A collection of [formatters](./ts-utils.formatter.md) indexed by the [default supported target formats](./ts-utils.formattargets.md)<!-- -->. |
+|  [Infer](./ts-utils.infer.md) | **_(BETA)_** Infers the type that will be returned by an instantiated converter. Works for complex as well as simple types. |
 |  [Result](./ts-utils.result.md) | Represents the [result](./ts-utils.iresult.md) of some operation or sequence of operations. |
-|  [ResultDetailType](./ts-utils.resultdetailtype.md) | <b><i>(BETA)</i></b> Type inference to determine the detail type <code>TD</code> of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->. |
-|  [ResultValueType](./ts-utils.resultvaluetype.md) | <b><i>(BETA)</i></b> Type inference to determine the result type of an [Result](./ts-utils.result.md)<!-- -->. |
+|  [ResultDetailType](./ts-utils.resultdetailtype.md) | **_(BETA)_** Type inference to determine the detail type <code>TD</code> of a [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->. |
+|  [ResultValueType](./ts-utils.resultvaluetype.md) | **_(BETA)_** Type inference to determine the result type of an [Result](./ts-utils.result.md)<!-- -->. |
 |  [SuccessContinuation](./ts-utils.successcontinuation.md) | Continuation callback to be called in the event that an [Result](./ts-utils.result.md) is successful. |
 

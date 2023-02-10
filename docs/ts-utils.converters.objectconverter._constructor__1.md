@@ -6,7 +6,7 @@
 
 Constructs a new [ObjectConverter&lt;T&gt;](./ts-utils.converters.objectconverter.md) with optional properties specified as an array of `keyof T`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]);
@@ -17,5 +17,5 @@ constructor(fields: FieldConverters<T, TC>, optional?: (keyof T)[]);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  fields | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T, TC&gt; | A [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) containing a [Converter](./ts-utils.converter.md) for each field. |
-|  optional | (keyof T)\[\] | <i>(Optional)</i> An array of <code>keyof T</code> listing fields that are not required.  |
+|  optional | (keyof T)\[\] | _(Optional)_ An array of <code>keyof T</code> listing fields that are not required.  |
 

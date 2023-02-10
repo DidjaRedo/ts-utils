@@ -6,7 +6,7 @@
 
 Formats the minimum and maximum values of this range.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 toFormattedProperties(format: (value: T) => string | undefined): RangeOfProperties<string>;
@@ -18,7 +18,7 @@ toFormattedProperties(format: (value: T) => string | undefined): RangeOfProperti
 |  --- | --- | --- |
 |  format | (value: T) =&gt; string \| undefined | A format function used to format the values. |
 
-<b>Returns:</b>
+**Returns:**
 
 [RangeOfProperties](./ts-utils.rangeofproperties.md)<!-- -->&lt;string&gt;
 

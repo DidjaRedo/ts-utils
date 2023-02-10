@@ -6,12 +6,12 @@
 
 Reports that this [DetailedFailure](./ts-utils.detailedfailure.md) is a failure.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isFailure(): this is DetailedFailure<T, TD>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 this is [DetailedFailure](./ts-utils.detailedfailure.md)<!-- -->&lt;T, TD&gt;
 

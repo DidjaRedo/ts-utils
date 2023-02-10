@@ -6,7 +6,7 @@
 
 Aggregates successful results from a collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md)<!-- -->, optionally ignoring certain error details.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function mapDetailedResults<T, TD>(results: Iterable<DetailedResult<T, TD>>, ignore: TD[]): Result<T[]>;
@@ -19,7 +19,7 @@ export declare function mapDetailedResults<T, TD>(results: Iterable<DetailedResu
 |  results | Iterable&lt;[DetailedResult](./ts-utils.detailedresult.md)<!-- -->&lt;T, TD&gt;&gt; | The collection of [DetailedResult&lt;T, TD&gt;](./ts-utils.detailedresult.md) to be mapped. |
 |  ignore | TD\[\] | An array of error detail values (of type <code>&lt;TD&gt;</code>) that should be ignored. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;T\[\]&gt;
 

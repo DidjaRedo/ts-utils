@@ -6,7 +6,7 @@
 
 Applies a factory method to convert a `Record<TK, TS>` into a `Map<TK, TD>`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function recordToMap<TS, TD, TK extends string = string>(src: Record<TK, TS>, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>>;
@@ -19,7 +19,7 @@ export declare function recordToMap<TS, TD, TK extends string = string>(src: Rec
 |  src | Record&lt;TK, TS&gt; | The <code>Record</code> to be converted. |
 |  factory | KeyedThingFactory&lt;TS, TD, TK&gt; | The factory method used to convert elements. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Result](./ts-utils.result.md)<!-- -->&lt;Map&lt;TK, TD&gt;&gt;
 

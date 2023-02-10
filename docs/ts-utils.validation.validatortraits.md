@@ -6,12 +6,12 @@
 
 Generic implementation of [ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class ValidatorTraits implements ValidatorTraitValues 
 ```
-<b>Implements:</b> [ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md)
+**Implements:** [ValidatorTraitValues](./ts-utils.validation.validatortraitvalues.md)
 
 ## Constructors
 
@@ -23,7 +23,7 @@ export declare class ValidatorTraits implements ValidatorTraitValues
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand?](./ts-utils.validation.validatortraits.brand.md) | <code>readonly</code> | string | <i>(Optional)</i> If present, indicates that the result will be branded with the corresponding brand. |
+|  [brand?](./ts-utils.validation.validatortraits.brand.md) | <code>readonly</code> | string | _(Optional)_ If present, indicates that the result will be branded with the corresponding brand. |
 |  [constraints](./ts-utils.validation.validatortraits.constraints.md) | <code>readonly</code> | [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->\[\] | Zero or more additional [ConstraintTrait](./ts-utils.validation.constrainttrait.md)<!-- -->s describing additional constraints applied by this [Validator](./ts-utils.validation.validator.md)<!-- -->. |
 |  [isOptional](./ts-utils.validation.validatortraits.isoptional.md) | <code>readonly</code> | boolean | Indicates whether the validator accepts <code>undefined</code> as a valid value. |
 

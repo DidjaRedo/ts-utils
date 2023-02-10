@@ -6,7 +6,7 @@
 
 Creates a new [ObjectConverter](./ts-utils.converters.objectconverter.md) derived from this one but with new optional properties as specified by a supplied array of `keyof T`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 addPartial(addOptionalProperties: (keyof T)[]): ObjectConverter<Partial<T>, TC>;
@@ -18,7 +18,7 @@ addPartial(addOptionalProperties: (keyof T)[]): ObjectConverter<Partial<T>, TC>;
 |  --- | --- | --- |
 |  addOptionalProperties | (keyof T)\[\] | The keys to be made optional. |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;Partial&lt;T&gt;, TC&gt;
 

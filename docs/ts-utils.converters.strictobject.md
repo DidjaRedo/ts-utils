@@ -6,7 +6,7 @@
 
 Helper function to create a [ObjectConverter](./ts-utils.converters.objectconverter.md) which converts an object without changing shape, a [FieldConverters&lt;T&gt;](./ts-utils.converters.fieldconverters.md) and an optional [StrictObjectConverterOptions&lt;T&gt;](./ts-utils.converters.strictobjectconverteroptions.md) to further refine conversion behavior.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function strictObject<T>(properties: FieldConverters<T>, options?: StrictObjectConverterOptions<T>): ObjectConverter<T>;
@@ -17,9 +17,9 @@ export declare function strictObject<T>(properties: FieldConverters<T>, options?
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  properties | [FieldConverters](./ts-utils.converters.fieldconverters.md)<!-- -->&lt;T&gt; | An object containing defining the shape and converters to be applied. |
-|  options | [StrictObjectConverterOptions](./ts-utils.converters.strictobjectconverteroptions.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> An optional |
+|  options | [StrictObjectConverterOptions](./ts-utils.converters.strictobjectconverteroptions.md)<!-- -->&lt;T&gt; | _(Optional)_ An optional |
 
-<b>Returns:</b>
+**Returns:**
 
 [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->&lt;T&gt;
 

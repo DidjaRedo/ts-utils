@@ -6,7 +6,7 @@
 
 Constructs a [Success](./ts-utils.success.md) with the supplied value.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(value: T);

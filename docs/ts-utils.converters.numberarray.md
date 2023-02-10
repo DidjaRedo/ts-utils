@@ -6,7 +6,7 @@
 
 [Converter](./ts-utils.converter.md) to convert an `unknown` to an array of `number`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 numberArray: Converter<number[], undefined>

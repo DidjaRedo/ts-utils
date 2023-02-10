@@ -6,7 +6,7 @@
 
 Constructs a new [ObjectValidator&lt;T&gt;](./ts-utils.validation.classes.objectvalidator.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(params: ObjectValidatorConstructorParams<T, TC>);

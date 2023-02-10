@@ -9,7 +9,7 @@
 
 Options for [Csv.readCsvFileSync()](./ts-utils.csv.readcsvfilesync.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface CsvOptions 
@@ -19,5 +19,5 @@ export interface CsvOptions
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [delimiter?](./ts-utils.csv.csvoptions.delimiter.md) |  | string | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [delimiter?](./ts-utils.csv.csvoptions.delimiter.md) |  | string | **_(BETA)_** _(Optional)_ |
 

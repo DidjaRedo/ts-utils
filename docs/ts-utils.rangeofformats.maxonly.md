@@ -4,7 +4,7 @@
 
 ## RangeOfFormats.maxOnly property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 maxOnly: string;

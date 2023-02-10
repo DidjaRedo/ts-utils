@@ -6,7 +6,7 @@
 
 Static method which validates that a supplied `unknown` value is a `string`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static validateString<T extends string>(from: unknown): boolean | Failure<T>;
@@ -18,7 +18,7 @@ static validateString<T extends string>(from: unknown): boolean | Failure<T>;
 |  --- | --- | --- |
 |  from | unknown | The <code>unknown</code> value to be tested. |
 
-<b>Returns:</b>
+**Returns:**
 
 boolean \| [Failure](./ts-utils.failure.md)<!-- -->&lt;T&gt;
 

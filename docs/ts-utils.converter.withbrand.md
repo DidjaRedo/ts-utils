@@ -6,7 +6,7 @@
 
 returns a converter which adds a brand to the type to prevent mismatched usage of simple types.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC>;
@@ -18,7 +18,7 @@ withBrand<B extends string>(brand: B): Converter<Brand<T, B>, TC>;
 |  --- | --- | --- |
 |  brand | B | The brand to be applied to the result value. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;[Brand](./ts-utils.brand.md)<!-- -->&lt;T, B&gt;, TC&gt;
 

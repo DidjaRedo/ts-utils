@@ -4,7 +4,7 @@
 
 ## ConverterTraits.isOptional property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly isOptional: boolean;

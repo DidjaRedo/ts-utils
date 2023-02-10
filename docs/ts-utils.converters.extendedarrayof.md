@@ -9,7 +9,7 @@
 
 A helper function to create a [Converter](./ts-utils.converter.md) which converts `unknown` to [ExtendedArray&lt;T&gt;](./ts-utils.extendedarray.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function extendedArrayOf<T, TC = undefined>(label: string, converter: Converter<T, TC>, onError?: OnError): Converter<ExtendedArray<T>, TC>;
@@ -21,9 +21,9 @@ export declare function extendedArrayOf<T, TC = undefined>(label: string, conver
 |  --- | --- | --- |
 |  label | string |  |
 |  converter | [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt; | [Converter](./ts-utils.converter.md) used to convert each item in the array |
-|  onError | OnError | <i>(Optional)</i> |
+|  onError | OnError | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;[ExtendedArray](./ts-utils.extendedarray.md)<!-- -->&lt;T&gt;, TC&gt;
 

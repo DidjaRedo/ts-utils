@@ -6,12 +6,12 @@
 
 Get a 'friendly' string representation of this object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 toString(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

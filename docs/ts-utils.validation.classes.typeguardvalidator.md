@@ -6,12 +6,12 @@
 
 An in-place [Validator](./ts-utils.validation.validator.md) that can be instantiated using a type guard function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class TypeGuardValidator<T, TC = unknown> extends ValidatorBase<T, TC> 
 ```
-<b>Extends:</b> ValidatorBase&lt;T, TC&gt;
+**Extends:** ValidatorBase&lt;T, TC&gt;
 
 ## Constructors
 

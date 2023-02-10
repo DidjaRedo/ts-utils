@@ -6,7 +6,7 @@
 
 Helper to create a [Converter](./ts-utils.converter.md) which converts a discriminated object without changing shape.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function discriminatedObject<T, TD extends string = string, TC = unknown>(discriminatorProp: string, converters: DiscriminatedObjectConverters<T, TD>): Converter<T, TC>;
@@ -19,7 +19,7 @@ export declare function discriminatedObject<T, TD extends string = string, TC = 
 |  discriminatorProp | string | Name of the property used to discriminate types. |
 |  converters | [DiscriminatedObjectConverters](./ts-utils.converters.discriminatedobjectconverters.md)<!-- -->&lt;T, TD&gt; | [String-keyed record of converters](./ts-utils.converters.discriminatedobjectconverters.md) to invoke, where each key corresponds to a value of the discriminator property. |
 
-<b>Returns:</b>
+**Returns:**
 
 [Converter](./ts-utils.converter.md)<!-- -->&lt;T, TC&gt;
 

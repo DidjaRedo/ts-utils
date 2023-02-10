@@ -4,7 +4,7 @@
 
 ## RangeOfFormats.minMax property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 minMax: string;

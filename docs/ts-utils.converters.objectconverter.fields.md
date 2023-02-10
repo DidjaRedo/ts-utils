@@ -6,7 +6,7 @@
 
 Fields converted by this [ObjectConverter](./ts-utils.converters.objectconverter.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readonly fields: FieldConverters<T>;

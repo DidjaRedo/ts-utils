@@ -6,7 +6,7 @@
 
 Gets the value associated with a successful [result](./ts-utils.iresult.md)<!-- -->, or a default value if the corresponding operation failed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 orDefault(dflt?: T): T | undefined;
@@ -16,9 +16,9 @@ orDefault(dflt?: T): T | undefined;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  dflt | T | <i>(Optional)</i> The value to be returned if the operation failed (default is <code>undefined</code>). |
+|  dflt | T | _(Optional)_ The value to be returned if the operation failed (default is <code>undefined</code>). |
 
-<b>Returns:</b>
+**Returns:**
 
 T \| undefined
 

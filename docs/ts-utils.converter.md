@@ -6,18 +6,18 @@
 
 Generic converter to convert unknown to a templated type `<T>`<!-- -->, using intrinsic rules or as modified by an optional conversion context of optional templated type `<TC>` (default `undefined`<!-- -->).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Converter<T, TC = undefined> extends ConverterTraits 
 ```
-<b>Extends:</b> [ConverterTraits](./ts-utils.convertertraits.md)
+**Extends:** [ConverterTraits](./ts-utils.convertertraits.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [brand?](./ts-utils.converter.brand.md) | <code>readonly</code> | string | <i>(Optional)</i> Returns the brand for a branded type. |
+|  [brand?](./ts-utils.converter.brand.md) | <code>readonly</code> | string | _(Optional)_ Returns the brand for a branded type. |
 |  [isOptional](./ts-utils.converter.isoptional.md) | <code>readonly</code> | boolean | Indicates whether this element is explicitly optional. |
 
 ## Methods

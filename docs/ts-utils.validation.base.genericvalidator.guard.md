@@ -6,7 +6,7 @@
 
 Non-throwing type guard
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 guard(from: unknown, context?: TC): from is T;
@@ -17,9 +17,9 @@ guard(from: unknown, context?: TC): from is T;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  from | unknown | The value to be tested. |
-|  context | TC | <i>(Optional)</i> Optional validation context. |
+|  context | TC | _(Optional)_ Optional validation context. |
 
-<b>Returns:</b>
+**Returns:**
 
 from is T
 

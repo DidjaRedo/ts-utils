@@ -6,7 +6,7 @@
 
 A [Converter](./ts-utils.converter.md) which converts `unknown` to `boolean`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 boolean: BaseConverter<boolean, undefined>
