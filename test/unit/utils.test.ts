@@ -28,12 +28,10 @@ import {
     getValueOfPropertyOrDefault,
     isKeyOf,
     mapToRecord,
-    omit,
     optionalMapToPossiblyEmptyRecord,
     optionalMapToRecord,
     optionalRecordToMap,
     optionalRecordToPossiblyEmptyMap,
-    pick,
     recordToMap,
 } from '../../src/utils';
 
@@ -162,70 +160,6 @@ describe('Utils module', () => {
         });
     });
 
-    describe('pick function', () => {
-        test('it picks the requested properties', () => {
-            expect(pick({
-                prop1: 1,
-                prop2: 'p2',
-                prop3: true,
-            }, ['prop1', 'prop3'])).toEqual({
-                prop1: 1,
-                prop3: true,
-            });
-        });
-
-        test('it silently ignores missing properties', () => {
-            interface PickMe {
-                prop1: number;
-                prop2: string;
-                prop3: boolean;
-                prop4?: string;
-            }
-            const pickMe: PickMe = {
-                prop1: 1,
-                prop2: 'p2',
-                prop3: true,
-            };
-
-            expect(pick(pickMe, ['prop1', 'prop3', 'prop4'])).toEqual({
-                prop1: 1,
-                prop3: true,
-            });
-        });
-    });
-
-    describe('omit function', () => {
-        test('it omits the requested properties', () => {
-            expect(omit({
-                prop1: 1,
-                prop2: 'p2',
-                prop3: true,
-            }, ['prop2'])).toEqual({
-                prop1: 1,
-                prop3: true,
-            });
-        });
-
-        test('it silently ignores missing properties', () => {
-            interface PickMe {
-                prop1: number;
-                prop2: string;
-                prop3: boolean;
-                prop4?: string;
-            }
-            const pickMe: PickMe = {
-                prop1: 1,
-                prop2: 'p2',
-                prop3: true,
-            };
-
-            expect(omit(pickMe, ['prop2', 'prop4'])).toEqual({
-                prop1: 1,
-                prop3: true,
-            });
-        });
-    });
-
     describe('getValueOfPropertyOrDefault function', () => {
         const sym = Symbol('symbol');
         const obj = {
@@ -263,7 +197,7 @@ describe('Utils module', () => {
             'string': 'string value',
             'number': 100,
             'boolean': true,
-            'object': { },
+            'object': {},
             'array': [1, 2, 3],
             'null': null,
             'undefined': undefined,

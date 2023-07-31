@@ -23,7 +23,82 @@
 import { Result, fail, succeed } from './result';
 
 /**
- * Helper type-guard function to report whether a specified key is present in
+ * Templated type which includes all of the keys from supplied object
+ * type `TOBJ` that extend supplied type `TTYPE`.
+ * @public
+ */
+export type KeysOfPropertiesWithType<TOBJ extends object, TTYPE, TKEY extends keyof TOBJ = keyof TOBJ> = (
+    { [K in keyof TOBJ]: TOBJ[K] extends TTYPE ? K : never }
+)[TKEY];
+
+/**
+ * Templated type which includes all of the keys from supplied object
+ * type `TOBJ` that extend supplied type `TTYPE` or undefined.
+ * @public
+ */
+export type OptionalKeysOfPropertiesWithType<TOBJ extends object, TTYPE, TKEY extends keyof TOBJ = keyof TOBJ> = (
+    { [K in keyof TOBJ]: TOBJ[K] extends TTYPE | undefined ? K : never }
+)[TKEY];
+
+/**
+ * Returns a supplied key type or `string' if the supplied type is 'never'.
+ */
+export type SpecificKeyOrString<TKEY> = [TKEY] extends [never] ? string : TKEY;
+
+/**
+ * Type to describe a function which validates that a supplied `unknown` value
+ * matches a specified type.
+ * @public
+ */
+export type TypeGuard<T> = (val: unknown) => val is T;
+
+/**
+ * A {@link TypeGuard | TypeGuard} to determine if a supplied `unknown` is a `string`.
+ * @param value - the `unknown` value to be tested.
+ * @returns `true` if `value` is a `string`, `false` otherwise.
+ * @public
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const StringTypeGuard: TypeGuard<string> = (value: unknown): value is string => typeof value === 'string';
+
+/**
+ * A {@link TypeGuard | TypeGuard} to determine if a supplied `unknown` is a `number`.
+ * @param value - the `unknown` value to be tested.
+ * @returns `true` if `value` is a `number`, `false` otherwise.
+ * @public
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const NumberTypeGuard: TypeGuard<number> = (value: unknown): value is number => typeof value === 'number';
+
+/**
+ * A {@link TypeGuard | TypeGuard} to determine if a supplied `unknown` is a `boolean`.
+ * @param value - the `unknown` value to be tested.
+ * @returns `true` if `value` is a `boolean`, `false` otherwise.
+ * @public
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const BooleanTypeGuard: TypeGuard<boolean> = (value: unknown): value is boolean => typeof value === 'boolean';
+
+/**
+ * A {@link TypeGuard | TypeGuard} to determine if a supplied `unknown` is an object.
+ * @param value - the `unknown` value to be tested.
+ * @returns `true` if `value` is an object, `false` otherwise.
+ * @public
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ObjectTypeGuard: TypeGuard<object> = (value: unknown): value is object => typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/**
+ * A {@link TypeGuard | TypeGuard} to determine if a supplied `unknown` is an array.
+ * @param value - the `unknown` value to be tested.
+ * @returns `true` if `value` is an array, `false` otherwise.
+ * @public
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ArrayTypeGuard: TypeGuard<unknown[]> = (value: unknown): value is unknown[] => typeof value === 'object' && Array.isArray(value);
+
+/**
+ * Helper guard function to report whether a specified key is present in
  * a supplied object.
  * @param key - The key to be tested.
  * @param item - The object to be tested.
@@ -31,45 +106,8 @@ import { Result, fail, succeed } from './result';
  * @public
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isKeyOf<T extends object>(key: string|number|symbol, item: T): key is keyof T {
+export function isKeyOf<T extends object>(key: string | number | symbol, item: T): key is keyof T {
     return item.hasOwnProperty(key);
-}
-
-
-/**
- * Simple implicit pick function, which picks a set of properties from a supplied
- * object.  Ignores picked properties that do not exist regardless of type signature.
- * @param from - The object from which keys are to be picked.
- * @param include - The keys of the properties to be picked from `from`.
- * @returns A new object containing the requested properties from `from`, where present.
- * @public
- */
-export function pick<T extends object, K extends keyof T>(from: T, include: K[]): Pick<T, K> {
-    const rtrn: Partial<Pick<T, K>> = {};
-    for (const key of include) {
-        if (key in from) {
-            rtrn[key] = from[key];
-        }
-    }
-    return rtrn as Pick<T, K>;
-}
-
-/**
- * Simple implicit omit function, which picks all of the properties from a supplied
- * object except those specified for exclusion.
- * @param from - The object from which keys are to be picked.
- * @param exclude - The keys of the properties to be excluded from the returned object.
- * @returns A new object containing all of the properties from `from` that were not
- * explicitly excluded.
- * @public
- */
-export function omit<T extends object, K extends keyof T>(from: T, exclude: K[]): Omit<T, K> {
-    const rtrn: Partial<Omit<T, K>> = {};
-    for (const entry of Object.entries(from).filter((e) => !exclude.includes(e[0] as keyof T as K))) {
-        rtrn[entry[0] as unknown as keyof Omit<T, K>] = entry[1];
-    }
-
-    return rtrn as Omit<T, K>;
 }
 
 /**
@@ -84,7 +122,7 @@ export function omit<T extends object, K extends keyof T>(from: T, exclude: K[])
  * @public
  */
 export function getValueOfPropertyOrDefault<T extends object>(
-    key: string|number|symbol,
+    key: string | number | symbol,
     item: T,
     defaultValue?: unknown
 ): unknown | undefined {
@@ -103,7 +141,7 @@ export function getValueOfPropertyOrDefault<T extends object>(
  * @public
  */
 export function getTypeOfProperty<T extends object>(
-    key: string|number|symbol,
+    key: string | number | symbol,
     item: T): 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'undefined' | 'object' | 'function' | undefined {
     return isKeyOf(key, item) ? typeof item[key] : undefined;
 }
@@ -146,7 +184,7 @@ export function recordToMap<TS, TD, TK extends string = string>(src: Record<TK, 
  * if `src` is `undefined`. Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Record<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>|undefined> {
+export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Record<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD> | undefined> {
     return (src === undefined) ? succeed(undefined) : recordToMap(src, factory);
 }
 
@@ -158,7 +196,7 @@ export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Rec
  * Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = string>(src: Record<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>> {
+export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = string>(src: Record<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>> {
     return (src === undefined) ? succeed(new Map<TK, TD>()) : recordToMap(src, factory);
 }
 
@@ -194,7 +232,7 @@ export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>
  * `src` is `undefined`. Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalMapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>|undefined> {
+export function optionalMapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD> | undefined> {
     return (src === undefined) ? succeed(undefined) : mapToRecord(src, factory);
 }
 
@@ -206,6 +244,6 @@ export function optionalMapToRecord<TS, TD, TK extends string = string>(src: Map
  * Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
+export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(src: Map<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
     return (src === undefined) ? succeed({} as Record<TK, TD>) : mapToRecord(src, factory);
 }

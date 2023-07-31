@@ -17,11 +17,16 @@
         "oopsy",
         "papaparse",
         "prefixp",
+        "rtrn",
         "TCONV",
         "TDEST",
         "TELEM",
+        "TKEY",
+        "TOBJ",
+        "TPROP",
         "TSRC",
         "TTOELEM",
+        "TTYPE",
         "xyzzy"
     ]
 }
