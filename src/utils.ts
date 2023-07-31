@@ -194,7 +194,10 @@ export function mapToRecord<TS, TD, TK extends string = string>(src: ReadonlyMap
  * `src` is `undefined`. Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalMapToRecord<TS, TD, TK extends string = string>(src: ReadonlyMap<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD> | undefined> {
+export function optionalMapToRecord<TS, TD, TK extends string = string>(
+    src: ReadonlyMap<TK, TS> | undefined,
+    factory: KeyedThingFactory<TS, TD, TK>
+): Result<Record<TK, TD> | undefined> {
     return (src === undefined) ? succeed(undefined) : mapToRecord(src, factory);
 }
 
@@ -206,6 +209,9 @@ export function optionalMapToRecord<TS, TD, TK extends string = string>(src: Rea
  * Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(src: ReadonlyMap<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
+export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(
+    src: ReadonlyMap<TK, TS> | undefined,
+    factory: KeyedThingFactory<TS, TD, TK>
+): Result<Record<TK, TD>> {
     return (src === undefined) ? succeed({} as Record<TK, TD>) : mapToRecord(src, factory);
 }
