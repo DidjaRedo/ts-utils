@@ -31,7 +31,7 @@ import { Result, fail, succeed } from './result';
  * @public
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isKeyOf<T extends object>(key: string|number|symbol, item: T): key is keyof T {
+export function isKeyOf<T extends object>(key: string | number | symbol, item: T): key is keyof T {
     return item.hasOwnProperty(key);
 }
 
@@ -84,7 +84,7 @@ export function omit<T extends object, K extends keyof T>(from: T, exclude: K[])
  * @public
  */
 export function getValueOfPropertyOrDefault<T extends object>(
-    key: string|number|symbol,
+    key: string | number | symbol,
     item: T,
     defaultValue?: unknown
 ): unknown | undefined {
@@ -103,7 +103,7 @@ export function getValueOfPropertyOrDefault<T extends object>(
  * @public
  */
 export function getTypeOfProperty<T extends object>(
-    key: string|number|symbol,
+    key: string | number | symbol,
     item: T): 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'undefined' | 'object' | 'function' | undefined {
     return isKeyOf(key, item) ? typeof item[key] : undefined;
 }
@@ -146,7 +146,7 @@ export function recordToMap<TS, TD, TK extends string = string>(src: Record<TK, 
  * if `src` is `undefined`. Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Record<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>|undefined> {
+export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Record<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD> | undefined> {
     return (src === undefined) ? succeed(undefined) : recordToMap(src, factory);
 }
 
@@ -158,19 +158,19 @@ export function optionalRecordToMap<TS, TD, TK extends string = string>(src: Rec
  * Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = string>(src: Record<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>> {
+export function optionalRecordToPossiblyEmptyMap<TS, TD, TK extends string = string>(src: Record<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Map<TK, TD>> {
     return (src === undefined) ? succeed(new Map<TK, TD>()) : recordToMap(src, factory);
 }
 
 /**
- * Applies a factory method to convert a `Map<TK, TS>` into a `Record<TK, TD>`.
- * @param src - The `Map` object to be converted.
+ * Applies a factory method to convert a `ReadonlyMap<TK, TS>` into a `Record<TK, TD>`.
+ * @param src - The `ReadonlyMap` object to be converted.
  * @param factory - The factory method used to convert elements.
  * @returns {@link Success} with the resulting `Record<TK, TD>` if conversion succeeds, or
  * {@link Failure} with an error message if an error occurs.
  * @public
  */
-export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
+export function mapToRecord<TS, TD, TK extends string = string>(src: ReadonlyMap<TK, TS>, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
     const record: Record<TK, TD> = {} as Record<TK, TD>;
     for (const kvp of src) {
         if (kvp[1] !== undefined) {
@@ -187,25 +187,25 @@ export function mapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>
 }
 
 /**
- * Applies a factory method to convert an optional `Map<string, TS>` into a `Record<string, TD>` or `undefined`.
+ * Applies a factory method to convert an optional `ReadonlyMap<string, TS>` into a `Record<string, TD>` or `undefined`.
  * @param src - The `Map` object to be converted, or `undefined`.
  * @param factory - The factory method used to convert elements.
  * @returns {@link Success} with the resulting record if conversion succeeds, or {@link Success} with `undefined` if
  * `src` is `undefined`. Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalMapToRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>|undefined> {
+export function optionalMapToRecord<TS, TD, TK extends string = string>(src: ReadonlyMap<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD> | undefined> {
     return (src === undefined) ? succeed(undefined) : mapToRecord(src, factory);
 }
 
 /**
- * Applies a factory method to convert an optional `Map<string, TS>` into a `Record<string, TD>`
+ * Applies a factory method to convert an optional `ReadonlyMap<string, TS>` into a `Record<string, TD>`
  * @param src - The `Map` object to be converted, or `undefined`.
  * @param factory - The factory method used to convert elements.
  * @returns {@link Success} with the resulting record (empty if `src` is `undefined`) if conversion succeeds.
  * Returns {@link Failure} with a message if an error occurs.
  * @public
  */
-export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(src: Map<TK, TS>|undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
+export function optionalMapToPossiblyEmptyRecord<TS, TD, TK extends string = string>(src: ReadonlyMap<TK, TS> | undefined, factory: KeyedThingFactory<TS, TD, TK>): Result<Record<TK, TD>> {
     return (src === undefined) ? succeed({} as Record<TK, TD>) : mapToRecord(src, factory);
 }
