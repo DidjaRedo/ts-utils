@@ -99,6 +99,12 @@ describe('Utils module', () => {
             expect(mapToRecord(map, (_k, v) => succeed(v))).toSucceedWith(record);
         });
 
+        test('converts a ReadOnlyMap', () => {
+            const m2: ReadonlyMap<string, string> = new Map<string, string>([['one', '1'], ['two', '2']]);
+            const r2 = { one: '1', two: '2' };
+            expect(mapToRecord(m2, (_k, v) => succeed(v))).toSucceedWith(r2);
+        });
+
         test('omits undefined values', () => {
             const r2: Record<string, unknown> = { ...record, fourth: null, sixth: '6th' };
             const m2 = new Map<string, unknown>([
