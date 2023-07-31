@@ -22,7 +22,7 @@
         },
     },
     "include": [
-        "src/**/*.ts", "src/validation/valid",
+        "src/**/*.ts"
     ],
     "exclude": [
         "src/test/**/*.spec.ts"
